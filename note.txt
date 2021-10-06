@@ -1,0 +1,3 @@
+change pygame object type to correct one
+"Exit" or "Quit"
+add check_event() in Toolbar
