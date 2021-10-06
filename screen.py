@@ -24,6 +24,11 @@ class Screen:
 	def refresh_background(self):
 		self.display.fill(self.__background_color)
 
+	# draw name of simulation
+	def draw_name(self):
+		pass
+
 	# update screen by re-draw every components
-	def update_screen(self):
+	def update_screen(self, map=None, airport=None, sidebar=None, toolbar=None):
 		self.refresh_background()
+		toolbar.draw_toolbar(self.display)
