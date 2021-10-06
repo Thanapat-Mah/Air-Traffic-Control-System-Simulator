@@ -14,6 +14,7 @@ def simulate(screen, toolbar, sidebar):
 				run = False
 			else:
 				toolbar.check_event(event)
+				sidebar.check_event(event)
 
 		# update screen to next frame
 		screen.update_screen(toolbar=toolbar, sidebar=sidebar)

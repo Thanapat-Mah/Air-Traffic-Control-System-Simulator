@@ -3,3 +3,4 @@ change pygame object type to correct one
 add check_event() in Toolbar
 add width, height, is_open in Sidebar
 add get_height() in Toolbar
+add check_event() in Sidebar

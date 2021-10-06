@@ -4,7 +4,7 @@ from color import Color
 
 ### sidebar at left of screen, display simulation's infomations
 class Sidebar:
-	def __init__(self, screen_size, toolbar_height, notch_width=20, notch_color=Color.dark_gray, width=200, background_color=Color.dark_gray):
+	def __init__(self, screen_size, toolbar_height, notch_width=20, notch_color=Color.dark_gray, width=250, background_color=Color.dark_gray):
 		self.__x = screen_size[0] - notch_width
 		self.__y = 0
 		self.__width = width
@@ -12,7 +12,7 @@ class Sidebar:
 		self.__is_open = False
 		self.__notch_width = notch_width
 		self.__notch_color = notch_color
-		self.__notch_button = Button(x=self.__x-notch_width-10, y=(self.__height-60)/2, width=40, height=60, text="<|",
+		self.__notch_button = Button(x=0, y=(self.__height-60)/2, width=40, height=60,
 			border_size=0, border_radius=10, background_color=notch_color)
 		self.__background_color = background_color
 
@@ -23,8 +23,22 @@ class Sidebar:
 	# draw all components on sidebar
 	def draw_sidebar(self, display):
 		if self.__is_open:
+			# modify notch
 			current_x = self.__x - self.__width
+			self.__notch_button.x = self.__x-self.__notch_width-self.__width-10
+			self.__notch_button.text = "|>"
+			# draw background
+			pygame.draw.rect(display, self.__background_color, (current_x+self.__notch_width, self.__y, self.__width, self.__height))
 		else:
+			# modify notch
 			current_x = self.__x
+			self.__notch_button.x = self.__x-self.__notch_width-10
+			self.__notch_button.text = "<|"
+		# draw notch
 		pygame.draw.rect(display, self.__notch_color, (current_x, self.__y, self.__notch_width, self.__height))
 		self.__notch_button.draw_button(display=display)
+
+	# check sidebar openning/closing
+	def check_event(self, event):
+		if self.__notch_button.click(event):
+			self.__is_open = not self.__is_open
