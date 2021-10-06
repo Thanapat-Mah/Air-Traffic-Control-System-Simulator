@@ -3,6 +3,8 @@ from color import Color
 from font import Font
 from button import Button
 from button import QuitButton
+from button import MultiStateButton
+from icon_loader import *
 
 ### toolbar at bottom side of screen, provide tool for modify simulation behavior
 class Toolbar:
@@ -14,8 +16,10 @@ class Toolbar:
 		self.__background_color = background_color
 		# self.__simulated_datetime = None
 		self.__font = font
-		self.__play_pause_button = Button(x=200, y=self.__y+10, width=100, height=self.__height-20)
-		self.__speed_button = None
+		# initiate play-pause button
+		self.__play_pause_button = MultiStateButton(icon_tuple=load_icons(30, "icon_playing.png", "icon_paused.png"),
+			x=200, y=self.__y+10, width=100, height=self.__height-20, text="Multi")
+		self.__speed_button = Button(x=350, y=self.__y+10, width=100, height=self.__height-20)
 		self.__zoom_button = None
 		self.__quit_button = QuitButton(x=self.__width-120, y=self.__y+10, width=100, height=self.__height-20)
 
@@ -26,6 +30,7 @@ class Toolbar:
 	# draw button on toolbar
 	def draw_button(self, display):
 		self.__play_pause_button.draw_button(display)
+		self.__speed_button.draw_button(display)
 		self.__quit_button.draw_button(display)
 
 	# draw all componenets on toolbar

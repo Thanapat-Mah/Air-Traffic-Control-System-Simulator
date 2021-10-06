@@ -43,7 +43,6 @@ class Button:
 class QuitButton(Button):
 	# overide default style of button
 	def __init__(self, x, y, width, height):
-		# print(x, y, width, height)
 		super().__init__(x, y, width, height, border_size=0, background_color=Color.pink, text="Exit")
 
 	# return True when button is clicked by left mouse button
@@ -53,3 +52,8 @@ class QuitButton(Button):
 			if pygame.mouse.get_pressed()[0]:
 				if self.hit_box.collidepoint(x, y):
 					quit()
+
+class MultiStateButton(Button):
+	def __init__(self, icon_tuple, *args, **kwargs):
+		super(MultiStateButton, self).__init__(*args, **kwargs)
+		self.icon_tuple = icon_tuple
