@@ -5,3 +5,4 @@ add width, height, is_open in Sidebar
 add get_height() in Toolbar
 remove draw_name() from Simulation
 add module icon_loader
+add check_event() in Sidebar

@@ -21,6 +21,8 @@ class Button:
 
 	# draw button with text
 	def draw_button(self, display):
+		# adjust hit box and text on button
+		self.hit_box = pygame.Rect(self.x, self.y, self.width, self.height)
 		self.text_surface = self.font.render(self.text, True, self.text_color)
 		# draw button background and border
 		pygame.draw.rect(display, self.background_color, self.hit_box, width=0, border_radius=self.border_radius)

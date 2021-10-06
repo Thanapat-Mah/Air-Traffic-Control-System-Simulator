@@ -1,9 +1,11 @@
 import pygame
 from screen import Screen
-# from font import Font
+from font import Font
+from color import Color
 from toolbar import Toolbar
+from sidebar import Sidebar
 
-def play_game(screen):
+def simulate(screen, toolbar, sidebar):
 	run = True
 	while run:
 		# check for every event
@@ -12,11 +14,10 @@ def play_game(screen):
 				run = False
 			else:
 				toolbar.check_event(event)
+				sidebar.check_event(event)
 
 		# update screen to next frame
-		screen.update_screen(toolbar=toolbar)
-		# text_surface = Font.roboto_normal.render('Speed 900 km/h', True, (0, 255, 0))
-		# screen.display.blit(text_surface, (0, 0))
+		screen.update_screen(toolbar=toolbar, sidebar=sidebar)
 		pygame.display.update()
 
 	pygame.quit()
@@ -25,6 +26,7 @@ if __name__ == "__main__":
 	pygame.init()
 
 	screen = Screen(fullscreen=True)
-	toolbar = Toolbar(screen_size=screen.get_size(), height=60)
+	toolbar = Toolbar(screen_size=screen.get_size())
+	sidebar = Sidebar(screen_size=screen.get_size(), toolbar_height=toolbar.get_height())
 
-	play_game(screen)
+	simulate(screen, toolbar, sidebar)

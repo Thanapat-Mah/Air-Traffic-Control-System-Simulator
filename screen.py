@@ -32,3 +32,4 @@ class Screen:
 	def update_screen(self, map=None, airport=None, sidebar=None, toolbar=None):
 		self.refresh_background()
 		toolbar.draw_toolbar(self.display)
+		sidebar.draw_sidebar(self.display)
