@@ -4,8 +4,8 @@ from font import Font
 
 ### button UI
 class Button:
-	def __init__(self, x, y, width, height, border_size=2, border_color=Color.light_gray, border_radius=5,
-		background_color=Color.dark_gray, text="Button", font=Font.roboto_normal, text_color=Color.white):
+	def __init__(self, x, y, width, height, border_size=3, border_color=Color.dark_gray, border_radius=5,
+		background_color=Color.black, text="Button", font=Font.roboto_normal, text_color=Color.white):
 		self.x = x
 		self.y = y
 		self.width = width
@@ -56,6 +56,45 @@ class QuitButton(Button):
 					quit()
 
 class MultiStateButton(Button):
-	def __init__(self, icon_tuple, *args, **kwargs):
+	def __init__(self, label_tuple, icon_tuple=None, *args, **kwargs):
 		super(MultiStateButton, self).__init__(*args, **kwargs)
+		if icon_tuple == None:
+			icon_tuple = tuple(None for i in range(len(label_tuple)))
+		if len(label_tuple) != len(icon_tuple):
+			return(False)
+		# begin at first state, first label and first icon
+		self.state = 0
+		self.label_tuple = label_tuple
+		self.text = label_tuple[0]
 		self.icon_tuple = icon_tuple
+		self.icon = icon_tuple[0]
+
+	def switch_state(self):
+		if self.state == len(self.label_tuple) - 1:
+			self.state = 0
+		else:
+			self.state += 1
+		self.text = self.label_tuple[self.state]
+		self.icon = self.icon_tuple[self.state]
+
+	def draw_button(self, display):
+		# adjust hit box and text on button
+		self.hit_box = pygame.Rect(self.x, self.y, self.width, self.height)
+		self.text_surface = self.font.render(self.text, True, self.text_color)
+		# draw button background and border
+		pygame.draw.rect(display, self.background_color, self.hit_box, width=0, border_radius=self.border_radius)
+		if self.border_size != 0:
+			pygame.draw.rect(display, self.border_color, self.hit_box, width=self.border_size, border_radius=self.border_radius)
+		# draw text and icon on center of button
+		# if this button have icon
+		if self.icon != None:
+			text_x = (self.width - self.text_surface.get_size()[0] - self.icon.get_size()[0] - 10)/2
+			icon_x = text_x + self.text_surface.get_size()[0] + 10
+			icon_y = (self.height - self.icon.get_size()[1])/2
+			display.blit(self.icon, (self.x+icon_x, self.y+icon_y))			
+		else:
+			text_x = (self.width - self.text_surface.get_size()[0])/2
+		text_y = (self.height - self.text_surface.get_size()[1])/2
+		display.blit(self.text_surface, (self.x+text_x, self.y+text_y))
+		# draw icon in case if have icon
+		

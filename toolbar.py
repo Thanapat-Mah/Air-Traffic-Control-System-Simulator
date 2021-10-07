@@ -8,7 +8,7 @@ from icon_loader import *
 
 ### toolbar at bottom side of screen, provide tool for modify simulation behavior
 class Toolbar:
-	def __init__(self, screen_size, height=60, background_color=Color.dark_gray, font=Font.roboto_normal):
+	def __init__(self, screen_size, simulator, height=60, background_color=Color.black, font=Font.roboto_normal):
 		self.__x = 0
 		self.__y = screen_size[1] - height	# adjust position to buttom of screen
 		self.__width = screen_size[0]
@@ -17,10 +17,15 @@ class Toolbar:
 		# self.__simulated_datetime = None
 		self.__font = font
 		# initiate play-pause button
-		self.__play_pause_button = MultiStateButton(icon_tuple=load_icons(30, "icon_playing.png", "icon_paused.png"),
-			x=200, y=self.__y+10, width=100, height=self.__height-20, text="Multi")
-		self.__speed_button = Button(x=350, y=self.__y+10, width=100, height=self.__height-20)
-		self.__zoom_button = None
+		self.__play_pause_button = MultiStateButton(label_tuple=tuple(state[0] for state in simulator.get_state("play_pause")),
+			icon_tuple=load_icons(25, "icon_paused.png", "icon_playing.png"),
+			x=200, y=self.__y+10, width=150, height=self.__height-20)
+		self.__speed_button = MultiStateButton(label_tuple=tuple(state[0] for state in simulator.get_state("speed")),
+			icon_tuple=load_icons(25, "icon_speed_1.png", "icon_speed_2.png", "icon_speed_3.png"),
+			x=360, y=self.__y+10, width=180, height=self.__height-20)
+		self.__zoom_button = MultiStateButton(label_tuple=tuple(state[0] for state in simulator.get_state("zoomed")),
+			icon_tuple=load_icons(25, "icon_zoom_in.png", "icon_zoom_out.png"),
+			x=550, y=self.__y+10, width=130, height=self.__height-20)
 		self.__quit_button = QuitButton(x=self.__width-120, y=self.__y+10, width=100, height=self.__height-20)
 
 	# getter for toolbar's height
@@ -35,6 +40,7 @@ class Toolbar:
 	def draw_button(self, display):
 		self.__play_pause_button.draw_button(display)
 		self.__speed_button.draw_button(display)
+		self.__zoom_button.draw_button(display)
 		self.__quit_button.draw_button(display)
 
 	# draw all componenets on toolbar
@@ -44,5 +50,14 @@ class Toolbar:
 		self.draw_button(display)
 
 	# check event on toolbar
-	def check_event(self, event):
+	def check_event(self, event, simulator):
+		if self.__play_pause_button.click(event):
+			self.__play_pause_button.switch_state()
+			simulator.update_state("play_pause")
+		elif self.__speed_button.click(event):
+			self.__speed_button.switch_state()
+			simulator.update_state("speed")
+		elif self.__zoom_button.click(event):
+			self.__zoom_button.switch_state()
+			simulator.update_state("zoomed")
 		self.__quit_button.click(event)

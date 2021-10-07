@@ -3,7 +3,7 @@ from color import Color
 
 ### screen of program, adjust and display component.
 class Screen:
-	def __init__(self, fullscreen=False, width=1500, height=750, background_color=Color.white):
+	def __init__(self, fullscreen=False, width=1500, height=750, background_color=Color.dark_gray):
 		self.__fullscreen = fullscreen
 		# if fullsreen, adjust width and height to fit user's display size
 		if fullscreen:

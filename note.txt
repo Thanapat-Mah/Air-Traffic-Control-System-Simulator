@@ -6,3 +6,6 @@ add get_height() in Toolbar
 remove draw_name() from Simulation
 add module icon_loader
 add check_event() in Sidebar
+remove State class
+add state_tuple in MultiStateButton
+modify Simulator getter
