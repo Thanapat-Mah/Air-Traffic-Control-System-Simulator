@@ -18,7 +18,8 @@ def simulate(screen, toolbar, sidebar):
 				sidebar.check_event(event)
 
 		# update screen to next frame
-		screen.update_screen(toolbar=toolbar, sidebar=sidebar)
+		simulator.tick_time()
+		screen.update_screen(simulator=simulator, toolbar=toolbar, sidebar=sidebar)
 		pygame.display.update()
 
 	pygame.quit()

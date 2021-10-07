@@ -1,11 +1,9 @@
 change pygame object type to correct one
 "Exit" or "Quit"
-add check_event() in Toolbar
-add width, height, is_open in Sidebar
-add get_height() in Toolbar
-remove draw_name() from Simulation
+Toolbar - add check_event(), get_height()
+Sidebar - add width, height, is_open, check_event()
+Simulator - remove draw_name(), modify getter(), add get_name(), tick_time(), redesign this module....
+MultiStateButton - add state_tuple
+Screen - add text_color and font
 add module icon_loader
-add check_event() in Sidebar
 remove State class
-add state_tuple in MultiStateButton
-modify Simulator getter
