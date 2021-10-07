@@ -1,6 +1,5 @@
 import pygame
 from color import Color
-
 ### screen of program, adjust and display component.
 class Screen:
 	def __init__(self, fullscreen=False, width=1500, height=750, background_color=Color.white):
@@ -31,5 +30,6 @@ class Screen:
 	# update screen by re-draw every components
 	def update_screen(self, map=None, airport=None, sidebar=None, toolbar=None):
 		self.refresh_background()
+		map.draw_map(self.display)
 		toolbar.draw_toolbar(self.display)
 		sidebar.draw_sidebar(self.display)
