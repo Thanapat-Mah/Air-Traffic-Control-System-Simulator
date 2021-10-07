@@ -41,6 +41,8 @@ class Screen:
 	# update screen by re-draw every components
 	def update_screen(self, simulator=None, map=None, airport=None, sidebar=None, toolbar=None):
 		self.refresh_background()
+		map.draw_map(self.display)
 		toolbar.draw_toolbar(self.display, simulated_datetime=simulator.get_simulated_datetime())
 		sidebar.draw_sidebar(self.display)
 		self.draw_name(self.display, name=simulator.get_name())
+		
