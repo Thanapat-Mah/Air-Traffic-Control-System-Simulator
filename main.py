@@ -8,7 +8,7 @@ from simulator import Simulator
 from map import Map
 
 
-def simulate(screen, toolbar, sidebar, map):
+def simulate(screen, toolbar, sidebar, map, simulator):
 	run = True
 	while run:
 		# check for every event
@@ -35,4 +35,4 @@ if __name__ == "__main__":
 	toolbar = Toolbar(screen_size=screen.get_size(), simulator=simulator)
 	sidebar = Sidebar(screen_size=screen.get_size(), toolbar_height=toolbar.get_height())
 	map = Map(image_path="assets\images\map_full_size.png", screen_size=screen.get_size())
-	simulate(screen, toolbar, sidebar, map)
+	simulate(screen, toolbar, sidebar, map, simulator)
