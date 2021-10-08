@@ -18,7 +18,7 @@ def simulate(screen, toolbar, sidebar, map):
 			else:
 				toolbar.check_event(event, simulator)
 				sidebar.check_event(event)
-				map.check_event(event)
+				map.check_event(event, simulator)
 
 		# update screen to next frame
 		simulator.tick_time()
