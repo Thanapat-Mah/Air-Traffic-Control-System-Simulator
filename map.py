@@ -1,6 +1,6 @@
 import pygame
 from pygame.constants import CONTROLLER_BUTTON_RIGHTSTICK
-from image_loader import load_image
+from loader import Loader
 from simulator import Simulator
 class Map:
     zoom_state = "zoom_out" # for checking state of zoom
@@ -9,7 +9,8 @@ class Map:
     def __init__ (self, image_path, screen_size, top_left_point = ((0, 0))):
         self.__width = screen_size[0] 
         self.__height = screen_size[1]
-        self.__image = load_image(image_path = image_path, screen_size=(self.__width, self.__height))
+        loader = Loader()
+        self.__image = loader.load_image(image_path = image_path, screen_size=(self.__width, self.__height))
         self.__top_left_point = top_left_point
     
     #zoom map in

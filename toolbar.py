@@ -4,7 +4,7 @@ from font import Font
 from button import Button
 from button import QuitButton
 from button import MultiStateButton
-from icon_loader import *
+from loader import Loader
 
 ### toolbar at bottom side of screen, provide tool for modify simulation behavior
 class Toolbar:
@@ -18,14 +18,15 @@ class Toolbar:
 		self.__datetime_color = datetime_color
 		# initiate play-pause button
 		button_y_padding = 15
+		loader = Loader()
 		self.__play_pause_button = MultiStateButton(label_tuple=tuple(state[0] for state in simulator.get_state("play_pause")),
-			icon_tuple=load_icons(25, "icon_paused.png", "icon_playing.png"),
+			icon_tuple=loader.load_icons(25, "icon_paused.png", "icon_playing.png"),
 			x=290, y=self.__y+button_y_padding, width=150, height=self.__height-button_y_padding*2)
 		self.__speed_button = MultiStateButton(label_tuple=tuple(state[0] for state in simulator.get_state("speed")),
-			icon_tuple=load_icons(25, "icon_speed_1.png", "icon_speed_2.png", "icon_speed_3.png"),
+			icon_tuple=loader.load_icons(25, "icon_speed_1.png", "icon_speed_2.png", "icon_speed_3.png"),
 			x=450, y=self.__y+button_y_padding, width=180, height=self.__height-button_y_padding*2)
 		self.__zoom_button = MultiStateButton(label_tuple=tuple(state[0] for state in simulator.get_state("zoomed")),
-			icon_tuple=load_icons(25, "icon_zoom_in.png", "icon_zoom_out.png"),
+			icon_tuple=loader.load_icons(25, "icon_zoom_in.png", "icon_zoom_out.png"),
 			x=640, y=self.__y+button_y_padding, width=130, height=self.__height-button_y_padding*2)
 		self.__quit_button = QuitButton(x=self.__width-120, y=self.__y+button_y_padding, width=100, height=self.__height-button_y_padding*2)
 
