@@ -44,8 +44,8 @@ class Map:
         self.previous_distance = moving_distance # store the distance for future calculation.
         if top_left_point_list[1] > 0: #if moving more than top border
             top_left_point_list[1] = 0
-        elif top_left_point_list[1] < -750: #if moving more than bottom border
-            top_left_point_list[1] = -750
+        elif top_left_point_list[1] < -900: #if moving more than bottom border
+            top_left_point_list[1] = -900
         self.__top_left_point = tuple(top_left_point_list)
 
     def get_top_left_point(self):
