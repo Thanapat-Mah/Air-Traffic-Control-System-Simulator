@@ -59,7 +59,7 @@ class Map:
         if zoom_status:
             self.zoom_in()
         else: self.zoom_out()
-        if pygame.mouse.get_pressed()[2] and zoom_status:
+        if pygame.mouse.get_pressed()[0] and zoom_status:
             self.move()
         if event.type == pygame.MOUSEBUTTONUP:
             self.first_click_position = None
