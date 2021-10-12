@@ -42,12 +42,12 @@ class Button:
 					return(True)
 		return(False)
 
-class QuitButton(Button):
+class ExitButton(Button):
 	# overide default style of button
 	def __init__(self, x, y, width, height):
 		super().__init__(x, y, width, height, border_size=0, background_color=Color.pink, text="Exit")
 
-	# return True when button is clicked by left mouse button
+	# quit program when button is clicked by left mouse button
 	def click(self, event):
 		x, y = pygame.mouse.get_pos()
 		if event.type == pygame.MOUSEBUTTONDOWN:
@@ -69,6 +69,7 @@ class MultiStateButton(Button):
 		self.icon_tuple = icon_tuple
 		self.icon = icon_tuple[0]
 
+	# switch buttons state to next state
 	def switch_state(self):
 		if self.state == len(self.label_tuple) - 1:
 			self.state = 0
@@ -91,10 +92,9 @@ class MultiStateButton(Button):
 			text_x = (self.width - self.text_surface.get_size()[0] - self.icon.get_size()[0] - 10)/2
 			icon_x = text_x + self.text_surface.get_size()[0] + 10
 			icon_y = (self.height - self.icon.get_size()[1])/2
-			display.blit(self.icon, (self.x+icon_x, self.y+icon_y))			
+			display.blit(self.icon, (self.x+icon_x, self.y+icon_y))
+		# if this button have no icon
 		else:
 			text_x = (self.width - self.text_surface.get_size()[0])/2
 		text_y = (self.height - self.text_surface.get_size()[1])/2
 		display.blit(self.text_surface, (self.x+text_x, self.y+text_y))
-		# draw icon in case if have icon
-		
