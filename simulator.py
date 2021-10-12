@@ -38,7 +38,7 @@ class Simulator:
 		else:
 			return(state_list)
 
-	# update is_play state
+	# update specific state
 	def update_state(self, state):
 		state_list = None
 		if state == "play_pause":

@@ -1,7 +1,6 @@
 import pygame
-from pygame.constants import CONTROLLER_BUTTON_RIGHTSTICK
 from loader import Loader
-from simulator import Simulator
+
 class Map:
     zoom_state = "zoom_out" # for checking state of zoom
     first_click_position = None # position when rightclick is be down
@@ -64,6 +63,3 @@ class Map:
         if event.type == pygame.MOUSEBUTTONUP:
             self.first_click_position = None
             self.previous_distance = 0
-            
-            
-
