@@ -1,5 +1,6 @@
 import pygame
-from styles import Font, Color
+from styles import Color
+from styles import Font
 
 ### screen of program, adjust and display component.
 class Screen:
@@ -45,4 +46,3 @@ class Screen:
 		toolbar.draw_toolbar(self.display, simulated_datetime=simulator.get_simulated_datetime())
 		sidebar.draw_sidebar(self.display)
 		self.draw_name(self.display, name=simulator.get_name())
-		

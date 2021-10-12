@@ -1,5 +1,6 @@
 import pygame
-from styles import Font, Color
+from styles import Color
+from styles import Font
 
 ### button UI
 class Button:
@@ -90,10 +91,9 @@ class MultiStateButton(Button):
 			text_x = (self.width - self.text_surface.get_size()[0] - self.icon.get_size()[0] - 10)/2
 			icon_x = text_x + self.text_surface.get_size()[0] + 10
 			icon_y = (self.height - self.icon.get_size()[1])/2
-			display.blit(self.icon, (self.x+icon_x, self.y+icon_y))			
+			display.blit(self.icon, (self.x+icon_x, self.y+icon_y))
 		else:
 			text_x = (self.width - self.text_surface.get_size()[0])/2
 		text_y = (self.height - self.text_surface.get_size()[1])/2
 		display.blit(self.text_surface, (self.x+text_x, self.y+text_y))
 		# draw icon in case if have icon
-		

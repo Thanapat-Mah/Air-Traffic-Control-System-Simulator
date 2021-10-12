@@ -1,5 +1,6 @@
 import pygame
-from styles import Font, Color
+from styles import Color
+from styles import Font
 from simulator import Simulator
 
 class Airport :
@@ -9,7 +10,7 @@ class Airport :
         self.y = y
         self.status = True
 
-    
+
 class AirportManager :
     def __init__(self, screen_size):
         airport_list = [
@@ -28,9 +29,9 @@ class AirportManager :
     def draw_airport(self, display, map, simulator):
         top_left_point = map.get_top_left_point()
         scale = 1
-        if simulator.get_state(state = "zoomed", current=True)[1]:
+        if simulator.get_state(state = "zoomed", current=True):
             scale = 2
-        else: 
+        else:
             scale = 1
 
         for airport in self.__airport_tuple:
@@ -40,5 +41,3 @@ class AirportManager :
 
             text = Font.bebasneue_normal.render(airport.name, True, Color.black)
             display.blit(text, (airport_x + (self.__airport_size * 1.5), airport_y - self.__airport_size ))
-
-        

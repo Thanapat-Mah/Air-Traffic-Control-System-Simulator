@@ -1,6 +1,7 @@
 import pygame
 from screen import Screen
-from styles import Font, Color
+from styles import Font
+from styles import Color
 from toolbar import Toolbar
 from sidebar import Sidebar
 from simulator import Simulator
