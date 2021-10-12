@@ -1,6 +1,5 @@
 import pygame
-from color import Color
-from font import Font
+from styles import Font, Color
 from button import Button
 from button import QuitButton
 from button import MultiStateButton

@@ -1,6 +1,5 @@
 import pygame
-from color import Color
-from font import Font
+from styles import Font, Color
 from simulator import Simulator
 
 class Airport :
@@ -15,7 +14,7 @@ class AirportManager :
     def __init__(self, screen_size):
         airport_list = [
             Airport("CNX", 800, 200),
-            Airport("BKK", 900, 480),
+            Airport("BKK", 905, 488),
             Airport("KKC", 1020, 320),
             Airport("HKT", 770, 800),
             Airport("HDY", 890, 890)
@@ -37,9 +36,9 @@ class AirportManager :
         for airport in self.__airport_tuple:
             airport_x = (airport.x*scale)+top_left_point[0]
             airport_y = (airport.y*scale)+top_left_point[1]
-            pygame.draw.circle(display, Color.light_gray, (airport_x, airport_y), self.__airport_size*scale)
+            pygame.draw.circle(display, Color.black, (airport_x, airport_y), self.__airport_size)
 
-            text = Font.roboto_normal.render(airport.name, True, Color.dark_gray)
-            display.blit(text, (airport_x , airport_y ))
+            text = Font.bebasneue_normal.render(airport.name, True, Color.black)
+            display.blit(text, (airport_x + (self.__airport_size * 1.5), airport_y - self.__airport_size ))
 
         

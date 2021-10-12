@@ -1,6 +1,5 @@
 import pygame
-from color import Color
-from font import Font
+from styles import Font, Color
 
 ### button UI
 class Button:
