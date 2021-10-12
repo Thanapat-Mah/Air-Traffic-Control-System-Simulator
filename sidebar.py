@@ -1,6 +1,6 @@
 import pygame
 from button import MultiStateButton
-from color import Color
+from styles import Color
 
 ### sidebar at left of screen, display simulation's infomations
 class Sidebar:

@@ -1,6 +1,6 @@
 import pygame
-from color import Color
-from font import Font
+from styles import Color
+from styles import Font
 
 ### screen of program, adjust and display component.
 class Screen:

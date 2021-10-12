@@ -1,5 +1,5 @@
 import pygame
-from color import Color
+from styles import Color
 import datetime
 
 ### simulator data and state, keep track of state and time
