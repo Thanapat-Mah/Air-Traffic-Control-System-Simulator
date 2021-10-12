@@ -29,7 +29,7 @@ class AirportManager :
     def draw_airport(self, display, map, simulator):
         top_left_point = map.get_top_left_point()
         scale = 1
-        if simulator.get_state(state = "zoomed", current=True)[1]:
+        if simulator.get_state(state = "zoomed", current=True):
             scale = 2
         else: 
             scale = 1
