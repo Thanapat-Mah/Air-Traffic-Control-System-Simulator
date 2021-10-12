@@ -26,8 +26,8 @@ class AirportManager :
             airport.y = (airport.y/1080)*screen_size[1]
         self.__airport_tuple = tuple(airport_list)
 
-    def draw_airport(self, display, map, simulator):
-        top_left_point = map.get_top_left_point()
+    def draw_airport(self, display, map_, simulator):
+        top_left_point = map_.get_top_left_point()
         scale = 1
         if simulator.get_state(state = "zoomed", current=True):
             scale = 2
