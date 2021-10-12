@@ -1,7 +1,6 @@
 import pygame
-from pygame.constants import CONTROLLER_BUTTON_RIGHTSTICK
 from loader import Loader
-from simulator import Simulator
+
 class Map:
     __zoom_state = "zoom_out" # for checking state of zoom
     __first_click_position = None # position when rightclick is be down

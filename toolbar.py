@@ -1,8 +1,7 @@
 import pygame
 from styles import Color
 from styles import Font
-from button import Button
-from button import QuitButton
+from button import ExitButton
 from button import MultiStateButton
 from loader import Loader
 
@@ -16,7 +15,7 @@ class Toolbar:
 		self.__background_color = background_color
 		self.__font = font
 		self.__datetime_color = datetime_color
-		# initiate play-pause button
+		# initiate control button
 		button_y_padding = 15
 		loader = Loader()
 		self.__play_pause_button = MultiStateButton(label_tuple=("Playing", "Paused"),
@@ -28,9 +27,9 @@ class Toolbar:
 		self.__zoom_button = MultiStateButton(label_tuple=("Zoom", "Zoom"),
 			icon_tuple=loader.load_icons(25, "icon_zoom_in.png", "icon_zoom_out.png"),
 			x=640, y=self.__y+button_y_padding, width=130, height=self.__height-button_y_padding*2)
-		self.__quit_button = QuitButton(x=self.__width-120, y=self.__y+button_y_padding, width=100, height=self.__height-button_y_padding*2)
+		self.__exit_button = ExitButton(x=self.__width-120, y=self.__y+button_y_padding, width=100, height=self.__height-button_y_padding*2)
 
-	# getter for toolbar's height
+	# getter for toolbar height
 	def get_height(self):
 		return(self.__height)
 
@@ -45,12 +44,13 @@ class Toolbar:
 		self.__play_pause_button.draw_button(display)
 		self.__speed_button.draw_button(display)
 		self.__zoom_button.draw_button(display)
-		self.__quit_button.draw_button(display)
+		self.__exit_button.draw_button(display)
 
 	# draw all componenets on toolbar
 	def draw_toolbar(self, display, simulated_datetime):
 		# draw background
 		pygame.draw.rect(display, self.__background_color, (self.__x, self.__y, self.__width, self.__height))
+		# draw components on top of background
 		self.draw_datetime(display, simulated_datetime)
 		self.draw_button(display)
 
@@ -65,4 +65,4 @@ class Toolbar:
 		elif self.__zoom_button.click(event):
 			self.__zoom_button.switch_state()
 			simulator.update_state("zoomed")
-		self.__quit_button.click(event)
+		self.__exit_button.click(event)

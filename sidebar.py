@@ -16,10 +16,6 @@ class Sidebar:
 			border_size=0, border_radius=10, background_color=notch_color)
 		self.__background_color = background_color
 
-	# draw sidebar background, notch and notch button
-	def draw_background(self, display):
-		pass		
-
 	# draw all components on sidebar
 	def draw_sidebar(self, display):
 		if self.__is_open:

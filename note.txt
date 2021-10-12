@@ -1,9 +1,2 @@
-change pygame object type to correct one
-"Exit" or "Quit"
-Toolbar - add check_event(), get_height()
-Sidebar - add width, height, is_open, check_event()
-Simulator - remove draw_name(), modify getter(), add get_name(), tick_time(), redesign this module....
-MultiStateButton - add state_tuple
-Screen - add text_color and font
-add module icon_loader
-remove State class
+to do
+add switch_state() in Airport
