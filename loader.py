@@ -2,9 +2,10 @@ import pygame
 class Loader:
 
     def load_image(self, image_path, screen_size):
-        image = pygame.image.load(image_path)
-        image = pygame.transform.scale(image, screen_size)
-        return image
+        print(screen_size)
+        screen_size_scaled = (screen_size[0]*2, screen_size[1]*2)
+        image_loaded = pygame.image.load(image_path)
+        return pygame.transform.scale(image_loaded, screen_size_scaled)
 
     def adjust_size(self, icon, height_limit):
         width, height = icon.get_size()
