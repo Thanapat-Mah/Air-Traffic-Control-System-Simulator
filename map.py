@@ -18,8 +18,8 @@ class Map:
     def zoom_in(self):
         if self.__zoom_state != "zoom_in":
             self.__zoom_state = "zoom_in"
-            self.__top_left_point = ((-self.__width*(ZOOM_SCALE-1)/(ZOOM_SCALE*2), 0))
-            self.__image = pygame.transform.scale(self.__image, ((self.__width*ZOOM_SCALE, self.__height*ZOOM_SCALE)))
+            self.__top_left_point = ((int(-self.__width*(ZOOM_SCALE-1)/2), 0))
+            self.__image = pygame.transform.scale(self.__image, ((int(self.__width*ZOOM_SCALE), int(self.__height*ZOOM_SCALE))))
 
     #zoom map out
     def zoom_out(self):
