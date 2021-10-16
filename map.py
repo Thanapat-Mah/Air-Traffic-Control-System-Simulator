@@ -6,10 +6,10 @@ class Map:
     __first_click_position = None # position when rightclick is be down
     __previous_distance = 0 # __previous_distance is used to calulate in move method
     def __init__ (self, image_path, screen_size, top_left_point = ((0, 0))):
-        self.__width = screen_size[0] 
+        self.__width = screen_size[0]
         self.__height = screen_size[1]
         loader = Loader()
-        self._source_image = loader.load_image(image_path = image_path, screen_size=(self.__width, self.__height)) 
+        self._source_image = loader.load_image(image_path = image_path, screen_size=(self.__width, self.__height), scale=2) 
         self.__image = pygame.transform.scale( self._source_image, (self.__width, self.__height))
         self.__top_left_point = top_left_point
     
@@ -44,7 +44,6 @@ class Map:
         elif top_left_point_list[1] < border_bottom: #if moving more than bottom border
             top_left_point_list[1] = border_bottom
         self.__top_left_point = tuple(top_left_point_list)
-        print(self.__top_left_point)
 
     def get_top_left_point(self):
         return self.__top_left_point

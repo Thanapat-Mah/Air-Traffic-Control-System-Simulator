@@ -1,8 +1,8 @@
 import pygame
 class Loader:
 
-    def load_image(self, image_path, screen_size):
-        screen_size_scaled = (screen_size[0]*2, screen_size[1]*2)
+    def load_image(self, image_path, screen_size, scale):
+        screen_size_scaled = (screen_size[0]*scale, screen_size[1]*scale)
         image_loaded = pygame.image.load(image_path)
         return pygame.transform.scale(image_loaded, screen_size_scaled)
 
