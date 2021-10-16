@@ -8,10 +8,14 @@ class Simulator:
 		self.__name = name
 		self.__name_background_color = name_background_color
 		self.__playing = True
-		self.__speed = [200, 50, 1]		# time period, less value more speed, first value is current
-		self.__zoomed = False
+		self.__speed = [80, 30, 10]			# time period, less value more speed, first value is current
+		self.__zoomed = False		
 		self.__running_time_count = 0
 		self.__simulated_datetime = datetime.datetime(2022, 1, 1, 0, 0, 0)
+		self.__plane_status = None			# overall plane status Ex. Flying: 3, Landing: 2 etc.
+		self.__airport_status = None		# overall airport status Ex. Empty: 3, In Use: 2
+		self.__selected_object_code = ""	# IATA code of selected plane or airport object
+		self.__selected_object_detail = []
 
 	# return name of simulator
 	def get_name(self):
@@ -23,7 +27,7 @@ class Simulator:
 
 	# return simulators states
 	def get_state(self, state, current=False):		
-		state_list = None
+		state_list = [None]
 		# calculate all possible state
 		if state == "play_pause":
 			state_list = [self.__playing, not self.__playing]
@@ -40,7 +44,6 @@ class Simulator:
 
 	# update specific state
 	def update_state(self, state):
-		state_list = None
 		if state == "play_pause":
 			self.__playing = not self.__playing
 		elif state == "speed":
@@ -53,6 +56,7 @@ class Simulator:
 	def tick_time(self):
 		if self.__playing:
 			self.__running_time_count += 1
+			# increase simulated datetime by 1 minutes when reach the time period
 			if self.__running_time_count%self.get_state("speed", current=True) == 0:
 				self.__simulated_datetime += datetime.timedelta(minutes = 1)
 
