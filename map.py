@@ -9,26 +9,23 @@ class Map:
         self.__width = screen_size[0] 
         self.__height = screen_size[1]
         loader = Loader()
-        self.__image = loader.load_image(image_path = image_path, screen_size=(self.__width, self.__height))
+        self._source_image = loader.load_image(image_path = image_path, screen_size=(self.__width, self.__height)) 
+        self.__image = pygame.transform.scale( self._source_image, (self.__width, self.__height))
         self.__top_left_point = top_left_point
     
     #zoom map in
     def zoom_in(self):
         if self.__zoom_state != "zoom_in":
             self.__zoom_state = "zoom_in"
-            self.__width = int(self.__width*2)
-            self.__height = int(self.__height*2)
-            self.__top_left_point = ((-self.__width/4, 0))
-            self.__image = pygame.transform.scale(self.__image, ((self.__width, self.__height)))
+            self.__top_left_point = ((-self.__width/2, 0))
+            self.__image = pygame.transform.scale( self._source_image, (self.__width*2, self.__height*2))
 
     #zoom map out
     def zoom_out(self):
         if self.__zoom_state != "zoom_out":
             self.__zoom_state = "zoom_out"
-            self.__width = int(self.__width/2)
-            self.__height = int(self.__height/2)
             self.__top_left_point = ((0, 0))
-            self.__image = pygame.transform.scale(self.__image, ((self.__width, self.__height)))
+            self.__image = pygame.transform.scale( self._source_image, (self.__width, self.__height))
 
     #move map by holding the mouse
     def move(self):
@@ -41,11 +38,13 @@ class Map:
         moving_distance = last_click_position[1] - self.__first_click_position[1]
         top_left_point_list[1] = top_left_point_list[1] + moving_distance - self.__previous_distance
         self.__previous_distance = moving_distance # store the distance for future calculation.
+        border_bottom = -self.__height
         if top_left_point_list[1] > 0: #if moving more than top border
             top_left_point_list[1] = 0
-        elif top_left_point_list[1] < -900: #if moving more than bottom border
-            top_left_point_list[1] = -900
+        elif top_left_point_list[1] < border_bottom: #if moving more than bottom border
+            top_left_point_list[1] = border_bottom
         self.__top_left_point = tuple(top_left_point_list)
+        print(self.__top_left_point)
 
     def get_top_left_point(self):
         return self.__top_left_point

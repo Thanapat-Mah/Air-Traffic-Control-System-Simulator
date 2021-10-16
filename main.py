@@ -30,9 +30,9 @@ def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator):
 
 if __name__ == "__main__":
 	pygame.init()
-
 	screen = Screen(fullscreen=True)
-	simulator = Simulator(name="Air Traffic Control System Simulator")
+	print(screen.get_size())
+	simulator = Simulator(name="Air Traffic Control SysStem Simulator")
 	toolbar = Toolbar(screen_size=screen.get_size(), simulator=simulator)
 	sidebar = Sidebar(screen_size=screen.get_size(), toolbar_height=toolbar.get_height())
 	map_ = Map(image_path="assets\images\map_full_size.png", screen_size=screen.get_size())
