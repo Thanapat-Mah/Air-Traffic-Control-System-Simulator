@@ -1,10 +1,10 @@
 import pygame
 from button import MultiStateButton
-from styles import Color
+from configuration import COLOR
 
 ### sidebar at left of screen, display simulation's infomations
 class Sidebar:
-	def __init__(self, screen_size, toolbar_height, notch_width=20, notch_color=Color.black, width=250, background_color=Color.black):
+	def __init__(self, screen_size, toolbar_height, notch_width=20, notch_color=COLOR["black"], width=250, background_color=COLOR["black"]):
 		self.__x = screen_size[0] - notch_width
 		self.__y = 0
 		self.__width = width

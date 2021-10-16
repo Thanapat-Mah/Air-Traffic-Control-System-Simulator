@@ -1,12 +1,11 @@
 import pygame
+from configuration import MAP_PATH
 from screen import Screen
-from styles import Font
-from styles import Color
 from toolbar import Toolbar
 from sidebar import Sidebar
 from simulator import Simulator
 from map import Map
-from airport import Airport, AirportManager
+from airport import AirportManager
 
 
 def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator):
@@ -35,6 +34,6 @@ if __name__ == "__main__":
 	simulator = Simulator(name="Air Traffic Control SysStem Simulator")
 	toolbar = Toolbar(screen_size=screen.get_size(), simulator=simulator)
 	sidebar = Sidebar(screen_size=screen.get_size(), toolbar_height=toolbar.get_height())
-	map_ = Map(image_path="assets\images\map_full_size.png", screen_size=screen.get_size())
+	map_ = Map(image_path=MAP_PATH, screen_size=screen.get_size())
 	airport_manager = AirportManager(screen_size=screen.get_size())
 	simulate(screen, toolbar, sidebar, airport_manager, map_, simulator)
