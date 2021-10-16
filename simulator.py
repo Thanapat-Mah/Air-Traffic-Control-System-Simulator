@@ -1,10 +1,10 @@
 import pygame
-from styles import Color
+from configuration import COLOR
 import datetime
 
 ### simulator data and state, keep track of state and time
 class Simulator:
-	def __init__(self, name, name_background_color=Color.dark_gray):
+	def __init__(self, name, name_background_color=COLOR["dark_gray"]):
 		self.__name = name
 		self.__name_background_color = name_background_color
 		self.__playing = True

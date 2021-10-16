@@ -1,6 +1,5 @@
 import pygame
-from styles import Color
-from styles import Font
+from configuration import FONT, COLOR, AIRPORTS, ZOOM_SCALE
 from simulator import Simulator
 
 class Airport :
@@ -12,14 +11,8 @@ class Airport :
 
 
 class AirportManager :
-    def __init__(self, screen_size, airport_color=Color.black, text_color=Color.black, font=Font.bebasneue_normal):
-        airport_list = [
-            Airport("CNX", 800, 200),
-            Airport("BKK", 905, 488),
-            Airport("KKC", 1020, 320),
-            Airport("HKT", 770, 800),
-            Airport("HDY", 890, 890)
-        ]
+    def __init__(self, screen_size, airport_color=COLOR["black"], text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
+        airport_list = [Airport(a[0], a[1], a[2]) for a in AIRPORTS]
         self.__airport_size = 10
         for airport in airport_list:
             airport.x = (airport.x/1920)*screen_size[0]
@@ -33,7 +26,7 @@ class AirportManager :
         top_left_point = map_.get_top_left_point()
         scale = 1
         if simulator.get_state(state = "zoomed", current=True):
-            scale = 2
+            scale = ZOOM_SCALE
         else:
             scale = 1
 

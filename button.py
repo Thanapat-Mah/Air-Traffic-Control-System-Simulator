@@ -1,11 +1,10 @@
 import pygame
-from styles import Color
-from styles import Font
+from configuration import COLOR, FONT
 
 ### button UI
 class Button:
-	def __init__(self, x, y, width, height, border_size=3, border_color=Color.dark_gray, border_radius=5,
-		background_color=Color.black, text="Button", font=Font.roboto_normal, text_color=Color.white):
+	def __init__(self, x, y, width, height, border_size=3, border_color=COLOR["dark_gray"], border_radius=5,
+		background_color=COLOR["black"], text="Button", font=FONT["roboto_normal"], text_color=COLOR["white"]):
 		self.x = x
 		self.y = y
 		self.width = width
@@ -45,7 +44,7 @@ class Button:
 class ExitButton(Button):
 	# overide default style of button
 	def __init__(self, x, y, width, height):
-		super().__init__(x, y, width, height, border_size=0, background_color=Color.pink, text="Exit")
+		super().__init__(x, y, width, height, border_size=0, background_color=COLOR["pink"], text="Exit")
 
 	# quit program when button is clicked by left mouse button
 	def click(self, event):
