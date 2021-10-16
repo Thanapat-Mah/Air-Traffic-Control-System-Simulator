@@ -10,7 +10,7 @@ class Map:
         self.__width = screen_size[0]
         self.__height = screen_size[1]
         loader = Loader()
-        self._source_image = loader.load_image(image_path = image_path, screen_size=(self.__width, self.__height), scale=2) 
+        self._source_image = loader.load_image(image_path = image_path, screen_size=(self.__width, self.__height), scale=ZOOM_SCALE) 
         self.__image = pygame.transform.scale( self._source_image, (self.__width, self.__height))
         self.__top_left_point = top_left_point
     
@@ -19,7 +19,7 @@ class Map:
         if self.__zoom_state != "zoom_in":
             self.__zoom_state = "zoom_in"
             self.__top_left_point = ((int(-self.__width*(ZOOM_SCALE-1)/2), 0))
-            self.__image = pygame.transform.scale(self.__image, ((int(self.__width*ZOOM_SCALE), int(self.__height*ZOOM_SCALE))))
+            self.__image = pygame.transform.scale(self._source_image, ((int(self.__width*ZOOM_SCALE), int(self.__height*ZOOM_SCALE))))
 
     #zoom map out
     def zoom_out(self):
