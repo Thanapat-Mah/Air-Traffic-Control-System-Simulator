@@ -38,11 +38,13 @@ class Map:
         moving_distance = last_click_position[1] - self.__first_click_position[1]
         top_left_point_list[1] = top_left_point_list[1] + moving_distance - self.__previous_distance
         self.__previous_distance = moving_distance # store the distance for future calculation.
+        border_bottom = -self.__height
         if top_left_point_list[1] > 0: #if moving more than top border
             top_left_point_list[1] = 0
-        elif top_left_point_list[1] < -900: #if moving more than bottom border
-            top_left_point_list[1] = -900
+        elif top_left_point_list[1] < border_bottom: #if moving more than bottom border
+            top_left_point_list[1] = border_bottom
         self.__top_left_point = tuple(top_left_point_list)
+        print(self.__top_left_point)
 
     def get_top_left_point(self):
         return self.__top_left_point
