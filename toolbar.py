@@ -1,13 +1,11 @@
 import pygame
-from styles import Color
-from styles import Font
-from button import ExitButton
-from button import MultiStateButton
-from loader import Loader
+from configuration import COLOR, FONT, ICON_PATH
+from button import ExitButton, MultiStateButton
+from utilities import Loader
 
 ### toolbar at bottom side of screen, provide tool for modify simulation behavior
 class Toolbar:
-	def __init__(self, screen_size, simulator, height=80, background_color=Color.black, font=Font.roboto_normal, datetime_color=Color.white):
+	def __init__(self, screen_size, simulator, height=80, background_color=COLOR["black"], font=FONT["roboto_normal"], datetime_color=COLOR["white"]):
 		self.__x = 0
 		self.__y = screen_size[1] - height	# adjust position to buttom of screen
 		self.__width = screen_size[0]
@@ -19,13 +17,13 @@ class Toolbar:
 		button_y_padding = 15
 		loader = Loader()
 		self.__play_pause_button = MultiStateButton(label_tuple=("Playing", "Paused"),
-			icon_tuple=loader.load_icons(25, "icon_paused.png", "icon_playing.png"),
+			icon_tuple=loader.load_icons(25, ICON_PATH["pause"], ICON_PATH["play"]),
 			x=290, y=self.__y+button_y_padding, width=150, height=self.__height-button_y_padding*2)
 		self.__speed_button = MultiStateButton(label_tuple=("Speed", "Speed", "Speed"),
-			icon_tuple=loader.load_icons(25, "icon_speed_1.png", "icon_speed_2.png", "icon_speed_3.png"),
+			icon_tuple=loader.load_icons(25, ICON_PATH["speed1"], ICON_PATH["speed2"], ICON_PATH["speed3"]),
 			x=450, y=self.__y+button_y_padding, width=180, height=self.__height-button_y_padding*2)
 		self.__zoom_button = MultiStateButton(label_tuple=("Zoom", "Zoom"),
-			icon_tuple=loader.load_icons(25, "icon_zoom_in.png", "icon_zoom_out.png"),
+			icon_tuple=loader.load_icons(25, ICON_PATH["zoom_in"], ICON_PATH["zoom_out"]),
 			x=640, y=self.__y+button_y_padding, width=130, height=self.__height-button_y_padding*2)
 		self.__exit_button = ExitButton(x=self.__width-120, y=self.__y+button_y_padding, width=100, height=self.__height-button_y_padding*2)
 

@@ -1,4 +1,6 @@
 import pygame
+from configuration import MAP_TOP_LEFT_DEGREE, MAP_BOTTOM_RIGHT_DEGREE
+
 class Loader:
 
     def load_image(self, image_path, screen_size, scale):
@@ -13,5 +15,8 @@ class Loader:
 
     # load icons used in button
     def load_icons(self, height_limit, *name):
-        icons_tuple = tuple(self.adjust_size(pygame.image.load("assets/icons/"+n), height_limit) for n in name)
+        icons_tuple = tuple(self.adjust_size(pygame.image.load(n), height_limit) for n in name)
         return(icons_tuple)
+
+class Converter:
+    pass

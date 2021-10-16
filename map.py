@@ -1,5 +1,6 @@
 import pygame
-from loader import Loader
+from utilities import Loader
+from configuration import ZOOM_SCALE
 
 class Map:
     __zoom_state = "zoom_out" # for checking state of zoom
@@ -17,8 +18,8 @@ class Map:
     def zoom_in(self):
         if self.__zoom_state != "zoom_in":
             self.__zoom_state = "zoom_in"
-            self.__top_left_point = ((-self.__width/2, 0))
-            self.__image = pygame.transform.scale( self._source_image, (self.__width*2, self.__height*2))
+            self.__top_left_point = ((int(-self.__width*(ZOOM_SCALE-1)/2), 0))
+            self.__image = pygame.transform.scale(self.__image, ((int(self.__width*ZOOM_SCALE), int(self.__height*ZOOM_SCALE))))
 
     #zoom map out
     def zoom_out(self):
@@ -44,7 +45,6 @@ class Map:
         elif top_left_point_list[1] < border_bottom: #if moving more than bottom border
             top_left_point_list[1] = border_bottom
         self.__top_left_point = tuple(top_left_point_list)
-
     def get_top_left_point(self):
         return self.__top_left_point
 
