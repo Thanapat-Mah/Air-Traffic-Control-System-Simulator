@@ -32,12 +32,21 @@ ICON_PATH = {
 
 
 ### simulations data setting
-# airport IATA code and location
+# airport name, IATA code and location
 AIRPORTS = (
-	("CNX", 800, 200),
-	("BKK", 905, 488),
-	("KKC", 1020, 320),
-	("HKT", 770, 800),
-	("HDY", 890, 890)
+	("Chiang Mai International Airport", "CNX", 800, 200),
+	("Suvarnabhumi Airport", "BKK", 905, 488),
+	("Khon Kaen Airport", "KKC", 1020, 320),
+	("Phuket International Airport", "HKT", 770, 800),
+	("Hat Yai International Airport", "HDY", 890, 890)
+)
+# airline IATA code and full name
+AIRLINES = (
+	("FD", "Thai AirAsia"),
+	("TG", "Thai Airways International")
+)
+PLANE_INFORMATIONS = (
+	("Airbus A320-200", 180, 863, (29000, 39000)),
+	("Boeing 787-9", 236, 1050, (35000, 43000))
 )
 ZOOM_SCALE = 2		# map zoom scaling	

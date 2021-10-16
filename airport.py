@@ -12,7 +12,7 @@ class Airport :
 
 class AirportManager :
     def __init__(self, screen_size, airport_color=COLOR["black"], text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
-        airport_list = [Airport(a[0], a[1], a[2]) for a in AIRPORTS]
+        airport_list = [Airport(a[1], a[2], a[3]) for a in AIRPORTS]
         self.__airport_size = 10
         for airport in airport_list:
             airport.x = (airport.x/1920)*screen_size[0]

@@ -1,4 +1,20 @@
 import pygame
+# from configuration import AIRLINES, PLANE_INFORMATIONS
+
+# plane information/specification for each model
+class PlaneInformation:
+    def __init__(self, model, max_seat, speed, altitude):
+        self.model = model
+        self.max_seat = max_seat
+        self.speed = speed
+        self.altitude = altitude
+
+# airline information for each airline
+class AirlineInformation:
+    def __init__(self, name, code):
+        self.name = name
+        self.code = code
+
 class PlaneManager:
     def __init__(self, image):
         self.plane_icon = None
