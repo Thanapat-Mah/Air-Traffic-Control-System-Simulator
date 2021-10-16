@@ -14,23 +14,23 @@ class PlaneManager:
 
     def mock_update_plane_status(self):
         return {
-            'flying': 10,
+            'Flying': 10,
             'Taking-off': 10,
             'Landing': 10,
             'Circling': 10,
             'Waiting': 10
         }
 
-    def is_empty(self):
+    def mock_is_empty(self, airport_code=None):
         return True
 
     def draw_plane(self):
         pass 
 
-    def check_selection (self):
+    def mock_check_selection (self, event=None):
         return 'TG200'
 
-    def get_detail(self):
+    def mock_get_detail(self, code=None):
         return ["Flight Code: TG200",
                 "Airline: Thai AirAsia",
                 "From: CNX To: BKK",

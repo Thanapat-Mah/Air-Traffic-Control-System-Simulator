@@ -3,7 +3,7 @@ from configuration import COLOR, FONT
 
 ### screen of program, adjust and display components.
 class Screen:
-	def __init__(self, fullscreen=False, width=1500, height=750, background_color=COLOR["dark_gray"], text_background_color=COLOR["black"], text_color=COLOR["white"], font=FONT["roboto_normal"]):
+	def __init__(self, fullscreen=False, width=1500, height=750, background_color=COLOR["light_gray"], text_background_color=COLOR["black"], text_color=COLOR["white"], font=FONT["roboto_normal"]):
 		self.__fullscreen = fullscreen
 		# if fullsreen, adjust width and height to fit user's display size
 		if fullscreen:
