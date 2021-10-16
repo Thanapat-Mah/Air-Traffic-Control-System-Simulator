@@ -22,6 +22,7 @@ def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator):
 
 		# update screen to next frame
 		simulator.tick_time()
+		simulator.mock_check_selection(airport_manager=airport_manager, sidebar=sidebar)
 		screen.update_screen(simulator=simulator, toolbar=toolbar, sidebar=sidebar, airport_manager=airport_manager, map_=map_)
 		pygame.display.update()
 

@@ -4,6 +4,7 @@ import pygame
 pygame.font.init()
 FONT = {
 	"roboto_normal": pygame.font.Font('assets/fonts/Roboto-Regular.ttf', 24),
+	"roboto_small": pygame.font.Font('assets/fonts/Roboto-Regular.ttf', 16),
 	"bebasneue_normal": pygame.font.Font('assets/fonts/BebasNeue-Regular.ttf', 22)
 }
 # roboto_normal = pygame.font.Font('assets/fonts/Roboto-Regular.ttf', 24)

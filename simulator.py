@@ -55,3 +55,12 @@ class Simulator:
 			self.__running_time_count += 1
 			if self.__running_time_count%self.get_state("speed", current=True) == 0:
 				self.__simulated_datetime += datetime.timedelta(minutes = 1)
+
+	# update plane and airport to next time step
+	def mock_update_simulator(self, airport_manager=None, plane_manager=None):
+		pass
+
+	# check for clicking event in simulation, including click on plane, airport or status button on sidebar
+	def mock_check_selection(self, event=None, airport_manager=None, plane_manager=None, sidebar=None):
+		self.__selected_object_detail = airport_manager.mock_get_detail()
+		sidebar.update_information(selected_object_detail=self.__selected_object_detail)
