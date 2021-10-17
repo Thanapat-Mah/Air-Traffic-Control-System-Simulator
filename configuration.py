@@ -40,6 +40,11 @@ AIRPORTS = (
 	("Khon Kaen Airport", "KKC", 1020, 320),
 	("Phuket International Airport", "HKT", 770, 800),
 	("Hat Yai International Airport", "HDY", 890, 890)
+	# ("Chiang Mai International Airport", "CNX", 18.767750, 98.964000),
+    # ("Suvarnabhumi Airport", "BKK", 13.690000, 100.750111),
+    # ("Khon Kaen Airport", "KKC", 16.465417, 102.787361),
+    # ("Phuket International Airport", "HKT", 8.110722, 98.306944),
+    # ("Hat Yai International Airport", "HDY", 6.936417, 100.393389)
 )
 # airline IATA code and full name
 AIRLINES = (
@@ -50,4 +55,4 @@ PLANE_INFORMATIONS = (
 	("Airbus A320-200", 180, 863, (29000, 39000)),
 	("Boeing 787-9", 236, 1050, (35000, 43000))
 )
-ZOOM_SCALE = 2		# map zoom scaling	
+ZOOM_SCALE = 2		# map zoom scaling
