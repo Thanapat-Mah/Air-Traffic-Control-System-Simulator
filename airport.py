@@ -9,6 +9,12 @@ class Airport :
         self.x = x
         self.y = y
         self.status = True
+        self.landed = None
+        self.departed = None
+        self.code = None
+
+    def switch_statue(self):
+        pass
 
 
 class AirportManager :
