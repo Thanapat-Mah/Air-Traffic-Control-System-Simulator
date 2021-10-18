@@ -1,4 +1,5 @@
 import pygame
+from configuration import FONT, COLOR
 # from configuration import AIRLINES, PLANE_INFORMATIONS
 
 # plane information/specification for each model
@@ -16,12 +17,12 @@ class AirlineInformation:
         self.code = code
 
 class PlaneManager:
-    def __init__(self, image):
+    def __init__(self, image, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
         self.plane_icon = None
         self.plane_specifictaion_tuple = None
-        self.plane_list = None
+        self.plane_list = []
         self.airline_tuple = None
-        self.flight_counter = None
+        self.flight_counter = 0
         self.text_color = None
         self.font = None
         
