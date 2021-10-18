@@ -25,7 +25,7 @@ class PlaneManager:
         self.flight_counter = 0
         self.text_color = None
         self.font = None
-        
+
     def mock_update_plane_position(self):
         pass
 
@@ -42,7 +42,7 @@ class PlaneManager:
         return True
 
     def draw_plane(self):
-        pass 
+        pass
 
     def mock_check_selection (self, event=None):
         return 'TG200'
@@ -58,4 +58,26 @@ class PlaneManager:
         ]
 
 
+class Plane:
+    def __init__(self):
+        self.flight_code = None
+        self.airline_code = None
+        self.degree_position = None
+        self.model = None
+        self.passenger = None
+        self.speed = None
+        self.direction = None
+        self.altitude = None
+        self.origin = None
+        self.route = None
+        self.destination = None
+        self.status = None
 
+    def get_information(self):
+        return ({})
+
+    def generate_random_plane(self, plane_information=None, airline_information=None, airport_manager=None):
+        pass
+
+    def update_position(self, time_pass=None):
+        pass
