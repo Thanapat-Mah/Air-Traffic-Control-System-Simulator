@@ -19,4 +19,8 @@ class Loader:
         return(icons_tuple)
 
 class Converter:
-    pass
+    def dict_to_string(dict_data):
+        string_list = []
+        for key in dict_data:
+            string_list.append(str(key)+": "+str(dict_data[key]))
+        return(string_list)

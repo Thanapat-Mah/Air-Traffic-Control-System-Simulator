@@ -5,9 +5,8 @@ from toolbar import Toolbar
 from sidebar import Sidebar
 from simulator import Simulator
 from map import Map  
-from airport import Airport, AirportManager
+from airport import AirportManager
 from plane import PlaneManager
-
 
 def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator):
 	run = True
@@ -23,7 +22,8 @@ def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator):
 
 		# update screen to next frame
 		simulator.tick_time()
-		simulator.mock_check_selection(airport_manager=airport_manager, sidebar=sidebar)
+		simulator.mock_update_simulator(airport_manager=airport_manager, plane_manager=plane_manager)
+		simulator.mock_check_selection(airport_manager=airport_manager, plane_manager=plane_manager, sidebar=sidebar)
 		screen.update_screen(simulator=simulator, toolbar=toolbar, sidebar=sidebar, airport_manager=airport_manager, map_=map_)
 		pygame.display.update()
 
@@ -32,7 +32,7 @@ def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator):
 if __name__ == "__main__":
 	pygame.init()
 	screen = Screen(fullscreen=True)
-	simulator = Simulator(name="Air Traffic Control SysStem Simulator")
+	simulator = Simulator(name="Air Traffic Control System Simulator")
 	toolbar = Toolbar(screen_size=screen.get_size(), simulator=simulator)
 	sidebar = Sidebar(screen_size=screen.get_size(), toolbar_height=toolbar.get_height())
 	map_ = Map(image_path=MAP_PATH, screen_size=screen.get_size())
