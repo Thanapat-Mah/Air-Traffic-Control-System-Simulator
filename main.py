@@ -6,6 +6,7 @@ from sidebar import Sidebar
 from simulator import Simulator
 from map import Map  
 from airport import Airport, AirportManager
+from plane import PlaneManager
 
 
 def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator):
@@ -36,4 +37,5 @@ if __name__ == "__main__":
 	sidebar = Sidebar(screen_size=screen.get_size(), toolbar_height=toolbar.get_height())
 	map_ = Map(image_path=MAP_PATH, screen_size=screen.get_size())
 	airport_manager = AirportManager(screen_size=screen.get_size())
+	plane_manager = PlaneManager()
 	simulate(screen, toolbar, sidebar, airport_manager, map_, simulator)

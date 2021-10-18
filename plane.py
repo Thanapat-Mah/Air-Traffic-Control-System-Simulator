@@ -1,33 +1,41 @@
 import pygame
 from configuration import FONT, COLOR
+from utilities import Loader
 # from configuration import AIRLINES, PLANE_INFORMATIONS
 
 # plane information/specification for each model
 class PlaneInformation:
     def __init__(self, model, max_seat, speed, altitude):
-        self.model = model
-        self.max_seat = max_seat
+        self.__model = model
+        self.__max_seat = max_seat
         self.speed = speed
         self.altitude = altitude
 
 # airline information for each airline
 class AirlineInformation:
     def __init__(self, name, code):
-        self.name = name
-        self.code = code
+        self.__name = name
+        self.__code = code
 
 class PlaneManager:
-    def __init__(self, image, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
-        self.plane_icon = None
-        self.plane_specifictaion_tuple = None
-        self.plane_list = []
-        self.airline_tuple = None
-        self.flight_counter = 0
-        self.text_color = None
-        self.font = None
+    def __init__(self, image_path, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
+        self.__plane_icon = Loader.load_image(image_path = image_path, size=(100, 100))
+        self.__plane_specifictaion_tuple = (
+            PlaneInformation(model="Airbus A320-200", max_seat=180, speed=863, altitude= tuple(29000, 39000)),
+            PlaneInformation(model="Boeing 787-9", max_seat=236, speed=1050, altitude= tuple(35000, 43000))
+        )
+        self.__plane_list = None 
+        self.__airline_tuple = (
+            AirlineInformation(name = "Thai AirAsia", code = "FG"),
+            AirlineInformation(name = "Thai Airways International", code = "TG")
+        )
+        self.__flight_counter = 0
+        self.__text_color = None
+        self.__font = None
 
     def mock_update_plane_position(self):
-        pass
+        for plane in self.__plane_list:
+            print(plane.flightcode)
 
     def mock_update_plane_status(self):
         return {
@@ -39,6 +47,8 @@ class PlaneManager:
         }
 
     def mock_is_empty(self, airport_code=None):
+        for plane in self.plane_list:
+            pass
         return True
 
     def draw_plane(self):
@@ -60,24 +70,25 @@ class PlaneManager:
 
 class Plane:
     def __init__(self):
-        self.flight_code = None
-        self.airline_code = None
-        self.degree_position = None
-        self.model = None
-        self.passenger = None
-        self.speed = None
-        self.direction = None
-        self.altitude = None
-        self.origin = None
-        self.route = None
-        self.destination = None
-        self.status = None
+        self.__flight_code = None
+        self.__airline_code = None
+        self.__degree_position = None
+        self.__model = None
+        self.__passenger = None
+        self.__speed = None
+        self.__direction = None
+        self.__altitude = None
+        self.__origin = None
+        self.__route = None
+        self.__destination = None
+        self.__status = None
 
     def get_information(self):
         return ({})
 
-    def generate_random_plane(self, plane_information=None, airline_information=None, airport_manager=None):
+    def generate_random_plane(self, plane_information, airline_information=None, airport_manager=None):
         pass
+        
 
     def update_position(self, time_pass=None):
         pass

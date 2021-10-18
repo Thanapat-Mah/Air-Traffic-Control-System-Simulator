@@ -10,7 +10,7 @@ class Map:
         self.__width = screen_size[0]
         self.__height = screen_size[1]
         loader = Loader()
-        self._source_image = loader.load_image(image_path = image_path, screen_size=(self.__width, self.__height), scale=ZOOM_SCALE) 
+        self._source_image = loader.load_image(image_path = image_path, size=(self.__width, self.__height), scale=ZOOM_SCALE) 
         self.__image = pygame.transform.scale( self._source_image, (self.__width, self.__height))
         self.__top_left_point = top_left_point
     
