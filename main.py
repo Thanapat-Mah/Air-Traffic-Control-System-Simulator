@@ -1,5 +1,5 @@
 import pygame
-from configuration import MAP_PATH
+from configuration import MAP_PATH, PLANE_PATH
 from screen import Screen
 from toolbar import Toolbar
 from sidebar import Sidebar
@@ -37,5 +37,5 @@ if __name__ == "__main__":
 	sidebar = Sidebar(screen_size=screen.get_size(), toolbar_height=toolbar.get_height())
 	map_ = Map(image_path=MAP_PATH, screen_size=screen.get_size())
 	airport_manager = AirportManager(screen_size=screen.get_size())
-	plane_manager = PlaneManager()
+	plane_manager = PlaneManager(image_path=PLANE_PATH)
 	simulate(screen, toolbar, sidebar, airport_manager, map_, simulator)

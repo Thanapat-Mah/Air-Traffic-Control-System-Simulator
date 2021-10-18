@@ -18,6 +18,7 @@ COLOR = {
 	"pink": (255, 82, 96)
 }
 MAP_PATH = "assets/images/map_full_size.png"
+PLANE_PATH = "assets/images/plane.png"
 MAP_TOP_LEFT_DEGREE = (21.924045, 85.992727)		# decimal degree position of top left corner of map image
 MAP_BOTTOM_RIGHT_DEGREE = (5.121690, 117.554380)	# decimal degree position of bottom right corner of map image
 ICON_PATH = {

@@ -1,6 +1,7 @@
 import pygame
 from configuration import FONT, COLOR
 from utilities import Loader
+from configuration import PLANE_INFORMATIONS, AIRLINES
 # from configuration import AIRLINES, PLANE_INFORMATIONS
 
 # plane information/specification for each model
@@ -8,8 +9,8 @@ class PlaneInformation:
     def __init__(self, model, max_seat, speed, altitude):
         self.__model = model
         self.__max_seat = max_seat
-        self.speed = speed
-        self.altitude = altitude
+        self.__speed = speed
+        self.__altitude = altitude
 
 # airline information for each airline
 class AirlineInformation:
@@ -19,16 +20,15 @@ class AirlineInformation:
 
 class PlaneManager:
     def __init__(self, image_path, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
-        self.__plane_icon = Loader.load_image(image_path = image_path, size=(100, 100))
-        self.__plane_specifictaion_tuple = (
-            PlaneInformation(model="Airbus A320-200", max_seat=180, speed=863, altitude= tuple(29000, 39000)),
-            PlaneInformation(model="Boeing 787-9", max_seat=236, speed=1050, altitude= tuple(35000, 43000))
-        )
+        loader = Loader()
+        self.__plane_icon = loader.load_image(image_path = image_path, size=(100, 100), scale = 1)
+        self.__plane_specifictaion_tuple = tuple([
+            PlaneInformation(model= info[0], max_seat=info[1], speed=info[2], altitude=info[3]) for info in PLANE_INFORMATIONS
+        ])
         self.__plane_list = None 
-        self.__airline_tuple = (
-            AirlineInformation(name = "Thai AirAsia", code = "FG"),
-            AirlineInformation(name = "Thai Airways International", code = "TG")
-        )
+        self.__airline_tuple = tuple([
+            AirlineInformation(name= info[0], code=info[1]) for info in AIRLINES
+        ])
         self.__flight_counter = 0
         self.__text_color = None
         self.__font = None
