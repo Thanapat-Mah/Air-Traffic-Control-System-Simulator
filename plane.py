@@ -16,7 +16,7 @@ class AirlineInformation:
         self.code = code
 
 class PlaneManager:
-    def __init__(self, image):
+    def __init__(self, image=None):
         self.plane_icon = None
         self.plane_specifictaion_tuple = None
         self.plane_list = None
