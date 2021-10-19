@@ -12,7 +12,7 @@ class Airport :
         self.departed = None
         self.code = None
 
-    def switch_statue(self):
+    def switch_status(self):
         pass
 
 
