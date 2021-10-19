@@ -24,3 +24,16 @@ class Converter:
         for key in dict_data:
             string_list.append(str(key)+": "+str(dict_data[key]))
         return(string_list)
+
+    def degree_to_pixel(self, degree_postion, simulator, screen):
+        screen_size = screen.get_size()
+        #x_pixel = x_slope* x_degree - b_x
+        x_slope = screen_size[0]/(MAP_BOTTOM_RIGHT_DEGREE[1]-MAP_TOP_LEFT_DEGREE[1]) # size of screen divided by size of real map
+        x_intercept = -x_slope*MAP_TOP_LEFT_DEGREE[1] 
+        x_pixel = degree_postion[1]*x_slope +x_intercept
+        #y_pixel = y_slope* y_degree - b_x
+        y_slope =  screen_size[1]/(MAP_BOTTOM_RIGHT_DEGREE[0]-MAP_TOP_LEFT_DEGREE[0])
+        y_intercept = -y_slope*MAP_TOP_LEFT_DEGREE[0]
+        y_pixel = degree_postion[0]*y_slope+y_intercept
+
+        return (int(x_pixel), int(y_pixel))
