@@ -18,6 +18,7 @@ COLOR = {
 	"pink": (255, 82, 96)
 }
 MAP_PATH = "assets/images/map_full_size.png"
+PLANE_PATH = "assets/images/plane.png"
 MAP_TOP_LEFT_DEGREE = (21.924045, 85.992727)		# decimal degree position of top left corner of map image
 MAP_BOTTOM_RIGHT_DEGREE = (5.121690, 117.554380)	# decimal degree position of bottom right corner of map image
 ICON_PATH = {
@@ -27,7 +28,8 @@ ICON_PATH = {
 	"speed2": "assets/icons/icon_speed_2.png",
 	"speed3": "assets/icons/icon_speed_3.png",
 	"zoom_in": "assets/icons/icon_zoom_in.png",
-	"zoom_out": "assets/icons/icon_zoom_out.png"
+	"zoom_out": "assets/icons/icon_zoom_out.png",
+	"magnifier": "assets/icons/icon_magnifier.png"
 }
 
 
@@ -55,4 +57,4 @@ PLANE_INFORMATIONS = (
 	("Airbus A320-200", 180, 863, (29000, 39000)),
 	("Boeing 787-9", 236, 1050, (35000, 43000))
 )
-ZOOM_SCALE = 2		# map zoom scaling	
+ZOOM_SCALE = 2		# map zoom scaling

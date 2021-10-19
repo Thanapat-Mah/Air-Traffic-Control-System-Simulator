@@ -1,15 +1,14 @@
 import pygame
+from configuration import MAP_PATH, PLANE_PATH
 from screen import Screen
-from styles import Font
-from styles import Color
 from toolbar import Toolbar
 from sidebar import Sidebar
 from simulator import Simulator
-from map import Map
-from airport import Airport, AirportManager
+from map import Map  
+from airport import AirportManager
+from plane import PlaneManager
 
-
-def simulate(screen, toolbar, sidebar, airport_manager, map, simulator):
+def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator):
 	run = True
 	while run:
 		# check for every event
@@ -19,22 +18,24 @@ def simulate(screen, toolbar, sidebar, airport_manager, map, simulator):
 			else:
 				toolbar.check_event(event, simulator)
 				sidebar.check_event(event)
-				map.check_event(event, simulator)
+				map_.check_event(event, simulator)
 
 		# update screen to next frame
 		simulator.tick_time()
-		screen.update_screen(simulator=simulator, toolbar=toolbar, sidebar=sidebar, airport_manager=airport_manager, map=map)
+		simulator.mock_update_simulator(airport_manager=airport_manager, plane_manager=plane_manager)
+		simulator.mock_check_selection(airport_manager=airport_manager, plane_manager=plane_manager, sidebar=sidebar)
+		screen.update_screen(simulator=simulator, toolbar=toolbar, sidebar=sidebar, airport_manager=airport_manager, map_=map_)
 		pygame.display.update()
 
 	pygame.quit()
 
 if __name__ == "__main__":
 	pygame.init()
-
 	screen = Screen(fullscreen=True)
 	simulator = Simulator(name="Air Traffic Control System Simulator")
 	toolbar = Toolbar(screen_size=screen.get_size(), simulator=simulator)
 	sidebar = Sidebar(screen_size=screen.get_size(), toolbar_height=toolbar.get_height())
-	map = Map(image_path="assets\images\map_full_size.png", screen_size=screen.get_size())
+	map_ = Map(image_path=MAP_PATH, screen_size=screen.get_size())
 	airport_manager = AirportManager(screen_size=screen.get_size())
-	simulate(screen, toolbar, sidebar, airport_manager, map, simulator)
+	plane_manager = PlaneManager(image_path=PLANE_PATH)
+	simulate(screen, toolbar, sidebar, airport_manager, map_, simulator)

@@ -8,10 +8,10 @@ from configuration import PLANE_INFORMATIONS, AIRLINES, PLANE_PATH
 # plane information/specification for each model
 class PlaneInformation:
     def __init__(self, model, max_seat, speed, altitude):
-        self.model = model
-        self.max_seat = max_seat
-        self.speed = speed
-        self.altitude = altitude
+        self.__model = model
+        self.__max_seat = max_seat
+        self.__speed = speed
+        self.__altitude = altitude
 
 # airline information for each airline
 class AirlineInformation:
@@ -38,7 +38,8 @@ class PlaneManager:
         self.__font = None
 
     def mock_update_plane_position(self):
-        pass
+        for plane in self.__plane_list:
+            print(plane.flightcode)
 
     def mock_update_plane_status(self):
         return {
@@ -50,10 +51,12 @@ class PlaneManager:
         }
 
     def mock_is_empty(self, airport_code=None):
+        for plane in self.plane_list:
+            pass
         return True
 
     def draw_plane(self):
-        pass 
+        pass
 
     def mock_check_selection (self, event=None):
         return 'TG200'
@@ -89,9 +92,7 @@ class Plane:
         self.__status = None
 
     def get_information(self):
-        return ({
-            
-        })
+        return ({})
 
     def generate_random_plane(plane_information, airline_information, airport_manager=None):
         airline_code = airline_information[random.randint(0, len(airline_information)-1)].get_code()
