@@ -43,7 +43,7 @@ class PlaneManager:
 
     def mock_update_plane_position(self):
         for plane in self.__plane_list:
-            print(plane.flightcode)
+            plane.update_position()
 
     def mock_update_plane_status(self):
         return {
@@ -55,9 +55,16 @@ class PlaneManager:
         }
 
     def mock_is_empty(self, airport_code=None):
-        for plane in self.plane_list:
+        for plane in self.__plane_list:
+            """if plane.status == "waiting and plane.origin == airport_code :
+                    return True
+                if  plane.status == "landing and and plane.destination == airport_code"
+                    return True
+                if or plane.status = "taking off and plane.origin == airport_code
+                    return True
+            """
             pass
-        return True
+        return False
 
     def draw_plane(self):
         pass
@@ -135,7 +142,7 @@ class Plane:
         print(self.__passenger)
 		
     def update_position(self, time_pass=None):
-        pass
+        print(self.__speed)
 
 pm = PlaneManager()
 pm.gen_new_plane()

@@ -35,5 +35,4 @@ class Converter:
         y_slope =  screen_size[1]/(MAP_BOTTOM_RIGHT_DEGREE[0]-MAP_TOP_LEFT_DEGREE[0])
         y_intercept = -y_slope*MAP_TOP_LEFT_DEGREE[0]
         y_pixel = degree_postion[0]*y_slope+y_intercept
-
         return (int(x_pixel), int(y_pixel))
