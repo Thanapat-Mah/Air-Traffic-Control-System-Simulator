@@ -28,7 +28,8 @@ ICON_PATH = {
 	"speed2": "assets/icons/icon_speed_2.png",
 	"speed3": "assets/icons/icon_speed_3.png",
 	"zoom_in": "assets/icons/icon_zoom_in.png",
-	"zoom_out": "assets/icons/icon_zoom_out.png"
+	"zoom_out": "assets/icons/icon_zoom_out.png",
+	"magnifier": "assets/icons/icon_magnifier.png"
 }
 
 

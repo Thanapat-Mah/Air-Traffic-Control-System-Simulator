@@ -1,5 +1,6 @@
 import pygame
-from configuration import COLOR, FONT
+from configuration import COLOR, FONT, ICON_PATH
+from utilities import Loader
 
 ### button UI
 class Button:
@@ -41,6 +42,7 @@ class Button:
 					return(True)
 		return(False)
 
+### Exit button used to close the simulator and close program
 class ExitButton(Button):
 	# overide default style of button
 	def __init__(self, x, y, width, height):
@@ -54,9 +56,10 @@ class ExitButton(Button):
 				if self.hit_box.collidepoint(x, y):
 					quit()
 
+### button with many state with icon
 class MultiStateButton(Button):
 	def __init__(self, label_tuple, icon_tuple=None, *args, **kwargs):
-		super(MultiStateButton, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 		if icon_tuple == None:
 			icon_tuple = tuple(None for i in range(len(label_tuple)))
 		if len(label_tuple) != len(icon_tuple):
@@ -97,3 +100,42 @@ class MultiStateButton(Button):
 			text_x = (self.width - self.text_surface.get_size()[0])/2
 		text_y = (self.height - self.text_surface.get_size()[1])/2
 		display.blit(self.text_surface, (self.x+text_x, self.y+text_y))
+
+### clickable status button for plane and airport on list box on sidebar
+class StatusButton(Button):
+	def __init__(self, code, detail, icon=Loader.load_image(None, image_path=ICON_PATH["magnifier"], size=(20, 20)),
+		selected_background_color=COLOR["black"], *args, **kwargs):
+		super().__init__(font=FONT["roboto_small"], background_color=COLOR["dark_gray"],
+			border_color=COLOR["white"], border_size=1, *args, **kwargs)
+		self.code = code
+		self.detail = detail
+		self.icon = icon
+		self.selected_background_color = selected_background_color
+		self.text = str(self.code) + " | " + str(self.detail)
+
+	# draw button with fix icon at left
+	def draw_button(self, display, is_selected=False):
+		# adjust hit box and text on button
+		self.hit_box = pygame.Rect(self.x, self.y, self.width, self.height)
+		self.text_surface = self.font.render(self.text, True, self.text_color)
+		# draw button background and border
+		if is_selected:
+			background_color = self.selected_background_color
+		else:
+			background_color = self.background_color
+		pygame.draw.rect(display, background_color, self.hit_box, width=0, border_radius=self.border_radius)
+		if self.border_size != 0:
+			pygame.draw.rect(display, self.border_color, self.hit_box, width=self.border_size, border_radius=self.border_radius)
+		# draw text on left of button
+		padding = (self.height - self.text_surface.get_size()[1])/2
+		display.blit(self.text_surface, (self.x+padding, self.y+padding))
+		# draw icon on right of button		
+		icon_x = self.x + self.width - self.icon.get_size()[0] - padding
+		icon_y = self.y + (self.height-self.icon.get_size()[1])/2
+		display.blit(self.icon, (icon_x, icon_y))
+
+	def click(self, event):
+		if super().click(event):
+			return(self.code)
+		else:
+			return(False)

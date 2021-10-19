@@ -1,6 +1,6 @@
 import pygame
 from configuration import COLOR, FONT
-from button import MultiStateButton
+from button import MultiStateButton, StatusButton
 from information_box import InformationBox
 
 ### sidebar at left of screen, display simulation's infomations
@@ -19,18 +19,19 @@ class Sidebar:
 		self.__background_color = background_color
 		self.__font = font
 		self.__padding = padding
-		component_x_padding = self.__x - self.__width + self.__padding
+		component_x = self.__x - self.__width + self.__padding
 		component_width_space = self.__width - 2*self.__padding
 		half_width_space = (component_width_space-padding)/2
-		self.__overall_plane_information = InformationBox(x=component_x_padding, y=self.__y+self.__padding,
+		self.__overall_plane_information = InformationBox(x=component_x, y=self.__y+self.__padding,
 			width=half_width_space, height=170, topic="Plane", font=self.__font)
-		self.__overall_airport_information = InformationBox(x=component_x_padding+half_width_space+self.__padding, y=self.__y+self.__padding,
+		self.__overall_airport_information = InformationBox(x=component_x+half_width_space+self.__padding, y=self.__y+self.__padding,
 			width=half_width_space, height=170, topic="Airport", font=self.__font)
 		self.__overall_list_box = None
 		self.__command_input_box = pygame.Rect((0, 0), (component_width_space, 40))
-		self.__command_input_box.bottomleft = (component_x_padding, self.__y+self.__height-self.__padding)
-		self.__selected_object_detail = InformationBox(x=component_x_padding, y=self.__command_input_box.topleft[1]-self.__padding-220,
+		self.__command_input_box.bottomleft = (component_x, self.__y+self.__height-self.__padding)
+		self.__selected_object_detail = InformationBox(x=component_x, y=self.__command_input_box.topleft[1]-self.__padding-220,
 			width=component_width_space, height=220, topic="Details", font=self.__font)
+		self.test_button = StatusButton(x=component_x, y=200, width=component_width_space, height=40, code="TG200", detail="Flying")
 
 	# # draw information box including overall plane&airport information, selected object information
 	# def draw_information_box(self, display, simulator=None):
@@ -46,7 +47,7 @@ class Sidebar:
 	def draw_sidebar(self, display, simulator=None):
 		# change x position when sidebar is open
 		if not self.__is_open:
-			current_x = self.__x			
+			current_x = self.__x
 		else:
 			current_x = self.__x - self.__width
 			# draw background
@@ -57,6 +58,8 @@ class Sidebar:
 			self.__overall_airport_information.draw_information_box(display=display)
 			# draw command box
 			pygame.draw.rect(display, COLOR["dark_gray"], self.__command_input_box)
+			# test
+			self.test_button.draw_button(display, True)
 		# draw_notch
 		self.__notch_button.x = current_x - self.__notch_button.width - self.__notch_width/2
 		self.__notch_button.draw_button(display=display)
