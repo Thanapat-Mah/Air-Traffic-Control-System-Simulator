@@ -36,9 +36,10 @@ class AirlineInformation:
         return self.__code
 
 class PlaneManager:
+    __LIMIT = 1;
     def __init__(self, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
         loader = Loader()
-        self.__plane_icon = loader.load_image(image_path = image_path, size=(100, 100), scale = 1)
+        self.__plane_icon = loader.load_image(image_path = image_path, size=(50, 50), scale = 1)
         self.__plane_specifictaion_tuple = tuple([
             PlaneInformation(model= info[0], max_seat=info[1], speed=info[2], altitude=info[3]) for info in PLANE_INFORMATIONS
         ])
@@ -75,8 +76,10 @@ class PlaneManager:
             pass
         return False
 
-    def draw_plane(self):
-        pass
+    def draw_plane(self,display):
+        for plane in self.__plane_list:
+            display.blit(self.__plane_icon, (800, 200))
+            
 
     def mock_check_selection (self, event=None):
         return 'TG200'
@@ -92,8 +95,12 @@ class PlaneManager:
         ]
 
     def generate_new_plane(self):
-        gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple)
-        self.__plane_list.append(gen_plane)
+        if (len(self.__plane_list) != self.__LIMIT):
+            gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple)
+            self.__plane_list.append(gen_plane)
+        
+    def get_plane_list(self):
+        return self.__plane_list
 
 class Plane:
     def __init__(self, airline_code, model, passenger, origin, destination, altitude, speed, status):
@@ -146,14 +153,14 @@ class Plane:
         return normal_seat
 
     def print_data_plane(self):
-        print(self.__airline_code)
-        print(self.__model)
-        print(self.__origin)
-        print(self.__destination)
-        print(self.__passenger)
-        print(self.__altitude)
-        print(self.__speed)
-        print(self.__status)
+        print("self.__airline_code: ",self.__airline_code)
+        print("self.__model:, ",self.__model)
+        print("self.__origin:, ",self.__origin)
+        print("self.__destination:, ",self.__destination)
+        print("self.__passenger:, ",self.__passenger)
+        print("self.__altitude:, ",self.__altitude)
+        print("self.__speed:, ",self.__speed)
+        print("self.__status:, ",self.__status)
 
 		
     def update_position(self, time_pass=None):
