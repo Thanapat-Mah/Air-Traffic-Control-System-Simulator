@@ -151,6 +151,8 @@ class Plane:
         mean_seat = mean(list_seat)
         std_seat = std(list_seat)
         normal_seat = int(random.normal(mean_seat, std_seat, 1))
+        while(normal_seat < 0):
+            normal_seat = int(random.normal(mean_seat, std_seat, 1))
         return normal_seat
 
     def print_data_plane(self):
