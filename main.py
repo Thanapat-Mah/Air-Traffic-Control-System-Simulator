@@ -21,8 +21,8 @@ def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator):
 				map_.check_event(event, simulator)
 
 		# update screen to next frame
-		plane_manager.generate_new_plane()
-		#[print(line.print_data_plane()) for line in plane_manager.get_plane_list()]
+		plane_manager.generate_new_plane(airport_manager)
+		plane_manager.mock_update_plane_position()
 		simulator.tick_time()
 		simulator.mock_update_simulator(airport_manager=airport_manager, plane_manager=plane_manager)
 		simulator.mock_check_selection(airport_manager=airport_manager, plane_manager=plane_manager, sidebar=sidebar)

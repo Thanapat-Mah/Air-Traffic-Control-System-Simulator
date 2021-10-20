@@ -7,8 +7,8 @@ class Airport :
         converter = Converter()
         self.name = name
         self.code = None
-        self.degree_postion = converter.degree_to_pixel((x, y),screen_size)
-        self.pixel_posotion = (x, y)
+        self.pixel_posotion = converter.degree_to_pixel((x, y),screen_size)
+        self.degree_postion = (x, y)
         self.status = True
         self.landed = None
         self.departed = None
@@ -16,6 +16,7 @@ class Airport :
 
     def switch_status(self):
         pass
+
 
 
 
@@ -37,8 +38,8 @@ class AirportManager :
             scale = 1
 
         for airport in self.__airport_tuple:
-            airport_x = (airport.degree_postion[0]*scale)+top_left_point[0]
-            airport_y = (airport.degree_postion[1]*scale)+top_left_point[1]
+            airport_x = (airport.pixel_posotion[0]*scale)+top_left_point[0]
+            airport_y = (airport.pixel_posotion[1]*scale)+top_left_point[1]
             pygame.draw.circle(display, self.__airport_color, (airport_x, airport_y), self.__airport_size)
 
             text = self.__font.render(airport.name, True, self.__text_color)
@@ -61,3 +62,5 @@ class AirportManager :
             "Landed: 0",
             "Departed: 3"
         ])
+    def get_airport_list(self):
+        return self.__airport_tuple

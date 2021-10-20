@@ -2,7 +2,9 @@ from numpy.random.mtrand import normal, rand
 import pygame
 import random
 import string
+import math
 from numpy import std, mean, random
+from pygame.constants import NOEVENT
 from configuration import AIRPORTS, FONT, COLOR
 from utilities import Loader, Converter
 from configuration import PLANE_INFORMATIONS, AIRLINES, PLANE_PATH
@@ -80,8 +82,8 @@ class PlaneManager:
         for plane in self.__plane_list:
             position = plane.get_degree_position()
             converter = Converter()
-            pixel = converter.degree_to_pixel(degree_postion=position, screen=size)
-            print("pixel:", pixel)
+            pixel = converter.degree_to_pixel(degree_postion=position, screen_size=size)
+            pixel = (pixel[0]-25,pixel[1]-25)
             display.blit(self.__plane_icon, pixel)
             
 
@@ -98,9 +100,9 @@ class PlaneManager:
                 "Status: Flying"
         ]
 
-    def generate_new_plane(self):
+    def generate_new_plane(self, airport_manager):
         if (len(self.__plane_list) != self.__LIMIT):
-            gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple)
+            gen_plane = Plane.mock_generate_random_plane(airport_manager = airport_manager)
             self.__plane_list.append(gen_plane)
         
     def get_plane_list(self):
@@ -108,8 +110,8 @@ class PlaneManager:
 
 
 class Plane:
-    def __init__(self, airline_code, model, passenger, origin, destination, altitude, speed, status, degree_position):
-        self.__flight_code = None
+    def __init__(self, flight_code, airline_code = None, model= None, passenger= None, origin= None, destination= None, altitude= None, speed= None, status= None, degree_position= None):
+        self.__flight_code = flight_code
         self.__airline_code = airline_code
         self.__degree_position = degree_position
         self.__model = model
@@ -139,28 +141,14 @@ class Plane:
 
         }
 
-    def generate_random_plane(plane_information, airline_information, airport_manager=AIRPORTS):
-        airport_list = tuple([Airport(a[1], a[2], a[3]) for a in airport_manager])
-        airport_name_list = []
-        for airport in airport_list:
-            airport.name = airport.name
-            airport_name_list.append(airport.name)
-        origin = random.choice(airport_name_list)
-        destination = random.choice(airport_name_list)
-        while(destination == origin):
-            destination = random.choice(airport_name_list)
-        for airport in airport_list:
-            if(origin == airport.name):
-                degree_position = airport.x, airport.y
-        airline_code = airline_information[random.randint(0, len(airline_information)-1)].get_code()
-        spec = plane_information[random.randint(0, len(plane_information)-1)]
-        model = spec.get_model()
-        passenger = spec.get_max_seat()
-        normal_seat = Plane.normal_distribution_seat(passenger=passenger)
-        altitude = 0
-        speed = 0
-        status = 'waiting'
-        return Plane(airline_code=airline_code, model=model, passenger=normal_seat, origin=origin, destination=destination, altitude=altitude, speed=speed, status=status, degree_position=degree_position)
+    def mock_generate_random_plane(airport_manager):
+        airport_list = airport_manager.get_airport_list()
+        fligt_code = "TEST001"
+        origin = airport_list[1]
+        destination = airport_list[0]
+        degree_position = origin.degree_postion
+        speed = 1
+        return Plane(flight_code=fligt_code, origin=origin, destination=destination, degree_position=degree_position, speed=speed)
     
     def normal_distribution_seat(passenger):
         list_seat = []
@@ -177,19 +165,31 @@ class Plane:
         return normal_seat
 
     def print_data_plane(self):
-        print("self.__airline_code: ",self.__airline_code)
-        print("self.__model:, ",self.__model)
+        pass
+        #print("self.__airline_code: ",self.__airline_code)
+        #print("self.__model:, ",self.__model)
+        print("self.__flight_code:, ",self.__flight_code)
         print("self.__degree_position:, ",self.__degree_position)
         print("self.__origin:, ",self.__origin)
         print("self.__destination:, ",self.__destination)
-        print("self.__passenger:, ",self.__passenger)
-        print("self.__altitude:, ",self.__altitude)
-        print("self.__speed:, ",self.__speed)
-        print("self.__status:, ",self.__status)
+        #print("self.__passenger:, ",self.__passenger)
+        #print("self.__altitude:, ",self.__altitude)
+        #print("self.__speed:, ",self.__speed)
+        #print("self.__status:, ",self.__status)
 
 		
     def update_position(self, time_pass=None):
-        pass
+        degree_position = self.__degree_position
+        destination_position = self.__destination.degree_postion
+        speed = self.__speed
+        dy = destination_position[0] - degree_position[0]
+        dx = destination_position[1] - degree_position[1] 
+        direction = math.atan2(dy,dx)
+        direction = math.degrees(direction)
+        self.__direction = direction
+        x_speed = speed*math.cos(math.radians(direction))
+        y_speed =speed*math.sin(math.radians(direction))
+        self.__degree_position = (degree_position[0]+y_speed,degree_position[1]+x_speed)
 
     def get_degree_position(self):
         return self.__degree_position
