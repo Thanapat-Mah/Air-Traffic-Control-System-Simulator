@@ -2,6 +2,7 @@ import pygame
 from configuration import COLOR, FONT
 from button import MultiStateButton, StatusButton
 from information_box import InformationBox
+from list_box import ListBox
 
 ### sidebar at left of screen, display simulation's infomations
 class Sidebar:
@@ -14,24 +15,35 @@ class Sidebar:
 		self.__is_open = False							# begin with closing state
 		self.__notch_width = notch_width
 		self.__notch_color = notch_color
-		self.__notch_button = MultiStateButton(label_tuple=("<|", "|>"), x=0, y=(self.__height-60)/2, width=40, height=60,
-			border_size=0, border_radius=10, background_color=notch_color)
+		self.__notch_button = MultiStateButton(
+			label_tuple=("<|", "|>"), x=0, y=(self.__height-60)/2, width=40, height=60,
+			border_size=0, border_radius=10, background_color=notch_color
+			)
 		self.__background_color = background_color
 		self.__font = font
 		self.__padding = padding
+		# align and create components on sidebar
 		component_x = self.__x - self.__width + self.__padding
 		component_width_space = self.__width - 2*self.__padding
 		half_width_space = (component_width_space-padding)/2
-		self.__overall_plane_information = InformationBox(x=component_x, y=self.__y+self.__padding,
-			width=half_width_space, height=170, topic="Plane", font=self.__font)
-		self.__overall_airport_information = InformationBox(x=component_x+half_width_space+self.__padding, y=self.__y+self.__padding,
-			width=half_width_space, height=170, topic="Airport", font=self.__font)
-		self.__overall_list_box = None
+		self.__overall_plane_information = InformationBox(
+			x=component_x, y=self.__y+self.__padding, width=half_width_space, height=170, topic="Plane", font=self.__font
+			)
+		self.__overall_airport_information = InformationBox(
+			x=component_x+half_width_space+self.__padding, y=self.__y+self.__padding,
+			width=half_width_space, height=170, topic="Airport", font=self.__font
+			)
 		self.__command_input_box = pygame.Rect((0, 0), (component_width_space, 40))
 		self.__command_input_box.bottomleft = (component_x, self.__y+self.__height-self.__padding)
-		self.__selected_object_detail = InformationBox(x=component_x, y=self.__command_input_box.topleft[1]-self.__padding-220,
-			width=component_width_space, height=220, topic="Details", font=self.__font)
-		self.test_button = StatusButton(x=component_x, y=200, width=component_width_space, height=40, code="TG200", detail="Flying")
+		self.__selected_object_detail = InformationBox(
+			x=component_x, y=self.__command_input_box.topleft[1]-self.__padding-220,
+			width=component_width_space, height=220, topic="Details", font=self.__font
+			)
+		list_box_y = self.__overall_plane_information.get_corner_point(2)[1]+padding
+		list_box_height = self.__selected_object_detail.get_corner_point(0)[1] - list_box_y - padding
+		self.__overall_list_box = ListBox(x=component_x, y=list_box_y, width=component_width_space, height=list_box_height)
+		# self.__overall_list_box = ListBox(x=component_x, y=190, width=component_width_space, height=300)
+		# self.test_button = StatusButton(x=component_x, y=200, width=component_width_space, height=40, code="TG200", detail="Flying")
 
 	# # draw information box including overall plane&airport information, selected object information
 	# def draw_information_box(self, display, simulator=None):
@@ -58,8 +70,9 @@ class Sidebar:
 			self.__overall_airport_information.draw_information_box(display=display)
 			# draw command box
 			pygame.draw.rect(display, COLOR["dark_gray"], self.__command_input_box)
-			# test
-			self.test_button.draw_button(display, True)
+			# # test
+			# self.test_button.draw_button(display, True)
+			self.__overall_list_box.draw_list_box(display)
 		# draw_notch
 		self.__notch_button.x = current_x - self.__notch_button.width - self.__notch_width/2
 		self.__notch_button.draw_button(display=display)
@@ -71,3 +84,4 @@ class Sidebar:
 		if self.__notch_button.click(event):
 			self.__is_open = not self.__is_open
 			self.__notch_button.switch_state()
+		self.__overall_list_box.check_event(event)
