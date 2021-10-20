@@ -43,7 +43,7 @@ AIRPORTS = (
 	# ("Phuket International Airport", "HKT", 770, 800),
 	# ("Hat Yai International Airport", "HDY", 890, 890)
 	("Chiang Mai International Airport", "CNX", 18.767750, 98.964000),
-    ("Suvarnabhumi Airport", "BKK", 13.690000, 100.750111),
+    ("Suvarnabhumi Airport", "BKK", 13.5228675, 101.7735535),
     ("Khon Kaen Airport", "KKC", 16.465417, 102.787361),
     ("Phuket International Airport", "HKT", 8.110722, 98.306944),
     ("Hat Yai International Airport", "HDY", 6.936417, 100.393389)
