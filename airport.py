@@ -21,11 +21,6 @@ class AirportManager :
     def __init__(self, screen_size, airport_color=COLOR["black"], text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
         airport_list = [Airport(a[1], a[2], a[3],screen_size) for a in AIRPORTS]
         self.__airport_size = 10
-        
-        for airport in airport_list:
-            print(airport.name)
-            print(airport.degree_postion)
-        
         self.__airport_tuple = tuple(airport_list)
         self.__airport_color = airport_color
         self.__text_color = text_color
