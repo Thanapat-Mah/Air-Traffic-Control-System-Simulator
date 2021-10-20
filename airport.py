@@ -1,12 +1,12 @@
 import pygame
 from configuration import FONT, COLOR, AIRPORTS, ZOOM_SCALE
 from simulator import Simulator
-
+from utilities import Converter
 class Airport :
-    def __init__(self, name, x, y):
+    def __init__(self, name, x, y,screen_size):
+        converter = Converter()
         self.name = name
-        self.x = x
-        self.y = y
+        self.degree_postion = converter.degree_to_pixel((x, y),screen_size)
         self.status = True
         self.landed = None
         self.departed = None
@@ -16,13 +16,16 @@ class Airport :
         pass
 
 
+
 class AirportManager :
     def __init__(self, screen_size, airport_color=COLOR["black"], text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
-        airport_list = [Airport(a[1], a[2], a[3]) for a in AIRPORTS]
+        airport_list = [Airport(a[1], a[2], a[3],screen_size) for a in AIRPORTS]
         self.__airport_size = 10
+        
         for airport in airport_list:
-            airport.x = (airport.x/1920)*screen_size[0]
-            airport.y = (airport.y/1080)*screen_size[1]
+            print(airport.name)
+            print(airport.degree_postion)
+        
         self.__airport_tuple = tuple(airport_list)
         self.__airport_color = airport_color
         self.__text_color = text_color
@@ -37,8 +40,8 @@ class AirportManager :
             scale = 1
 
         for airport in self.__airport_tuple:
-            airport_x = (airport.x*scale)+top_left_point[0]
-            airport_y = (airport.y*scale)+top_left_point[1]
+            airport_x = (airport.degree_postion[0]*scale)+top_left_point[0]
+            airport_y = (airport.degree_postion[1]*scale)+top_left_point[1]
             pygame.draw.circle(display, self.__airport_color, (airport_x, airport_y), self.__airport_size)
 
             text = self.__font.render(airport.name, True, self.__text_color)
