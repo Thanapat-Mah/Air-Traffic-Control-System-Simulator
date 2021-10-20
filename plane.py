@@ -4,7 +4,7 @@ import random
 import string
 from numpy import std, mean, random
 from configuration import AIRPORTS, FONT, COLOR
-from utilities import Loader
+from utilities import Loader, Converter
 from configuration import PLANE_INFORMATIONS, AIRLINES, PLANE_PATH
 from airport import Airport
 # from configuration import AIRLINES, PLANE_INFORMATIONS
@@ -76,9 +76,13 @@ class PlaneManager:
             pass
         return False
 
-    def draw_plane(self,display):
+    def draw_plane(self, display, size):
         for plane in self.__plane_list:
-            display.blit(self.__plane_icon, (800, 200))
+            position = plane.get_degree_position()
+            converter = Converter()
+            pixel = converter.degree_to_pixel(degree_postion=position, screen=size)
+            print("pixel:", pixel)
+            display.blit(self.__plane_icon, pixel)
             
 
     def mock_check_selection (self, event=None):
@@ -175,6 +179,7 @@ class Plane:
     def print_data_plane(self):
         print("self.__airline_code: ",self.__airline_code)
         print("self.__model:, ",self.__model)
+        print("self.__degree_position:, ",self.__degree_position)
         print("self.__origin:, ",self.__origin)
         print("self.__destination:, ",self.__destination)
         print("self.__passenger:, ",self.__passenger)
@@ -185,3 +190,6 @@ class Plane:
 		
     def update_position(self, time_pass=None):
         pass
+
+    def get_degree_position(self):
+        return self.__degree_position
