@@ -6,11 +6,13 @@ class Airport :
     def __init__(self, name, x, y,screen_size):
         converter = Converter()
         self.name = name
+        self.code = None
         self.degree_postion = converter.degree_to_pixel((x, y),screen_size)
+        self.pixel_posotion = tuple(x, y)
         self.status = True
         self.landed = None
         self.departed = None
-        self.code = None
+        
 
     def switch_status(self):
         pass
