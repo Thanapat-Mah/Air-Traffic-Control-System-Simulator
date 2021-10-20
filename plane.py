@@ -90,10 +90,10 @@ class PlaneManager:
 
 
 class Plane:
-    def __init__(self, airline_code, model, passenger, origin, destination, altitude, speed, status):
+    def __init__(self, airline_code, model, passenger, origin, destination, altitude, speed, status, degree_position):
         self.__flight_code = None
         self.__airline_code = airline_code
-        self.__degree_position = None
+        self.__degree_position = degree_position
         self.__model = model
         self.__passenger = passenger
         self.__speed = speed
@@ -122,7 +122,7 @@ class Plane:
         }
 
     def generate_random_plane(plane_information, airline_information, airport_manager=AIRPORTS):
-        airport_list = tuple([Airport(a[1], a[2], a[3]) for a in AIRPORTS])
+        airport_list = tuple([Airport(a[1], a[2], a[3]) for a in airport_manager])
         airport_name_list = []
         for airport in airport_list:
             airport.name = airport.name
@@ -131,6 +131,9 @@ class Plane:
         destination = random.choice(airport_name_list)
         while(destination == origin):
             destination = random.choice(airport_name_list)
+        for airport in airport_list:
+            if(origin == airport.name):
+                degree_position = airport.x, airport.y
         airline_code = airline_information[random.randint(0, len(airline_information)-1)].get_code()
         spec = plane_information[random.randint(0, len(plane_information)-1)]
         model = spec.get_model()
@@ -139,7 +142,7 @@ class Plane:
         altitude = 0
         speed = 0
         status = 'waiting'
-        return Plane(airline_code=airline_code, model=model, passenger=normal_seat, origin=origin, destination=destination, altitude=altitude, speed=speed, status=status)
+        return Plane(airline_code=airline_code, model=model, passenger=normal_seat, origin=origin, destination=destination, altitude=altitude, speed=speed, status=status, degree_position=degree_position)
     
     def normal_distribution_seat(passenger):
         list_seat = []
@@ -168,4 +171,3 @@ class Plane:
 		
     def update_position(self, time_pass=None):
         pass
-
