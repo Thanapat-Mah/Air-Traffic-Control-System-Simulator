@@ -8,7 +8,7 @@ class Airport :
         self.name = name
         self.code = None
         self.degree_postion = converter.degree_to_pixel((x, y),screen_size)
-        self.pixel_posotion = tuple(x, y)
+        self.pixel_posotion = (x, y)
         self.status = True
         self.landed = None
         self.departed = None
