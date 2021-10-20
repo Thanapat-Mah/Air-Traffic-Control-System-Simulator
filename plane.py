@@ -12,10 +12,16 @@ from airport import Airport
 # plane information/specification for each model
 class PlaneInformation:
     def __init__(self, model, max_seat, speed, altitude):
-        self.model = model
-        self.max_seat = max_seat
+        self.__model = model
+        self.__max_seat = max_seat
         self.__speed = speed
         self.__altitude = altitude
+    
+    def get_model(self):
+        return self.__model
+
+    def get_max_seat(self):
+        return self.__max_seat
 
 # airline information for each airline
 class AirlineInformation:
@@ -23,6 +29,9 @@ class AirlineInformation:
         self.__name = name
         self.__code = code
     
+    def get_name(self):
+        return self.__name
+
     def get_code(self):
         return self.__code
 
@@ -33,7 +42,7 @@ class PlaneManager:
         self.__plane_specifictaion_tuple = tuple([
             PlaneInformation(model= info[0], max_seat=info[1], speed=info[2], altitude=info[3]) for info in PLANE_INFORMATIONS
         ])
-        self.__plane_list = None 
+        self.__plane_list = []
         self.__airline_tuple = tuple([
             AirlineInformation(name= info[0], code=info[1]) for info in AIRLINES
         ])
@@ -82,26 +91,24 @@ class PlaneManager:
                 "Status: Flying"
         ]
 
-    def gen_new_plane(self):
-        plane1 = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple)
-        # plane1.print()
-        
-
+    def generate_new_plane(self):
+        gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple)
+        self.__plane_list.append(gen_plane)
 
 class Plane:
-    def __init__(self, airline_code, model, passenger):
+    def __init__(self, airline_code, model, passenger, origin, destination, altitude, speed, status):
         self.__flight_code = None
         self.__airline_code = airline_code
         self.__degree_position = None
         self.__model = model
         self.__passenger = passenger
-        self.__speed = None
+        self.__speed = speed
         self.__direction = None
-        self.__altitude = None
-        self.__origin = None
+        self.__altitude = altitude
+        self.__origin = origin
         self.__route = None
-        self.__destination = None
-        self.__status = None
+        self.__destination = destination
+        self.__status = status
 
     def get_information(self):
         return ({})
@@ -112,21 +119,23 @@ class Plane:
         for airport in airport_list:
             airport.name = airport.name
             airport_name_list.append(airport.name)
-        start_point = random.choice(airport_name_list)
-        end_point = random.choice(airport_name_list)
-        print(start_point, end_point)
-
+        origin = random.choice(airport_name_list)
+        destination = random.choice(airport_name_list)
+        while(destination == origin):
+            destination = random.choice(airport_name_list)
         airline_code = airline_information[random.randint(0, len(airline_information)-1)].get_code()
         spec = plane_information[random.randint(0, len(plane_information)-1)]
-        model = spec.model
-        passenger = spec.max_seat
+        model = spec.get_model()
+        passenger = spec.get_max_seat()
         normal_seat = Plane.normal_distribution_seat(passenger=passenger)
-
-        return Plane(airline_code=airline_code, model=model, passenger=normal_seat)
+        altitude = 0
+        speed = 0
+        status = 'waiting'
+        return Plane(airline_code=airline_code, model=model, passenger=normal_seat, origin=origin, destination=destination, altitude=altitude, speed=speed, status=status)
     
     def normal_distribution_seat(passenger):
         list_seat = []
-        count = 100
+        count = 1000
         passenger = passenger
         for n in range(count):
             count_seat = random.randint(1,passenger)
@@ -136,13 +145,16 @@ class Plane:
         normal_seat = int(random.normal(mean_seat, std_seat, 1))
         return normal_seat
 
-    def print(self):
+    def print_data_plane(self):
         print(self.__airline_code)
         print(self.__model)
+        print(self.__origin)
+        print(self.__destination)
         print(self.__passenger)
+        print(self.__altitude)
+        print(self.__speed)
+        print(self.__status)
+
 		
     def update_position(self, time_pass=None):
-        print(self.__speed)
-
-pm = PlaneManager()
-pm.gen_new_plane()
+        pass
