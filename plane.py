@@ -86,7 +86,10 @@ class PlaneManager:
 
     def generate_new_plane(self):
         gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple)
+        # get_info = Plane.get_information(gen_plane)
+        # print(get_info)
         self.__plane_list.append(gen_plane)
+
 
 class Plane:
     def __init__(self, airline_code, model, passenger, origin, destination, altitude, speed, status):
@@ -104,7 +107,21 @@ class Plane:
         self.__status = status
 
     def get_information(self):
-        return ({})
+        return {
+            'flight_code' : self.__flight_code,
+            'airline_code' : self.__airline_code,
+            'degree_position' : self.__degree_position,
+            'model' : self.__model,
+            'passenger' : self.__passenger,
+            'speed' : "{} km/h".format(self.__speed),
+            'direction' : self.__direction,
+            'altitude' : "{} ft".format(self.__altitude),
+            'origin' : self.__origin,
+            'route' : self.__route,
+            'destination' : self.__destination,
+            'status' : self.__status
+
+        }
 
     def generate_random_plane(plane_information, airline_information, airport_manager=AIRPORTS):
         airport_list = tuple([Airport(a[1], a[2], a[3]) for a in AIRPORTS])
@@ -151,3 +168,6 @@ class Plane:
 		
     def update_position(self, time_pass=None):
         pass
+
+pm = PlaneManager()
+pm.generate_new_plane()
