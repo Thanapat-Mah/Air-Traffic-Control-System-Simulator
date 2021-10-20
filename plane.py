@@ -86,8 +86,6 @@ class PlaneManager:
 
     def generate_new_plane(self):
         gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple)
-        # get_info = Plane.get_information(gen_plane)
-        # print(get_info)
         self.__plane_list.append(gen_plane)
 
 
@@ -169,5 +167,3 @@ class Plane:
     def update_position(self, time_pass=None):
         pass
 
-pm = PlaneManager()
-pm.generate_new_plane()
