@@ -19,8 +19,8 @@ COLOR = {
 }
 MAP_PATH = "assets/images/map_full_size.png"
 PLANE_PATH = "assets/images/plane.png"
-MAP_TOP_LEFT_DEGREE = (21.924045, 85.992727)		# decimal degree position of top left corner of map image
-MAP_BOTTOM_RIGHT_DEGREE = (5.121690, 117.554380)	# decimal degree position of bottom right corner of map image
+MAP_TOP_LEFT_DEGREE = (22, 85)		# decimal degree position of top left corner of map image
+MAP_BOTTOM_RIGHT_DEGREE = (4, 117)	# decimal degree position of bottom right corner of map image
 ICON_PATH = {
 	"pause": "assets/icons/icon_paused.png",
 	"play": "assets/icons/icon_playing.png",
@@ -43,7 +43,7 @@ AIRPORTS = (
 	# ("Phuket International Airport", "HKT", 770, 800),
 	# ("Hat Yai International Airport", "HDY", 890, 890)
 	("Chiang Mai International Airport", "CNX", 18.767750, 98.964000),
-    ("Suvarnabhumi Airport", "BKK", 13.5228675, 101.7735535),
+    ("Suvarnabhumi Airport", "BKK", 13.690000, 100.750111),
     ("Khon Kaen Airport", "KKC", 16.465417, 102.787361),
     ("Phuket International Airport", "HKT", 8.110722, 98.306944),
     ("Hat Yai International Airport", "HDY", 6.936417, 100.393389)
