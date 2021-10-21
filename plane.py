@@ -39,8 +39,7 @@ class AirlineInformation:
 class PlaneManager:
     __LIMIT = 1;
     def __init__(self, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
-        loader = Loader()
-        self.__plane_icon = loader.load_image(image_path = image_path, size=(50, 50), scale = 1)
+        self.__plane_icon = Loader.load_image(image_path = image_path, size=(50, 50), scale = 1)
         self.__plane_specifictaion_tuple = tuple([
             PlaneInformation(model= info[0], max_seat=info[1], speed=info[2], altitude=info[3]) for info in PLANE_INFORMATIONS
         ])
@@ -84,12 +83,10 @@ class PlaneManager:
     def draw_plane(self, display, size):
         for plane in self.__plane_list:
             position = plane.get_degree_position()
-            converter = Converter()
-            pixel = converter.degree_to_pixel(degree_postion=position, screen_size=size)
+            pixel = Converter.degree_to_pixel(degree_postion=position, screen_size=size)
             pixel = (pixel[0]-25,pixel[1]-25)
             display.blit(self.__plane_icon, pixel)
             
-
     def mock_check_selection (self, event=None):
         return 'TG200'
 

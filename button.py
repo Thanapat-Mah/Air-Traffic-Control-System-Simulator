@@ -103,7 +103,7 @@ class MultiStateButton(Button):
 
 ### clickable status button for plane and airport on list box on sidebar
 class StatusButton(Button):
-	def __init__(self, code, detail, icon=Loader.load_image(None, image_path=ICON_PATH["magnifier"], size=(20, 20)),
+	def __init__(self, code, detail, icon=Loader.load_image(image_path=ICON_PATH["magnifier"], size=(20, 20)),
 		selected_background_color=COLOR["black"], *args, **kwargs):
 		super().__init__(font=FONT["roboto_small"], background_color=COLOR["dark_gray"],
 			border_color=COLOR["white"], border_size=1, *args, **kwargs)

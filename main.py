@@ -8,7 +8,7 @@ from map import Map
 from airport import AirportManager
 from plane import PlaneManager
 
-def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator):
+def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator,plane_manager):
 	run = True
 	while run:
 		# check for every event
@@ -40,4 +40,4 @@ if __name__ == "__main__":
 	map_ = Map(image_path=MAP_PATH, screen_size=screen.get_size())
 	airport_manager = AirportManager(screen_size=screen.get_size())
 	plane_manager = PlaneManager(image_path=PLANE_PATH)
-	simulate(screen, toolbar, sidebar, airport_manager, map_, simulator)
+	simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_manager)
