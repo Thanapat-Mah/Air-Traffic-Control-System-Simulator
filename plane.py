@@ -61,8 +61,10 @@ class PlaneManager:
     # this method will be called by Simulator in update_simulator()
     def mock_update_plane(self):
         self.update_plane_position()
-        for plane in self.__plane_list:
-            pass
+        # for plane in self.__plane_list:
+        #     origin_position = plane.get_origin()
+        #     destination_position = plane.get_destination()
+        #     print(origin_position, destination_position)
         status_dict ={
             'Flying': [],
             'Taking-off': [],
@@ -165,6 +167,12 @@ class Plane:
     def get_flight_code(self):
         return self.__flight_code
 
+    def get_origin(self):
+        return self.__origin
+
+    def get_destination(self):
+        return self.__destination
+
     def mock_generate_random_plane(airport_manager):
         airport_list = airport_manager.get_airport_list()
         fligt_code = "TEST001"
@@ -206,7 +214,7 @@ class Plane:
     def update_position(self):
         degree_position = self.__degree_position
         destination_position = self.__destination.degree_postion
-        speed = self.__speed/(111*3600)          #degree/second     111km = 1 degree
+        speed = 100*self.__speed/(111*3600)  #degree/second  111km = 1 degree
         dy = destination_position[0] - degree_position[0]
         dx = destination_position[1] - degree_position[1] 
         direction = math.atan2(dy,dx)
