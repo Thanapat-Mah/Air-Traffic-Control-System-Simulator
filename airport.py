@@ -45,7 +45,10 @@ class AirportManager :
             text = self.__font.render(airport.name, True, self.__text_color)
             display.blit(text, (airport_x + (self.__airport_size * 1.5), airport_y - self.__airport_size ))
 
-    def mock_update_airport_information(self, plane_manager=None):
+    # this method will be called by Simulator in update_simulator()
+    def mock_update_airport(self, plane_manager=None):
+        # update each airport status here
+        # format data and return as below
         return({
             "Empty": ["CNX", "KKC", "HDY"],
             "In Use": ["BKK", "HKT"]

@@ -5,13 +5,12 @@ import string
 import math
 from numpy import std, mean, random
 from pygame.constants import NOEVENT
-from configuration import AIRPORTS, FONT, COLOR
+from configuration import AIRPORTS, FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH
 from utilities import Loader, Converter
-from configuration import PLANE_INFORMATIONS, AIRLINES, PLANE_PATH
 from airport import Airport
 # from configuration import AIRLINES, PLANE_INFORMATIONS
 
-# plane information/specification for each model
+### plane information/specification for each model
 class PlaneInformation:
     def __init__(self, model, max_seat, speed, altitude):
         self.__model = model
@@ -25,7 +24,7 @@ class PlaneInformation:
     def get_max_seat(self):
         return self.__max_seat
 
-# airline information for each airline
+### airline information for each airline
 class AirlineInformation:
     def __init__(self, name, code):
         self.__name = name
@@ -57,13 +56,17 @@ class PlaneManager:
         for plane in self.__plane_list:
             plane.update_position()
 
-    def mock_update_plane_status(self):
+    # this method will be called by Simulator in update_simulator()
+    def mock_update_plane(self):
+        # insert update_plane_position() here
+        # update each plane status here
+        # format data and return as below
         return {
-            'Flying': 10,
-            'Taking-off': 10,
-            'Landing': 10,
-            'Circling': 10,
-            'Waiting': 10
+            'Flying': ["TG001", "FD002"],
+            'Taking-off': ["TG002"],
+            'Landing': ["FD001"],
+            'Circling': [],
+            'Waiting': ["TG003"]
         }
 
     def mock_is_empty(self, airport_code=None):

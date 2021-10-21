@@ -22,7 +22,7 @@ class ListBox:
 			pygame.Rect(self.__x, self.__y, int(self.__width/2), topic_height+20),
 			pygame.Rect(self.__x+int(self.__width/2), self.__y, int(self.__width/2), topic_height+20)
 			)
-		self.__selected_topic = self.__menu_topic_tuple[1]
+		self.__selected_topic = self.__menu_topic_tuple[0]
 		self.__non_selected_topic_color = non_selected_topic_color
 		self.__selected_page = 1
 		self.__all_page_count = 1	
@@ -41,10 +41,11 @@ class ListBox:
 		self.__status_button_per_page = math.floor(status_button_height_space/(self.__status_button_height+self.__status_button_padding))
 		self.__status_button_list = []
 
-	def update_button(self, airport_status_list=None, plane_manager=None):
+	# update status button with new information
+	def update_button(self, airport_status_list, plane_status_list):
 		# choose status button between flight list and airport list
 		if self.__selected_topic == self.__menu_topic_tuple[0]:
-			pass
+			status_list = plane_status_list
 		elif self.__selected_topic == self.__menu_topic_tuple[1]:
 			status_list = airport_status_list
 		# adjust selected page and all page count according to status_list
@@ -64,9 +65,7 @@ class ListBox:
 				)
 			status_button_y += self.__status_button_height + self.__status_button_padding
 
-	def draw_button(self):
-		pass
-
+	# draw list box
 	def draw_list_box(self, display):
 		# draw background of list box
 		pygame.draw.rect(display, self.__background_color, (self.__x, self.__y, self.__width, self.__height), border_radius=self.__border_radius)
@@ -84,18 +83,18 @@ class ListBox:
 			display.blit(topic_text_surface, (topic_x, self.__y+10))
 		# draw status button
 		for status_button in self.__status_button_list:
-			status_button.draw_button(display)
-		# page number
+			status_button.draw_button(display=display)
+		# draw page number
 		page_text_surface = self.__font.render(f"{self.__selected_page}/{self.__all_page_count}", True, self.__text_color)
 		left_switch_button = self.__switch_page_button[0]
 		display.blit(page_text_surface,
 			(self.__x+(self.__width-page_text_surface.get_size()[0])/2,
 			left_switch_button.y+(left_switch_button.height-page_text_surface.get_size()[1])/2))
-		# switch page button
+		# draw switch page button
 		for button in self.__switch_page_button:
-			button.draw_button(display)
+			button.draw_button(display=display)
 		
-
+	# check for event on list box including change menu topic, change page and select object (status button)
 	def check_event(self, event):
 		x, y = pygame.mouse.get_pos()
 		if event.type == pygame.MOUSEBUTTONDOWN:
