@@ -4,7 +4,7 @@ from screen import Screen
 from toolbar import Toolbar
 from sidebar import Sidebar
 from simulator import Simulator
-from map import Map  
+from map import Map
 from airport import AirportManager
 from plane import PlaneManager
 

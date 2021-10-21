@@ -17,7 +17,7 @@ class PlaneInformation:
         self.__max_seat = max_seat
         self.__speed = speed
         self.__altitude = altitude
-    
+
     def get_model(self):
         return self.__model
 
@@ -32,7 +32,7 @@ class AirlineInformation:
     def __init__(self, name, code):
         self.__name = name
         self.__code = code
-    
+
     def get_name(self):
         return self.__name
 
@@ -40,7 +40,7 @@ class AirlineInformation:
         return self.__code
 
 class PlaneManager:
-    __LIMIT = 1;
+    __LIMIT = 1
     def __init__(self, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(50, 50), scale = 1)
         self.__plane_specifictaion_tuple = tuple([
@@ -98,9 +98,9 @@ class PlaneManager:
                 status_dict['Taking-off'].append(plane.get_flight_code())
             elif plane.get_status() == 'Landing': 
                 status_dict['Landing'].append(plane.get_flight_code())
-            elif plane.get_status() == 'Circling': 
+            elif plane.get_status() == 'Circling':
                 status_dict['Circling'].append(plane.get_flight_code())
-            elif plane.get_status() == 'Waiting' : 
+            elif plane.get_status() == 'Waiting' :
                 status_dict['Waiting'].append(plane.get_flight_code())
         return status_dict
 
@@ -114,7 +114,13 @@ class PlaneManager:
                     return True
             """
             pass
-        return False
+        return True
+
+    def draw_plane(self, display, size):
+        convert = Converter()
+        for plane in self.__plane_list:
+            pixel = convert.degree_to_pixel(degree_postion=plane.get_degree_position(), screen_size=size)
+            display.blit(self.__plane_icon, pixel)
 
     def draw_plane(self, display, size):
         for plane in self.__plane_list:
@@ -122,7 +128,7 @@ class PlaneManager:
             pixel = Converter.degree_to_pixel(degree_postion=position, screen_size=size)
             pixel = (pixel[0]-25,pixel[1]-25)
             display.blit(self.__plane_icon, pixel)
-            
+
     def mock_check_selection (self, event=None):
         return 'TG200'
 
@@ -138,15 +144,17 @@ class PlaneManager:
 
     def generate_new_plane(self, airport_manager):
         if (len(self.__plane_list) != self.__LIMIT):
-            gen_plane = Plane.mock_generate_random_plane(airport_manager = airport_manager)
+            num = 1
+            gen_plane = Plane.mock_generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, num=num)
+            gen_plane.print_data_plane()
             self.__plane_list.append(gen_plane)
-    
-    
 
+    def get_plane_list(self):
+        return self.__plane_list
 
 
 class Plane:
-    def __init__(self, flight_code, status, airline_code = None, model= None, passenger= None, origin= None, destination= None, altitude= None, speed= None, degree_position= None):
+    def __init__(self, flight_code, status, airline_code, model, passenger, origin, destination, altitude, speed, degree_position):
         self.__flight_code = flight_code
         self.__airline_code = airline_code
         self.__degree_position = degree_position
@@ -159,6 +167,9 @@ class Plane:
         self.__route = None
         self.__destination = destination
         self.__status = status
+
+    def get_degree_position(self):
+        return self.__degree_position
 
     def get_information(self):
         return {
@@ -199,17 +210,29 @@ class Plane:
     def set_status(self,status):
         self.__status = status
     
-    def mock_generate_random_plane(airport_manager):
+    def mock_generate_random_plane(plane_information, airline_information, airport_manager, num):
         airport_list = airport_manager.get_airport_list()
-        fligt_code = "TEST001"
-        origin = airport_list[1]
-        destination = airport_list[0]
+        origin = random.choice(airport_list)
+        destination = random.choice(airport_list)
+        while(destination == origin):
+            destination = random.choice(airport_list)
         degree_position = origin.get_degree_position()
-        speed = 863
-        status = 'Taking-off'
+        airline = airline_information[random.randint(0, len(airline_information)-1)]
+        airline_code = airline.get_code()
+        airline_name = airline.get_name()
+        generate_num = "{:03d}".format(num)
+        flight_code = "{}{}".format(airline_name,str(generate_num))
+        spec = plane_information[random.randint(0, len(plane_information)-1)]
+        model = spec.get_model()
+        passenger = spec.get_max_seat()
+        normal_seat = Plane.normal_distribution_seat(passenger=passenger)
         altitude = 0
-        return Plane(flight_code=fligt_code, origin=origin, destination=destination, degree_position=degree_position, speed=speed, status=status, altitude=altitude)
-    
+        speed = 863
+        #status = 'Taking-off'
+        status = 'Flying'
+        altitude = 0
+        return Plane(airline_code=airline_code, model=model, passenger=normal_seat, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, status=status)
+
     def normal_distribution_seat(passenger):
         list_seat = []
         count = 1000
@@ -226,8 +249,8 @@ class Plane:
 
     def print_data_plane(self):
         pass
-        #print("self.__airline_code: ",self.__airline_code)
-        #print("self.__model:, ",self.__model)
+        print("self.__airline_code: ",self.__airline_code)
+        print("self.__model:, ",self.__model)
         print("self.__flight_code:, ",self.__flight_code)
         #print("self.__degree_position:, ",self.__degree_position)
         #print("self.__origin:, ",self.__origin)
@@ -252,4 +275,3 @@ class Plane:
             x_speed = speed*math.cos(math.radians(direction))
             y_speed =speed*math.sin(math.radians(direction))
             self.__degree_position = (degree_position[0]+y_speed,degree_position[1]+x_speed)
-
