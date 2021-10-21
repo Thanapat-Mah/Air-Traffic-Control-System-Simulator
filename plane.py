@@ -56,7 +56,7 @@ class PlaneManager:
             plane.update_position()
 
     # this method will be called by Simulator in update_simulator()
-    def mock_update_plane(self):
+    def mock_update_plane(self, delta_simulated_time):
         # insert update_plane_position() here
         # update each plane status here
         # format data and return as below

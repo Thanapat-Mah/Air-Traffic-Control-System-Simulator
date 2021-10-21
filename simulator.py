@@ -64,7 +64,7 @@ class Simulator:
 		if self.__playing:
 			self.__running_time_count += 1
 			# increase simulated datetime by 1 minutes when reach the time period
-			if self.__running_time_count%self.get_state("speed", current=True) == 0:
+			if self.__running_time_count%self.get_state("speed", current = True) == 0:
 				self.__simulated_datetime += datetime.timedelta(seconds = 1)
 				self.__delta_simulated_time += datetime.timedelta(seconds = 1)
 
@@ -73,12 +73,12 @@ class Simulator:
 		self.tick_time()
 		self.__selected_object_detail = plane_manager.mock_get_detail()
 		if self.__delta_simulated_time == self.__update_period:
-			self.__plane_information = plane_manager.mock_update_plane(self.__delta_simulated_time)
+			self.__plane_information = plane_manager.mock_update_plane(delta_simulated_time=self.__delta_simulated_time)
 			self.__airport_information = airport_manager.mock_update_airport()
 			sidebar.update_information(plane_information=self.__plane_information,
 				airport_information=self.__airport_information,
 				selected_object_detail=self.__selected_object_detail)
-			self.__delta_simulated_time = 0
+			self.__delta_simulated_time = datetime.timedelta(seconds = 0)
 
 	# check for clicking event in simulation, including click on plane, airport or status button on sidebar
 	def mock_check_selection(self, event=None, airport_manager=None, plane_manager=None, sidebar=None):
