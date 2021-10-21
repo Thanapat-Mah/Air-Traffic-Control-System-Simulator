@@ -119,7 +119,6 @@ class PlaneManager:
         if (len(self.__plane_list) != self.__LIMIT):
             gen_plane = Plane.mock_generate_random_plane(airport_manager = airport_manager)
             self.__plane_list.append(gen_plane)
-        print(self.__plane_list[0].get_status())
     
     
 
