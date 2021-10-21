@@ -51,6 +51,9 @@ class PlaneManager:
         self.__text_color = None
         self.__font = None
 
+    def get_plane_list(self):
+        return self.__plane_list
+
     def update_plane_position(self):
         for plane in self.__plane_list:
             plane.update_position()
@@ -58,16 +61,27 @@ class PlaneManager:
     # this method will be called by Simulator in update_simulator()
     def mock_update_plane(self):
         self.update_plane_position()
-        # insert update_plane_position() here
-        # update each plane status here
-        # format data and return as below
-        return {
-            'Flying': ["TG001", "FD002"],
-            'Taking-off': ["TG002"],
-            'Landing': ["FD001"],
+        for plane in self.__plane_list:
+            pass
+        status_dict ={
+            'Flying': [],
+            'Taking-off': [],
+            'Landing': [],
             'Circling': [],
-            'Waiting': ["TG003"]
+            'Waiting': []
         }
+        for plane in self.__plane_list:
+            if plane.get_status == 'Flying':
+                status_dict['Flying'].append(plane.get_flight_code())
+            elif plane.get_status() == 'Taking': 
+                status_dict['Taking'].append(plane.get_flight_code())
+            elif plane.get_status() == 'Landing': 
+                status_dict['Landing'].append(plane.get_flight_code())
+            elif plane.get_status() == 'Circling': 
+                status_dict['Circling'].append(plane.get_flight_code())
+            elif plane.get_status() == 'Waiting' : 
+                status_dict['Waiting'].append(plane.get_flight_code())
+        return status_dict
 
     def mock_is_empty(self, airport_code=None):
         for plane in self.__plane_list:
@@ -105,13 +119,14 @@ class PlaneManager:
         if (len(self.__plane_list) != self.__LIMIT):
             gen_plane = Plane.mock_generate_random_plane(airport_manager = airport_manager)
             self.__plane_list.append(gen_plane)
-        
-    def get_plane_list(self):
-        return self.__plane_list
+        print(self.__plane_list[0].get_status())
+    
+    
+
 
 
 class Plane:
-    def __init__(self, flight_code, airline_code = None, model= None, passenger= None, origin= None, destination= None, altitude= None, speed= None, status= None, degree_position= None):
+    def __init__(self, flight_code, status, airline_code = None, model= None, passenger= None, origin= None, destination= None, altitude= None, speed= None, degree_position= None):
         self.__flight_code = flight_code
         self.__airline_code = airline_code
         self.__degree_position = degree_position
@@ -142,6 +157,15 @@ class Plane:
 
         }
 
+    def get_degree_position(self):
+        return self.__degree_position
+
+    def get_status(self):
+        return self.__status
+
+    def get_flight_code(self):
+        return self.__flight_code
+
     def mock_generate_random_plane(airport_manager):
         airport_list = airport_manager.get_airport_list()
         fligt_code = "TEST001"
@@ -149,7 +173,8 @@ class Plane:
         destination = airport_list[0]
         degree_position = origin.degree_postion
         speed = 863
-        return Plane(flight_code=fligt_code, origin=origin, destination=destination, degree_position=degree_position, speed=speed)
+        status = 'Waiting'
+        return Plane(flight_code=fligt_code, origin=origin, destination=destination, degree_position=degree_position, speed=speed, status=status)
     
     def normal_distribution_seat(passenger):
         list_seat = []
@@ -192,5 +217,4 @@ class Plane:
         y_speed =speed*math.sin(math.radians(direction))
         self.__degree_position = (degree_position[0]+y_speed,degree_position[1]+x_speed)
 
-    def get_degree_position(self):
-        return self.__degree_position
+
