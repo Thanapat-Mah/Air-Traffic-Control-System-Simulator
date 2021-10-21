@@ -58,6 +58,9 @@ class PlaneManager:
     # this method will be called by Simulator in update_simulator()
     def mock_update_plane(self, time_pass):
         self.mock_update_plane_position(time_pass=time_pass)
+        # insert update_plane_position() here
+        # update each plane status here
+        # format data and return as below
         return {
             'Flying': ["TG001", "FD002"],
             'Taking-off': ["TG002"],
