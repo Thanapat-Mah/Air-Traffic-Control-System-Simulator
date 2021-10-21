@@ -3,7 +3,7 @@ from configuration import MAP_TOP_LEFT_DEGREE, MAP_BOTTOM_RIGHT_DEGREE
 
 class Loader:
 
-    def load_image(self, image_path, size, scale = 1):
+    def load_image(image_path, size, scale = 1):
         screen_size_scaled = (size[0]*scale, size[1]*scale)
         image_loaded = pygame.image.load(image_path)
         return pygame.transform.scale(image_loaded, screen_size_scaled)
