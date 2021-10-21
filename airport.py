@@ -8,9 +8,9 @@ class Airport :
         self.__code = None
         self.__pixel_position = Converter.degree_to_pixel((x, y),screen_size)
         self.__degree_position = (x, y)
-        self.status = True
-        self.landed = None
-        self.departed = None
+        self.__status = True
+        self.__landed = None
+        self.__departed = None
         
 
     def switch_status(self):
