@@ -24,7 +24,10 @@ class PlaneInformation:
     def get_max_seat(self):
         return self.__max_seat
     
-    def get_altitide(self):
+    def get_speed(self):
+        return self.__speed
+    
+    def get_altitude(self):
         return self.__altitude
 
 ### airline information for each airline
@@ -59,11 +62,11 @@ class PlaneManager:
 
     def update_plane_position(self):
         for plane in self.__plane_list:
-            plane.update_position()
+            plane.update_position(plane_specifictaion_tuple = self.__plane_specifictaion_tuple)
 
     # this method will be called by Simulator in update_simulator()
     def mock_update_plane(self):
-        distance_error = 0.001
+        distance_error = 0.001*100
         self.update_plane_position()
         for plane in self.__plane_list:
             origin_position = plane.get_origin().get_degree_position()
@@ -79,10 +82,10 @@ class PlaneManager:
                     plane.set_status('Taking-off')
                 else: plane.set_status('Flying')
             if plane.get_status() == 'Taking-off':
-                [print(i.get_model(), i.get_altitide()) for i in self.__plane_specifictaion_tuple]
-                #if plane.get_altitude() == 
-
-            plane.print_data_plane()
+                for plane_info in self.__plane_specifictaion_tuple:
+                    if (plane.get_model() == plane_info.get_model() and 
+                    plane.get_speeed() == plane_info.get_speed()):
+                        plane.set_status('Flying')
         
         status_dict ={
             'Flying': [],
@@ -146,7 +149,6 @@ class PlaneManager:
         if (len(self.__plane_list) != self.__LIMIT):
             num = 1
             gen_plane = Plane.mock_generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, num=num)
-            gen_plane.print_data_plane()
             self.__plane_list.append(gen_plane)
 
     def get_plane_list(self):
@@ -205,7 +207,12 @@ class Plane:
     
     def get_altitude(self):
         return self.__altitude
+    
+    def get_model(self):
+        return self.__model
 
+    def get_speeed(self):
+        return self.__speed
 
     def set_status(self,status):
         self.__status = status
@@ -227,10 +234,9 @@ class Plane:
         passenger = spec.get_max_seat()
         normal_seat = Plane.normal_distribution_seat(passenger=passenger)
         altitude = 0
-        speed = 863
-        #status = 'Taking-off'
-        status = 'Flying'
-        altitude = 0
+        speed = 0
+        status = 'Taking-off'
+        #status = 'Flying'
         return Plane(airline_code=airline_code, model=model, passenger=normal_seat, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, status=status)
 
     def normal_distribution_seat(passenger):
@@ -260,13 +266,18 @@ class Plane:
         print("self.__speed:, ",self.__speed)
         print("self.__status:, ",self.__status)
 
-    def update_position(self):
+    def update_position(self,plane_specifictaion_tuple):
         if (self.__status == "Taking-off"):
-            self.__altitude += 10
+            for plane_spec in plane_specifictaion_tuple:
+                if self.__model == plane_spec.get_model():
+                    max_speed = plane_spec.get_speed()
+                    self.__speed += max_speed/15 # 15s to max speed
+                    if self.__speed > max_speed:
+                        self.__speed  = max_speed
         if (self.__status == "Flying"):
             degree_position = self.__degree_position
             destination_position = self.__destination.get_degree_position()
-            speed = self.__speed/(111*3600)   #degree/second     111km = 1 degree
+            speed = 100*self.__speed/(111*3600)   #degree/second     111km = 1 degree
             dy = destination_position[0] - degree_position[0]
             dx = destination_position[1] - degree_position[1] 
             direction = math.atan2(dy,dx)
