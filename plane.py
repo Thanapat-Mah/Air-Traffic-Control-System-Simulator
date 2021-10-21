@@ -51,15 +51,13 @@ class PlaneManager:
         self.__text_color = None
         self.__font = None
 
-    def mock_update_plane_position(self):
+    def mock_update_plane_position(self, time_pass):
         for plane in self.__plane_list:
-            plane.update_position()
+            plane.update_position(time_pass = time_pass)
 
     # this method will be called by Simulator in update_simulator()
-    def mock_update_plane(self):
-        # insert update_plane_position() here
-        # update each plane status here
-        # format data and return as below
+    def mock_update_plane(self, time_pass):
+        self.mock_update_plane_position(time_pass=time_pass)
         return {
             'Flying': ["TG001", "FD002"],
             'Taking-off': ["TG002"],
@@ -147,7 +145,7 @@ class Plane:
         origin = airport_list[1]
         destination = airport_list[0]
         degree_position = origin.degree_postion
-        speed = 0.1
+        speed = 863
         return Plane(flight_code=fligt_code, origin=origin, destination=destination, degree_position=degree_position, speed=speed)
     
     def normal_distribution_seat(passenger):
@@ -178,10 +176,11 @@ class Plane:
         #print("self.__status:, ",self.__status)
 
 		
-    def update_position(self, time_pass=None):
+    def update_position(self, time_pass):
+        print(time_pass)
         degree_position = self.__degree_position
         destination_position = self.__destination.degree_postion
-        speed = self.__speed
+        speed = self.__speed/(111*3600)          #degree/second     111km = 1 degree
         dy = destination_position[0] - degree_position[0]
         dx = destination_position[1] - degree_position[1] 
         direction = math.atan2(dy,dx)

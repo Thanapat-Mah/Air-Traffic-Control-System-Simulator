@@ -65,7 +65,7 @@ class Simulator:
 	def mock_update_simulator(self, airport_manager, plane_manager, sidebar):
 		self.tick_time()
 		self.__selected_object_detail = plane_manager.mock_get_detail()
-		self.__plane_information = plane_manager.mock_update_plane()
+		self.__plane_information = plane_manager.mock_update_plane(time_pass = self.__simulated_datetime)
 		self.__airport_information = airport_manager.mock_update_airport()
 		sidebar.update_information(plane_information=self.__plane_information,
 			airport_information=self.__airport_information,
