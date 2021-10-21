@@ -170,7 +170,7 @@ class Plane:
         fligt_code = "TEST001"
         origin = airport_list[1]
         destination = airport_list[0]
-        degree_position = origin.degree_postion
+        degree_position = origin.get_degree_position()
         speed = 863
         status = 'Waiting'
         return Plane(flight_code=fligt_code, origin=origin, destination=destination, degree_position=degree_position, speed=speed, status=status)
@@ -205,7 +205,7 @@ class Plane:
 		
     def update_position(self):
         degree_position = self.__degree_position
-        destination_position = self.__destination.degree_postion
+        destination_position = self.__destination.get_degree_position()
         speed = self.__speed/(111*3600)          #degree/second     111km = 1 degree
         dy = destination_position[0] - degree_position[0]
         dx = destination_position[1] - degree_position[1] 
