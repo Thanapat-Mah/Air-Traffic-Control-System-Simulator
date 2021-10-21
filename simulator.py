@@ -14,7 +14,7 @@ class Simulator:
 		self.__running_time_count = 0
 		self.__simulated_datetime = datetime.datetime(2022, 1, 1, 0, 0, 0)
 		self.__plane_status = {}			# overall plane status Ex. Flying: 3, Landing: 2 etc.
-		self.__airport_status = {}		# overall airport status Ex. Empty: 3, In Use: 2
+		self.__airport_information = {}		# airport information from AirportManager
 		self.__selected_object_code = ""	# IATA code of selected plane or airport object
 		self.__selected_object_detail = []
 
@@ -63,14 +63,14 @@ class Simulator:
 
 	# update plane and airport to next time step
 	def mock_update_simulator(self, airport_manager=None, plane_manager=None):
+		self.tick_time()
 		self.__plane_status = plane_manager.mock_update_plane_status()		
-		self.__airport_status = airport_manager.mock_update_airport()
+		self.__airport_information = airport_manager.mock_update_airport_information()
 
 	# check for clicking event in simulation, including click on plane, airport or status button on sidebar
 	def mock_check_selection(self, event=None, airport_manager=None, plane_manager=None, sidebar=None):
 		self.__selected_object_detail = plane_manager.mock_get_detail()
 		# self.__selected_object_detail = airport_manager.mock_get_detail()
-		overall_plane_text = ["test"]
 		sidebar.update_information(overall_plane_information=Converter.dict_to_string(self.__plane_status),
-			overall_airport_information=Converter.dict_to_string(self.__airport_status),
+			airport_information=self.__airport_information,
 			selected_object_detail=self.__selected_object_detail)

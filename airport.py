@@ -45,10 +45,10 @@ class AirportManager :
             text = self.__font.render(airport.name, True, self.__text_color)
             display.blit(text, (airport_x + (self.__airport_size * 1.5), airport_y - self.__airport_size ))
 
-    def mock_update_airport(self, plane_manager=None):
+    def mock_update_airport_information(self, plane_manager=None):
         return({
-            "Empty": 3,
-            "In Use": 2
+            "Empty": ["CNX", "KKC", "HDY"],
+            "In Use": ["BKK", "HKT"]
         })
 
     def mock_check_selection(self, event=None):
