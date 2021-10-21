@@ -51,13 +51,13 @@ class PlaneManager:
         self.__text_color = None
         self.__font = None
 
-    def mock_update_plane_position(self, time_pass):
+    def update_plane_position(self):
         for plane in self.__plane_list:
-            plane.update_position(time_pass = time_pass)
+            plane.update_position()
 
     # this method will be called by Simulator in update_simulator()
-    def mock_update_plane(self, time_pass):
-        self.mock_update_plane_position(time_pass=time_pass)
+    def mock_update_plane(self):
+        self.update_plane_position()
         # insert update_plane_position() here
         # update each plane status here
         # format data and return as below
@@ -179,8 +179,7 @@ class Plane:
         #print("self.__status:, ",self.__status)
 
 		
-    def update_position(self, time_pass):
-        print(time_pass)
+    def update_position(self):
         degree_position = self.__degree_position
         destination_position = self.__destination.degree_postion
         speed = self.__speed/(111*3600)          #degree/second     111km = 1 degree
