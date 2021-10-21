@@ -37,7 +37,7 @@ class AirlineInformation:
         return self.__code
 
 class PlaneManager:
-    __LIMIT = 1;
+    __LIMIT = 1
     def __init__(self, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(50, 50), scale = 1)
         self.__plane_specifictaion_tuple = tuple([
@@ -123,7 +123,9 @@ class PlaneManager:
 
     def generate_new_plane(self, airport_manager):
         if (len(self.__plane_list) != self.__LIMIT):
-            gen_plane = Plane.mock_generate_random_plane(airport_manager = airport_manager)
+            num = 1
+            gen_plane = Plane.mock_generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, num=num)
+            gen_plane.print_data_plane()
             self.__plane_list.append(gen_plane)
 
     def get_plane_list(self):
@@ -131,7 +133,7 @@ class PlaneManager:
 
 
 class Plane:
-    def __init__(self, flight_code, status, airline_code = None, model= None, passenger= None, origin= None, destination= None, altitude= None, speed= None, degree_position= None):
+    def __init__(self, flight_code, status, airline_code, model, passenger, origin, destination, altitude, speed, degree_position):
         self.__flight_code = flight_code
         self.__airline_code = airline_code
         self.__degree_position = degree_position
@@ -174,15 +176,26 @@ class Plane:
     def get_flight_code(self):
         return self.__flight_code
 
-    def mock_generate_random_plane(airport_manager):
+    def mock_generate_random_plane(plane_information, airline_information, airport_manager, num):
         airport_list = airport_manager.get_airport_list()
-        fligt_code = "TEST001"
-        origin = airport_list[1]
-        destination = airport_list[0]
+        origin = random.choice(airport_list)
+        destination = random.choice(airport_list)
+        while(destination == origin):
+            destination = random.choice(airport_list)
         degree_position = origin.get_degree_position()
+        airline = airline_information[random.randint(0, len(airline_information)-1)]
+        airline_code = airline.get_code()
+        airline_name = airline.get_name()
+        generate_num = "{:03d}".format(num)
+        flight_code = "{}{}".format(airline_name,str(generate_num))
+        spec = plane_information[random.randint(0, len(plane_information)-1)]
+        model = spec.get_model()
+        passenger = spec.get_max_seat()
+        normal_seat = Plane.normal_distribution_seat(passenger=passenger)
+        altitude = 0
         speed = 863
         status = 'Waiting'
-        return Plane(flight_code=fligt_code, origin=origin, destination=destination, degree_position=degree_position, speed=speed, status=status)
+        return Plane(airline_code=airline_code, model=model, passenger=normal_seat, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, status=status)
 
     def normal_distribution_seat(passenger):
         list_seat = []
@@ -200,16 +213,16 @@ class Plane:
 
     def print_data_plane(self):
         pass
-        #print("self.__airline_code: ",self.__airline_code)
-        #print("self.__model:, ",self.__model)
+        print("self.__airline_code: ",self.__airline_code)
+        print("self.__model:, ",self.__model)
         print("self.__flight_code:, ",self.__flight_code)
         print("self.__degree_position:, ",self.__degree_position)
         print("self.__origin:, ",self.__origin)
         print("self.__destination:, ",self.__destination)
-        #print("self.__passenger:, ",self.__passenger)
-        #print("self.__altitude:, ",self.__altitude)
-        #print("self.__speed:, ",self.__speed)
-        #print("self.__status:, ",self.__status)
+        print("self.__passenger:, ",self.__passenger)
+        print("self.__altitude:, ",self.__altitude)
+        print("self.__speed:, ",self.__speed)
+        print("self.__status:, ",self.__status)
 
 
     def update_position(self):
