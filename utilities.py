@@ -3,7 +3,7 @@ from configuration import MAP_TOP_LEFT_DEGREE, MAP_BOTTOM_RIGHT_DEGREE
 
 class Loader:
 
-    def load_image(self, image_path, size, scale = 1):
+    def load_image(image_path, size, scale = 1):
         screen_size_scaled = (size[0]*scale, size[1]*scale)
         image_loaded = pygame.image.load(image_path)
         return pygame.transform.scale(image_loaded, screen_size_scaled)
@@ -25,7 +25,7 @@ class Converter:
             string_list.append(str(key)+": "+str(dict_data[key]))
         return(string_list)
 
-    def degree_to_pixel(self, degree_postion, screen_size):
+    def degree_to_pixel(degree_postion, screen_size):
         #x_pixel = x_slope* x_degree - b_x
         x_slope = screen_size[0]/(MAP_BOTTOM_RIGHT_DEGREE[1]-MAP_TOP_LEFT_DEGREE[1]) # size of screen divided by size of real map
         x_intercept = -x_slope*MAP_TOP_LEFT_DEGREE[1] 

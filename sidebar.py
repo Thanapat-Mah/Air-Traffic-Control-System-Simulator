@@ -42,18 +42,28 @@ class Sidebar:
 		list_box_y = self.__overall_plane_information.get_corner_point(2)[1]+padding
 		list_box_height = self.__selected_object_detail.get_corner_point(0)[1] - list_box_y - padding
 		self.__overall_list_box = ListBox(x=component_x, y=list_box_y, width=component_width_space, height=list_box_height)
-		# self.__overall_list_box = ListBox(x=component_x, y=190, width=component_width_space, height=300)
-		# self.test_button = StatusButton(x=component_x, y=200, width=component_width_space, height=40, code="TG200", detail="Flying")
-
-	# # draw information box including overall plane&airport information, selected object information
-	# def draw_information_box(self, display, simulator=None):
-	# 	self.__selected_object_detail.draw_information_box(display=display)
 
 	# update simulations information on sidebar
-	def update_information(self, overall_plane_information, overall_airport_information, selected_object_detail):
-		self.__overall_plane_information.update_content(overall_plane_information)
-		self.__overall_airport_information.update_content(overall_airport_information)
-		self.__selected_object_detail.update_content(selected_object_detail)
+	def update_information(self, plane_information, airport_information, selected_object_detail):		
+		# update plane information
+		overall_plane_information = []
+		plane_status_list = []
+		for key in plane_information:
+			overall_plane_information.append(f"{key}: {len(plane_information[key])}")
+			for plane in plane_information[key]:
+				plane_status_list.append({"code": plane, "detail": key})
+		# update airport information
+		overall_airport_information = []		
+		airport_status_list = []
+		for key in airport_information:
+			overall_airport_information.append(f"{key}: {len(airport_information[key])}")
+			for airport in airport_information[key]:
+				airport_status_list.append({"code": airport, "detail": key})
+		# update content in each components
+		self.__overall_plane_information.update_content(new_content=overall_plane_information)
+		self.__overall_airport_information.update_content(new_content=overall_airport_information)
+		self.__overall_list_box.update_button(airport_status_list=airport_status_list, plane_status_list=plane_status_list)
+		self.__selected_object_detail.update_content(new_content=selected_object_detail)
 
 	# draw all components on sidebar
 	def draw_sidebar(self, display, simulator=None):
@@ -70,9 +80,7 @@ class Sidebar:
 			self.__overall_airport_information.draw_information_box(display=display)
 			# draw command box
 			pygame.draw.rect(display, COLOR["dark_gray"], self.__command_input_box)
-			# # test
-			# self.test_button.draw_button(display, True)
-			self.__overall_list_box.draw_list_box(display)
+			self.__overall_list_box.draw_list_box(display=display, simulator=simulator)
 		# draw_notch
 		self.__notch_button.x = current_x - self.__notch_button.width - self.__notch_width/2
 		self.__notch_button.draw_button(display=display)
@@ -81,7 +89,14 @@ class Sidebar:
 
 	# check sidebar openning/closing
 	def check_event(self, event):
-		if self.__notch_button.click(event):
+		if self.__notch_button.click(event=event):
 			self.__is_open = not self.__is_open
 			self.__notch_button.switch_state()
-		self.__overall_list_box.check_event(event)
+		if self.__is_open:
+			self.__overall_list_box.check_event(event=event)
+		
+	def check_selection(self, event):
+		selected_object_code = ""
+		if self.__is_open:
+			selected_object_code = self.__overall_list_box.check_selection(event=event)
+		return(selected_object_code)
