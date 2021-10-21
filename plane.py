@@ -81,12 +81,10 @@ class PlaneManager:
     def draw_plane(self, display, size):
         for plane in self.__plane_list:
             position = plane.get_degree_position()
-            converter = Converter()
-            pixel = converter.degree_to_pixel(degree_postion=position, screen_size=size)
+            pixel = Converter.degree_to_pixel(degree_postion=position, screen_size=size)
             pixel = (pixel[0]-25,pixel[1]-25)
             display.blit(self.__plane_icon, pixel)
             
-
     def mock_check_selection (self, event=None):
         return 'TG200'
 

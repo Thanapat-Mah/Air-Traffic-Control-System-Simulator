@@ -4,10 +4,9 @@ from simulator import Simulator
 from utilities import Converter
 class Airport :
     def __init__(self, name, x, y,screen_size):
-        converter = Converter()
         self.name = name
         self.code = None
-        self.pixel_posotion = converter.degree_to_pixel((x, y),screen_size)
+        self.pixel_posotion = Converter.degree_to_pixel((x, y),screen_size)
         self.degree_postion = (x, y)
         self.status = True
         self.landed = None

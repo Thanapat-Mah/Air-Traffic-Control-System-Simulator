@@ -25,7 +25,7 @@ class Converter:
             string_list.append(str(key)+": "+str(dict_data[key]))
         return(string_list)
 
-    def degree_to_pixel(self, degree_postion, screen_size):
+    def degree_to_pixel(degree_postion, screen_size):
         #x_pixel = x_slope* x_degree - b_x
         x_slope = screen_size[0]/(MAP_BOTTOM_RIGHT_DEGREE[1]-MAP_TOP_LEFT_DEGREE[1]) # size of screen divided by size of real map
         x_intercept = -x_slope*MAP_TOP_LEFT_DEGREE[1] 
