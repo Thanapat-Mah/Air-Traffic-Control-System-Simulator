@@ -147,7 +147,7 @@ class Plane:
         origin = airport_list[1]
         destination = airport_list[0]
         degree_position = origin.degree_postion
-        speed = 1
+        speed = 0.1
         return Plane(flight_code=fligt_code, origin=origin, destination=destination, degree_position=degree_position, speed=speed)
     
     def normal_distribution_seat(passenger):
