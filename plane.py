@@ -23,6 +23,9 @@ class PlaneInformation:
 
     def get_max_seat(self):
         return self.__max_seat
+    
+    def get_altitide(self):
+        return self.__altitude
 
 ### airline information for each airline
 class AirlineInformation:
@@ -60,11 +63,27 @@ class PlaneManager:
 
     # this method will be called by Simulator in update_simulator()
     def mock_update_plane(self):
+        distance_error = 0.001
         self.update_plane_position()
-        # for plane in self.__plane_list:
-        #     origin_position = plane.get_origin()
-        #     destination_position = plane.get_destination()
-        #     print(origin_position, destination_position)
+        for plane in self.__plane_list:
+            origin_position = plane.get_origin().get_degree_position()
+            destination_position = plane.get_destination().get_degree_position()
+            current_postion = plane.get_degree_position()
+
+            if (plane.get_status() != 'Landing' and plane.get_status() != 'Taking-off'):
+                if (abs(current_postion[0] - destination_position[0]) < distance_error and 
+                abs(current_postion[1] - destination_position[1]) < distance_error):
+                    plane.set_status('Landing')
+                elif (abs(origin_position[0] - destination_position[0]) < distance_error and 
+                abs(origin_position[1] - destination_position[1]) < distance_error):
+                    plane.set_status('Taking-off')
+                else: plane.set_status('Flying')
+            if plane.get_status() == 'Taking-off':
+                [print(i.get_model(), i.get_altitide()) for i in self.__plane_specifictaion_tuple]
+                #if plane.get_altitude() == 
+
+            plane.print_data_plane()
+        
         status_dict ={
             'Flying': [],
             'Taking-off': [],
@@ -73,10 +92,10 @@ class PlaneManager:
             'Waiting': []
         }
         for plane in self.__plane_list:
-            if plane.get_status == 'Flying':
+            if plane.get_status() == 'Flying':
                 status_dict['Flying'].append(plane.get_flight_code())
-            elif plane.get_status() == 'Taking': 
-                status_dict['Taking'].append(plane.get_flight_code())
+            elif plane.get_status() == 'Taking-off': 
+                status_dict['Taking-off'].append(plane.get_flight_code())
             elif plane.get_status() == 'Landing': 
                 status_dict['Landing'].append(plane.get_flight_code())
             elif plane.get_status() == 'Circling': 
@@ -172,7 +191,14 @@ class Plane:
 
     def get_destination(self):
         return self.__destination
+    
+    def get_altitude(self):
+        return self.__altitude
 
+
+    def set_status(self,status):
+        self.__status = status
+    
     def mock_generate_random_plane(airport_manager):
         airport_list = airport_manager.get_airport_list()
         fligt_code = "TEST001"
@@ -180,8 +206,9 @@ class Plane:
         destination = airport_list[0]
         degree_position = origin.get_degree_position()
         speed = 863
-        status = 'Waiting'
-        return Plane(flight_code=fligt_code, origin=origin, destination=destination, degree_position=degree_position, speed=speed, status=status)
+        status = 'Taking-off'
+        altitude = 0
+        return Plane(flight_code=fligt_code, origin=origin, destination=destination, degree_position=degree_position, speed=speed, status=status, altitude=altitude)
     
     def normal_distribution_seat(passenger):
         list_seat = []
@@ -202,26 +229,27 @@ class Plane:
         #print("self.__airline_code: ",self.__airline_code)
         #print("self.__model:, ",self.__model)
         print("self.__flight_code:, ",self.__flight_code)
-        print("self.__degree_position:, ",self.__degree_position)
-        print("self.__origin:, ",self.__origin)
-        print("self.__destination:, ",self.__destination)
+        #print("self.__degree_position:, ",self.__degree_position)
+        #print("self.__origin:, ",self.__origin)
+        #print("self.__destination:, ",self.__destination)
         #print("self.__passenger:, ",self.__passenger)
-        #print("self.__altitude:, ",self.__altitude)
-        #print("self.__speed:, ",self.__speed)
-        #print("self.__status:, ",self.__status)
+        print("self.__altitude:, ",self.__altitude)
+        print("self.__speed:, ",self.__speed)
+        print("self.__status:, ",self.__status)
 
-		
     def update_position(self):
-        degree_position = self.__degree_position
-        destination_position = self.__destination.get_degree_position()
-        speed = self.__speed/(111*3600)          #degree/second     111km = 1 degree
-        dy = destination_position[0] - degree_position[0]
-        dx = destination_position[1] - degree_position[1] 
-        direction = math.atan2(dy,dx)
-        direction = math.degrees(direction)
-        self.__direction = direction
-        x_speed = speed*math.cos(math.radians(direction))
-        y_speed =speed*math.sin(math.radians(direction))
-        self.__degree_position = (degree_position[0]+y_speed,degree_position[1]+x_speed)
-
+        if (self.__status == "Taking-off"):
+            self.__altitude += 10
+        if (self.__status == "Flying"):
+            degree_position = self.__degree_position
+            destination_position = self.__destination.get_degree_position()
+            speed = self.__speed/(111*3600)   #degree/second     111km = 1 degree
+            dy = destination_position[0] - degree_position[0]
+            dx = destination_position[1] - degree_position[1] 
+            direction = math.atan2(dy,dx)
+            direction = math.degrees(direction)
+            self.__direction = direction
+            x_speed = speed*math.cos(math.radians(direction))
+            y_speed =speed*math.sin(math.radians(direction))
+            self.__degree_position = (degree_position[0]+y_speed,degree_position[1]+x_speed)
 
