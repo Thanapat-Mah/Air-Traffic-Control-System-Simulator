@@ -138,4 +138,4 @@ class StatusButton(Button):
 		if super().click(event):
 			return(self.code)
 		else:
-			return(False)
+			return("")

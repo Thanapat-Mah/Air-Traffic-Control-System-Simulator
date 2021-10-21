@@ -26,6 +26,10 @@ class Simulator:
 	def get_simulated_datetime(self):
 		return(self.__simulated_datetime)
 
+	# return selected object code
+	def get_selected_object_code(self):
+		return(self.__selected_object_code)
+
 	# return simulators states
 	def get_state(self, state, current=False):		
 		state_list = [None]
@@ -73,5 +77,7 @@ class Simulator:
 
 	# check for clicking event in simulation, including click on plane, airport or status button on sidebar
 	def mock_check_selection(self, event=None, airport_manager=None, plane_manager=None, sidebar=None):
-		pass
+		selected_candidate = sidebar.check_selection(event)
+		if selected_candidate != "":
+			self.__selected_object_code = selected_candidate
 		
