@@ -51,22 +51,37 @@ class PlaneManager:
         self.__text_color = None
         self.__font = None
 
-    def mock_update_plane_position(self):
+    def get_plane_list(self):
+        return self.__plane_list
+
+    def update_plane_position(self):
         for plane in self.__plane_list:
             plane.update_position()
 
     # this method will be called by Simulator in update_simulator()
-    def mock_update_plane(self, delta_simulated_time):
-        # insert update_plane_position() here
-        # update each plane status here
-        # format data and return as below
-        return {
-            'Flying': ["TG001", "FD002"],
-            'Taking-off': ["TG002"],
-            'Landing': ["FD001"],
+    def mock_update_plane(self):
+        self.update_plane_position()
+        for plane in self.__plane_list:
+            pass
+        status_dict ={
+            'Flying': [],
+            'Taking-off': [],
+            'Landing': [],
             'Circling': [],
-            'Waiting': ["TG003"]
+            'Waiting': []
         }
+        for plane in self.__plane_list:
+            if plane.get_status == 'Flying':
+                status_dict['Flying'].append(plane.get_flight_code())
+            elif plane.get_status() == 'Taking':
+                status_dict['Taking'].append(plane.get_flight_code())
+            elif plane.get_status() == 'Landing':
+                status_dict['Landing'].append(plane.get_flight_code())
+            elif plane.get_status() == 'Circling':
+                status_dict['Circling'].append(plane.get_flight_code())
+            elif plane.get_status() == 'Waiting' :
+                status_dict['Waiting'].append(plane.get_flight_code())
+        return status_dict
 
     def mock_is_empty(self, airport_code=None):
         for plane in self.__plane_list:
@@ -116,7 +131,7 @@ class PlaneManager:
 
 
 class Plane:
-    def __init__(self, flight_code, airline_code = None, model= None, passenger= None, origin= None, destination= None, altitude= None, speed= None, status= None, degree_position= None):
+    def __init__(self, flight_code, status, airline_code = None, model= None, passenger= None, origin= None, destination= None, altitude= None, speed= None, degree_position= None):
         self.__flight_code = flight_code
         self.__airline_code = airline_code
         self.__degree_position = degree_position
@@ -150,14 +165,24 @@ class Plane:
 
         }
 
+    def get_degree_position(self):
+        return self.__degree_position
+
+    def get_status(self):
+        return self.__status
+
+    def get_flight_code(self):
+        return self.__flight_code
+
     def mock_generate_random_plane(airport_manager):
         airport_list = airport_manager.get_airport_list()
         fligt_code = "TEST001"
         origin = airport_list[1]
         destination = airport_list[0]
         degree_position = origin.degree_postion
-        speed = 0.1
-        return Plane(flight_code=fligt_code, origin=origin, destination=destination, degree_position=degree_position, speed=speed)
+        speed = 863
+        status = 'Waiting'
+        return Plane(flight_code=fligt_code, origin=origin, destination=destination, degree_position=degree_position, speed=speed, status=status)
 
     def normal_distribution_seat(passenger):
         list_seat = []
@@ -187,10 +212,10 @@ class Plane:
         #print("self.__status:, ",self.__status)
 
 
-    def update_position(self, time_pass=None):
+    def update_position(self):
         degree_position = self.__degree_position
         destination_position = self.__destination.degree_postion
-        speed = self.__speed
+        speed = self.__speed/(111*3600)          #degree/second     111km = 1 degree
         dy = destination_position[0] - degree_position[0]
         dx = destination_position[1] - degree_position[1]
         direction = math.atan2(dy,dx)
@@ -199,6 +224,3 @@ class Plane:
         x_speed = speed*math.cos(math.radians(direction))
         y_speed =speed*math.sin(math.radians(direction))
         self.__degree_position = (degree_position[0]+y_speed,degree_position[1]+x_speed)
-
-    def get_degree_position(self):
-        return self.__degree_position
