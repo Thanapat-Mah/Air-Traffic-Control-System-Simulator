@@ -80,7 +80,7 @@ class Sidebar:
 			self.__overall_airport_information.draw_information_box(display=display)
 			# draw command box
 			pygame.draw.rect(display, COLOR["dark_gray"], self.__command_input_box)
-			self.__overall_list_box.draw_list_box(display=display)
+			self.__overall_list_box.draw_list_box(display=display, simulator=simulator)
 		# draw_notch
 		self.__notch_button.x = current_x - self.__notch_button.width - self.__notch_width/2
 		self.__notch_button.draw_button(display=display)
@@ -92,4 +92,11 @@ class Sidebar:
 		if self.__notch_button.click(event=event):
 			self.__is_open = not self.__is_open
 			self.__notch_button.switch_state()
-		self.__overall_list_box.check_event(event=event)
+		if self.__is_open:
+			self.__overall_list_box.check_event(event=event)
+		
+	def check_selection(self, event):
+		selected_object_code = ""
+		if self.__is_open:
+			selected_object_code = self.__overall_list_box.check_selection(event=event)
+		return(selected_object_code)
