@@ -2,11 +2,13 @@ import pygame
 from configuration import FONT, COLOR, AIRPORTS, ZOOM_SCALE
 from simulator import Simulator
 from utilities import Converter
+
+### Airport Object
 class Airport :
     def __init__(self, name, x, y,screen_size):
         self.__name = name
         self.__code = None
-        self.__pixel_position = Converter.degree_to_pixel((x, y),screen_size)
+        # self.__pixel_position = Converter.degree_to_pixel((x, y),screen_size, map_=map_, simulator=simulator)
         self.__degree_position = (x, y)
         self.__status = True
         self.__landed = None
@@ -15,40 +17,46 @@ class Airport :
     def switch_status(self):
         pass
     
+    # return pixel position of airport
     def get_pixel_position(self):
         return self.__pixel_position
 
+    # return degree position of airport
     def get_degree_position(self):
         return self.__degree_position
 
+    # return name of airport
     def get_name(self):
         return self.__name
 
 
-
+### AirportManager that can update airport
 class AirportManager :
     def __init__(self, screen_size, airport_color=COLOR["black"], text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
-        airport_list = [Airport(a[1], a[2], a[3],screen_size) for a in AIRPORTS]
-        self.__airport_size = 10
+        airport_list = [Airport(a[1], a[2], a[3], screen_size) for a in AIRPORTS]
+        self.__airport_size = 10       # airport area size
         self.__airport_tuple = tuple(airport_list)
         self.__airport_color = airport_color
         self.__text_color = text_color
         self.__font = font
 
-    def draw_airport(self, display, map_, simulator):
-        top_left_point = map_.get_top_left_point()
-        scale = 1
-        if simulator.get_state(state = "zoomed", current=True):
-            scale = ZOOM_SCALE
-        else:
-            scale = 1
+    # Display the airport on the map.
+    def draw_airport(self, display, map_, simulator, size):
+        # top_left_point = map_.get_top_left_point()
+        # scale = 1
+        # if simulator.get_state(state = "zoomed", current=True):
+        #     scale = ZOOM_SCALE
+        # else:
+        #     scale = 1
         for airport in self.__airport_tuple:
-            airport_x = (airport.get_pixel_position()[0]*scale)+top_left_point[0]
-            airport_y = (airport.get_pixel_position()[1]*scale)+top_left_point[1]
-            pygame.draw.circle(display, self.__airport_color, (airport_x, airport_y), self.__airport_size)
+            position = airport.get_degree_position()
+            pixel = Converter.degree_to_pixel(position, size, map_=map_, simulator=simulator)
+            # airport_x = airport.get_pixel_position()[0]
+            # airport_y = airport.get_pixel_position()[1]
+            pygame.draw.circle(display, self.__airport_color, (pixel[0], pixel[1]), self.__airport_size)
 
             text = self.__font.render(airport.get_name(), True, self.__text_color)
-            display.blit(text, (airport_x + (self.__airport_size * 1.5), airport_y - self.__airport_size ))
+            display.blit(text, (pixel[0] + (self.__airport_size * 1.5), pixel[1] - self.__airport_size ))
 
     # this method will be called by Simulator in update_simulator()
     def mock_update_airport(self, plane_manager=None):
