@@ -45,9 +45,7 @@ class AirlineInformation:
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 1
-    __pervious_distance = 0 # is used to check did plane overpass airport?
-    __pervious_direction = 0 #is used to set direct for plane that overpass the airport
+    __LIMIT = 5
     def __init__(self, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(50, 50), scale = 1)
         self.__plane_specifictaion_tuple = tuple([
@@ -76,12 +74,11 @@ class PlaneManager:
             origin_position = plane.get_origin().get_degree_position()
             destination_position = plane.get_destination().get_degree_position()
             current_postion = plane.get_degree_position() #current position of plane
-            distance_different_destination = math.dist(current_postion,destination_position)*111 # distance different in km
+            distance_different_current_origin = math.dist(origin_position,current_postion)*111
+            distance_different_origin_destination = math.dist(origin_position,destination_position)*111
             if (plane.get_status() != 'Landing' and plane.get_status() != 'Taking-off'):
-                if (distance_different_destination <= 10 or self.__pervious_distance < distance_different_destination):
+                if (distance_different_origin_destination - distance_different_current_origin <2):
                     plane.set_status('Landing')
-                    plane.set_degree_position(destination_position)
-                    plane.set_direction(self.__pervious_direction)
                 else: plane.set_status('Flying')
 
             if plane.get_status() == 'Taking-off': # if (plane.get_model() == plane_info.get_model() and plane.get_speed() == plane_info.get_speed()):
@@ -92,9 +89,8 @@ class PlaneManager:
             if plane.get_status() == 'Landing':
                 if(plane.get_speed() == 0):
                     self.__plane_list.remove(plane)
-
-            self.__pervious_distance = distance_different_destination
-            self.__pervious_direction = plane.get_direction()
+                
+                    
         status_dict ={
             'Flying': [],
             'Taking-off': [],
@@ -206,6 +202,8 @@ class Plane:
     def set_degree_position(self, degree_position):
         self.__degree_position = degree_position
     
+    def set_speed(self, speed):
+        self.__speed = speed
     def set_direction(self,direction):
         self.__direction = direction
 
@@ -288,11 +286,17 @@ class Plane:
                         self.__speed -= average_speed/10
                         self.__altitude -= avrage_altitude/10
             else: self.__speed = 0
-        speed = 10*self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
-        x_speed = speed*math.cos(math.radians(self.__direction))
-        y_speed =speed*math.sin(math.radians(self.__direction))
-        self.__degree_position = (self.__degree_position[0]+y_speed,self.__degree_position[1]+x_speed)
-
+        origin_position = self.get_origin().get_degree_position()
+        destination_position = self.get_destination().get_degree_position()
+        current_postion = self.get_degree_position() #current position of plane
+        distance_different_current_origin = math.dist(origin_position,current_postion)*111
+        distance_different_origin_destination = math.dist(origin_position,destination_position)*111
+        if (distance_different_current_origin - distance_different_origin_destination < 1):
+            speed = 100*self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
+            x_speed = speed*math.cos(math.radians(self.__direction))
+            y_speed =speed*math.sin(math.radians(self.__direction))
+            self.__degree_position = (self.__degree_position[0]+y_speed,self.__degree_position[1]+x_speed)
+        
     def print_data_plane(self):
         #print("self.__airline_code: ",self.__airline_code)
         #print("self.__model:, ",self.__model)
