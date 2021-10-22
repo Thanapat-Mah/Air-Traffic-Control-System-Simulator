@@ -129,7 +129,7 @@ class PlaneManager:
                 position = plane.get_degree_position()
                 pixel = Converter.degree_to_pixel(degree_postion=position, screen_size=size)
                 pixel = (pixel[0]-25,pixel[1]-25)
-                direction = plane.get_direction()
+                direction = plane.get_direction() - 45 
                 image = pygame.transform.rotate(self.__plane_icon, direction)
                 display.blit(image, pixel)
 
@@ -236,7 +236,7 @@ class Plane:
         normal_seat = Calculator.normal_distribution_seat(passenger=passenger)
         altitude = 0
         speed = 0
-        status = 'Flying'
+        status = 'Taking-off'
         #start calculate direction
         # direction_origin = origin.get_pixel_position()
         # direction_destination = destination.get_pixel_position()
@@ -257,7 +257,6 @@ class Plane:
                     if self.__speed > max_speed:
                         self.__speed  = max_speed
         if (self.__status == "Flying"):
-            print("update")
             degree_position = self.__degree_position
             destination_position = self.__destination.get_degree_position()
             speed = 100*self.__speed/(111*3600)   #degree/second     111km = 1 degree
@@ -269,7 +268,6 @@ class Plane:
             x_speed = speed*math.cos(math.radians(direction))
             y_speed =speed*math.sin(math.radians(direction))
             self.__degree_position = (degree_position[0]+y_speed,degree_position[1]+x_speed)
-            print(self.__degree_position)
 
     def print_data_plane(self):
         print("self.__airline_code: ",self.__airline_code)
