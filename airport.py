@@ -12,7 +12,6 @@ class Airport :
         self.__landed = None
         self.__departed = None
         
-
     def switch_status(self):
         pass
     
@@ -43,17 +42,6 @@ class AirportManager :
             scale = ZOOM_SCALE
         else:
             scale = 1
-
-
-        # for airport in self.__airport_tuple:
-            # degree_position = airport.x, airport.y
-            # pixel_position = Converter.degree_to_pixel(degree_position,None, None)
-            # pygame.draw.circle(display, self.__airport_color, pixel_position, self.__airport_size)
-
-            # text = self.__font.render(airport.name, True, self.__text_color)
-            # display.blit(text, (airport_x + (self.__airport_size * 1.5), airport_y - self.__airport_size ))
-
-
         for airport in self.__airport_tuple:
             airport_x = (airport.get_pixel_position()[0]*scale)+top_left_point[0]
             airport_y = (airport.get_pixel_position()[1]*scale)+top_left_point[1]
