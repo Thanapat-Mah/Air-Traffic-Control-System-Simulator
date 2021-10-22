@@ -45,7 +45,7 @@ class AirlineInformation:
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 1
+    __LIMIT = 5
     def __init__(self, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(50, 50), scale = 1)
         self.__plane_specifictaion_tuple = tuple([
