@@ -270,7 +270,6 @@ class Plane:
             y_speed =speed*math.sin(math.radians(direction))
             self.__degree_position = (degree_position[0]+y_speed,degree_position[1]+x_speed)
         if (self.__status == "Landing"):
-            print(self.__speed)
             if (self.__speed > 0):
                 for plane_spec in plane_specifictaion_tuple:
                     if self.__model == plane_spec.get_model():
