@@ -45,6 +45,7 @@ class AirlineInformation:
 ### plane mamager that can update plane
 class PlaneManager:
     __LIMIT = 1
+    __pervious_distance = 0
     def __init__(self, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(50, 50), scale = 1)
         self.__plane_specifictaion_tuple = tuple([
@@ -68,28 +69,25 @@ class PlaneManager:
 
     # this method will be called by Simulator in update_simulator()
     def update_plane(self):
-        distance_error = 0.001*100
         self.update_plane_position()
         for plane in self.__plane_list:
-            origin_position = plane.get_origin().get_degree_position()
             destination_position = plane.get_destination().get_degree_position()
             current_postion = plane.get_degree_position() #current position of plane
+            distance_different = math.dist(current_postion,destination_position)*111 # distance different in km
             if (plane.get_status() != 'Landing' and plane.get_status() != 'Taking-off'):
-                # distance between plane position and destinationis less than distance_error
-                if (abs(current_postion[0] - destination_position[0]) < distance_error and
-                abs(current_postion[1] - destination_position[1]) < distance_error):
+                if (distance_different <= 2 or self.__pervious_distance < distance_different):
                     plane.set_status('Landing')
-                # distance between plane position and original less than distance_error
-                # elif (abs(origin_position[0] - destination_position[0]) < distance_error and
-                # abs(origin_position[1] - destination_position[1]) < distance_error):
-                #     plane.set_status('Taking-off')
                 else: plane.set_status('Flying')
-                # if status is Taking-off and speed is equal avg speed change status to Flying
             if plane.get_status() == 'Taking-off':
                 for plane_info in self.__plane_specifictaion_tuple:
                     if (plane.get_model() == plane_info.get_model() and
-                    plane.get_speeed() == plane_info.get_speed()):
+                    plane.get_speed() == plane_info.get_speed()):
                         plane.set_status('Flying')
+
+            if plane.get_status() == 'Landing':
+                if(plane.get_speed() == 0):
+                    self.__plane_list.remove(plane)
+            self.__pervious_distance = distance_different
 
         status_dict ={
             'Flying': [],
@@ -180,7 +178,7 @@ class Plane:
     def get_model(self):
         return self.__model
 
-    def get_speeed(self):
+    def get_speed(self):
         return self.__speed
 
     def get_direction(self):
@@ -197,6 +195,9 @@ class Plane:
 
     def get_status(self):
         return self.__status
+
+    def set_degree_positon(self, degree_position):
+        self.__degree_position = degree_position
 
     def set_status(self,status):
         self.__status = status
@@ -268,6 +269,14 @@ class Plane:
             x_speed = speed*math.cos(math.radians(direction))
             y_speed =speed*math.sin(math.radians(direction))
             self.__degree_position = (degree_position[0]+y_speed,degree_position[1]+x_speed)
+        if (self.__status == "Landing"):
+            print(self.__speed)
+            if (self.__speed > 0):
+                for plane_spec in plane_specifictaion_tuple:
+                    if self.__model == plane_spec.get_model():
+                        max_speed = plane_spec.get_speed()
+                        self.__speed -= max_speed/15
+            else: self.__speed = 0
 
     def print_data_plane(self):
         print("self.__airline_code: ",self.__airline_code)
