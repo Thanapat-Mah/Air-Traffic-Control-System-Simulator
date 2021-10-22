@@ -42,6 +42,7 @@ class AirlineInformation:
     def get_code(self):
         return self.__code
 
+### plane mamager that can update plane 
 class PlaneManager:
     __LIMIT = 1
     def __init__(self, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
@@ -60,6 +61,7 @@ class PlaneManager:
     def get_plane_list(self):
         return self.__plane_list
 
+    # update all plane position in plane list
     def update_plane_position(self):
         for plane in self.__plane_list:
             plane.update_position(plane_specifictaion_tuple = self.__plane_specifictaion_tuple)
@@ -71,17 +73,19 @@ class PlaneManager:
         for plane in self.__plane_list:
             origin_position = plane.get_origin().get_degree_position()
             destination_position = plane.get_destination().get_degree_position()
-            current_postion = plane.get_degree_position()
-
+            current_postion = plane.get_degree_position() #current position of plane
             if (plane.get_status() != 'Landing' and plane.get_status() != 'Taking-off'):
+                # distance between plane position and destinationis less than distance_error
                 if (abs(current_postion[0] - destination_position[0]) < distance_error and 
-                abs(current_postion[1] - destination_position[1]) < distance_error):
+                abs(current_postion[1] - destination_position[1]) < distance_error): 
                     plane.set_status('Landing')
-                elif (abs(origin_position[0] - destination_position[0]) < distance_error and 
-                abs(origin_position[1] - destination_position[1]) < distance_error):
-                    plane.set_status('Taking-off')
+                # distance between plane position and original less than distance_error
+                # elif (abs(origin_position[0] - destination_position[0]) < distance_error and 
+                # abs(origin_position[1] - destination_position[1]) < distance_error):
+                #     plane.set_status('Taking-off')
                 else: plane.set_status('Flying')
-            if plane.get_status() == 'Taking-off':
+                # if status is Taking-off and speed is equal avg speed change status to Flying
+            if plane.get_status() == 'Taking-off': 
                 for plane_info in self.__plane_specifictaion_tuple:
                     if (plane.get_model() == plane_info.get_model() and 
                     plane.get_speeed() == plane_info.get_speed()):
@@ -120,21 +124,17 @@ class PlaneManager:
         return True
 
     def draw_plane(self, display, size):
-        convert = Converter()
-        for plane in self.__plane_list:
-            pixel = convert.degree_to_pixel(degree_postion=plane.get_degree_position(), screen_size=size)
-            display.blit(self.__plane_icon, pixel)
-
-    def draw_plane(self, display, size):
         for plane in self.__plane_list:
             position = plane.get_degree_position()
             pixel = Converter.degree_to_pixel(degree_postion=position, screen_size=size)
             pixel = (pixel[0]-25,pixel[1]-25)
             display.blit(self.__plane_icon, pixel)
 
+    # return selected plane
     def mock_check_selection (self, event=None):
         return 'TG200'
 
+    # return detail of plane
     def mock_get_detail(self, code=None):
         return ["Flight Code: TG200",
                 "Airline: Thai AirAsia",
@@ -151,10 +151,8 @@ class PlaneManager:
             gen_plane = Plane.mock_generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, num=num)
             self.__plane_list.append(gen_plane)
 
-    def get_plane_list(self):
-        return self.__plane_list
 
-
+### plane object 
 class Plane:
     def __init__(self, flight_code, status, airline_code, model, passenger, origin, destination, altitude, speed, degree_position):
         self.__flight_code = flight_code
@@ -172,23 +170,6 @@ class Plane:
 
     def get_degree_position(self):
         return self.__degree_position
-
-    def get_information(self):
-        return {
-            'flight_code' : self.__flight_code,
-            'airline_code' : self.__airline_code,
-            'degree_position' : self.__degree_position,
-            'model' : self.__model,
-            'passenger' : self.__passenger,
-            'speed' : "{} km/h".format(self.__speed),
-            'direction' : self.__direction,
-            'altitude' : "{} ft".format(self.__altitude),
-            'origin' : self.__origin,
-            'route' : self.__route,
-            'destination' : self.__destination,
-            'status' : self.__status
-
-        }
 
     def get_degree_position(self):
         return self.__degree_position
@@ -216,6 +197,24 @@ class Plane:
 
     def set_status(self,status):
         self.__status = status
+
+    def get_information(self):
+        return {
+            'flight_code' : self.__flight_code,
+            'airline_code' : self.__airline_code,
+            'degree_position' : self.__degree_position,
+            'model' : self.__model,
+            'passenger' : self.__passenger,
+            'speed' : "{} km/h".format(self.__speed),
+            'direction' : self.__direction,
+            'altitude' : "{} ft".format(self.__altitude),
+            'origin' : self.__origin,
+            'route' : self.__route,
+            'destination' : self.__destination,
+            'status' : self.__status
+
+        }
+
     
     def mock_generate_random_plane(plane_information, airline_information, airport_manager, num):
         airport_list = airport_manager.get_airport_list()
@@ -266,6 +265,7 @@ class Plane:
         print("self.__speed:, ",self.__speed)
         print("self.__status:, ",self.__status)
 
+    # update plane position 
     def update_position(self,plane_specifictaion_tuple):
         if (self.__status == "Taking-off"):
             for plane_spec in plane_specifictaion_tuple:

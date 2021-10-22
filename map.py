@@ -13,6 +13,11 @@ class Map:
         self.__image = pygame.transform.scale( self._source_image, (self.__width, self.__height))
         self.__top_left_point = top_left_point
     
+
+    # get top left point of map
+    def get_top_left_point(self):
+        return self.__top_left_point
+
     #zoom map in
     def zoom_in(self):
         if self.__zoom_state != "zoom_in":
@@ -44,22 +49,22 @@ class Map:
         elif top_left_point_list[1] < border_bottom: #if moving more than bottom border
             top_left_point_list[1] = border_bottom
         self.__top_left_point = tuple(top_left_point_list)
-    def get_top_left_point(self):
-        return self.__top_left_point
-
+    
+    # draw map in a screen
     def draw_map(self, display):
         display.blit(self.__image, self.__top_left_point)
 
+    #check event
     def check_event(self, event, simulator):
         zoom_status = simulator.get_state(state = "zoomed", current=True)
         if zoom_status:
             self.zoom_in()
         else: self.zoom_out()
-        if pygame.mouse.get_pressed()[0] and zoom_status:
+        if pygame.mouse.get_pressed()[0] and zoom_status: #click right mouse
             self.move()
-        if event.type == pygame.MOUSEBUTTONUP:
+        if event.type == pygame.MOUSEBUTTONUP: #click stop holding
             self.__first_click_position = None
             self.__previous_distance = 0
             
-            
+        
 
