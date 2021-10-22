@@ -46,4 +46,3 @@ class Screen:
 		toolbar.draw_toolbar(self.__display, simulated_datetime=simulator.get_simulated_datetime())
 		sidebar.draw_sidebar(self.__display, simulator=simulator)
 		self.draw_name(name=simulator.get_name())
-		plane_manager.draw_plane(self.__display, size=(self.__width,self.__height))
