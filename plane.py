@@ -72,11 +72,13 @@ class PlaneManager:
     def update_plane(self):
         self.update_plane_position()
         for plane in self.__plane_list:
+            origin_position = plane.get_origin().get_degree_position()
             destination_position = plane.get_destination().get_degree_position()
             current_postion = plane.get_degree_position() #current position of plane
-            distance_different = math.dist(current_postion,destination_position)*111 # distance different in km
+            distance_different_origin = math.dist(current_postion,origin_position)*111
+            distance_different_destination = math.dist(current_postion,destination_position)*111 # distance different in km
             if (plane.get_status() != 'Landing' and plane.get_status() != 'Taking-off'):
-                if (distance_different <= 2 or self.__pervious_distance < distance_different):
+                if (distance_different_destination <= 2 or self.__pervious_distance < distance_different_destination):
                     plane.set_status('Landing')
                     plane.set_degree_position(destination_position)
                     plane.set_direction(self.__pervious_direction)
@@ -92,7 +94,7 @@ class PlaneManager:
                 if(plane.get_speed() == 0):
                     self.__plane_list.remove(plane)
 
-            self.__pervious_distance = distance_different
+            self.__pervious_distance = distance_different_destination
             self.__pervious_direction = plane.get_direction()
         status_dict ={
             'Flying': [],
@@ -258,24 +260,31 @@ class Plane:
 
     # update plane position 
     def update_position(self,plane_specifictaion_tuple):
+        #self.print_data_plane()
+        #update position for flying and taking off plane
         if (self.__status == "Taking-off" or self.__status == "Flying"):
+            # find plane direction 
             degree_position = self.__degree_position
             destination_position = self.__destination.get_degree_position()
-            direction = math.degrees(math.atan2(destination_position[0] - degree_position[0],
+            self.__direction = math.degrees(math.atan2(destination_position[0] - degree_position[0],
                     destination_position[1] - degree_position[1]))
-            self.__direction = direction
             if (self.__status == "Taking-off"):
                 for plane_spec in plane_specifictaion_tuple:
                     if self.__model == plane_spec.get_model():
-                        max_speed = plane_spec.get_speed()
-                        self.__speed += max_speed/15 # 15s to max speed
-                        if self.__speed > max_speed:
-                            self.__speed  = max_speed
+                        average_speed = plane_spec.get_speed()
+                        avrage_altitude = plane_spec.get_altitude()
+                        avrage_altitude = (sum(avrage_altitude)/2)
+                        self.__speed += average_speed/15 # 15s to max speed
+                        self.__altitude += avrage_altitude/15
+                        if self.__speed > average_speed or self.__altitude:
+                            self.__speed  = average_speed
+                            self.__altitude = avrage_altitude
             if (self.__status == "Flying"):
-                speed = 100*self.__speed/(111*3600)   #degree/second     111km = 1 degree
-                x_speed = speed*math.cos(math.radians(direction))
-                y_speed =speed*math.sin(math.radians(direction))
+                speed = 100*self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
+                x_speed = speed*math.cos(math.radians(self.__direction))
+                y_speed =speed*math.sin(math.radians(self.__direction))
                 self.__degree_position = (degree_position[0]+y_speed,degree_position[1]+x_speed)
+        #update position for landing plane
         if (self.__status == "Landing"):
             if (self.__speed > 0):
                 for plane_spec in plane_specifictaion_tuple:
@@ -286,13 +295,13 @@ class Plane:
 
     def print_data_plane(self):
         print("self.__airline_code: ",self.__airline_code)
-        print("self.__model:, ",self.__model)
-        print("self.__flight_code:, ",self.__flight_code)
-        print("self.__degree_position:, ",self.__degree_position)
-        print("self.__origin:, ",self.__origin)
-        print("self.__destination:, ",self.__destination)
-        print("self.__passenger:, ",self.__passenger)
+        #print("self.__model:, ",self.__model)
+        #print("self.__flight_code:, ",self.__flight_code)
+        #print("self.__degree_position:, ",self.__degree_position)
+        #print("self.__origin:, ",self.__origin)
+        #print("self.__destination:, ",self.__destination)
+        #print("self.__passenger:, ",self.__passenger)
         print("self.__altitude:, ",self.__altitude)
         print("self.__speed:, ",self.__speed)
-        print("self.__status:, ",self.__status)
-        print("self.__direction", self.__direction)
+        #print("self.__status:, ",self.__status)
+        #print("self.__direction", self.__direction)
