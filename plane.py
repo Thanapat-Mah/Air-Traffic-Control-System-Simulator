@@ -45,7 +45,8 @@ class AirlineInformation:
 ### plane mamager that can update plane
 class PlaneManager:
     __LIMIT = 1
-    __pervious_distance = 0
+    __pervious_distance = 0 # is used to check did plane overpass airport?
+    __pervious_direction = 0 #is used to set direct for plane that overpass the airport
     def __init__(self, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(50, 50), scale = 1)
         self.__plane_specifictaion_tuple = tuple([
@@ -77,7 +78,10 @@ class PlaneManager:
             if (plane.get_status() != 'Landing' and plane.get_status() != 'Taking-off'):
                 if (distance_different <= 2 or self.__pervious_distance < distance_different):
                     plane.set_status('Landing')
+                    plane.set_degree_position(destination_position)
+                    plane.set_direction(self.__pervious_direction)
                 else: plane.set_status('Flying')
+
             if plane.get_status() == 'Taking-off':
                 for plane_info in self.__plane_specifictaion_tuple:
                     if (plane.get_model() == plane_info.get_model() and
@@ -87,8 +91,9 @@ class PlaneManager:
             if plane.get_status() == 'Landing':
                 if(plane.get_speed() == 0):
                     self.__plane_list.remove(plane)
-            self.__pervious_distance = distance_different
 
+            self.__pervious_distance = distance_different
+            self.__pervious_direction = plane.get_direction()
         status_dict ={
             'Flying': [],
             'Taking-off': [],
@@ -196,8 +201,11 @@ class Plane:
     def get_status(self):
         return self.__status
 
-    def set_degree_positon(self, degree_position):
+    def set_degree_position(self, degree_position):
         self.__degree_position = degree_position
+    
+    def set_direction(self,direction):
+        self.__direction = direction
 
     def set_status(self,status):
         self.__status = status
@@ -250,25 +258,24 @@ class Plane:
 
     # update plane position 
     def update_position(self,plane_specifictaion_tuple):
-        if (self.__status == "Taking-off"):
-            for plane_spec in plane_specifictaion_tuple:
-                if self.__model == plane_spec.get_model():
-                    max_speed = plane_spec.get_speed()
-                    self.__speed += max_speed/15 # 15s to max speed
-                    if self.__speed > max_speed:
-                        self.__speed  = max_speed
-        if (self.__status == "Flying"):
+        if (self.__status == "Taking-off" or self.__status == "Flying"):
             degree_position = self.__degree_position
             destination_position = self.__destination.get_degree_position()
-            speed = 100*self.__speed/(111*3600)   #degree/second     111km = 1 degree
-            dy = destination_position[0] - degree_position[0]
-            dx = destination_position[1] - degree_position[1]
-            direction = math.atan2(dy,dx)
-            direction = math.degrees(direction)
+            direction = math.degrees(math.atan2(destination_position[0] - degree_position[0],
+                    destination_position[1] - degree_position[1]))
             self.__direction = direction
-            x_speed = speed*math.cos(math.radians(direction))
-            y_speed =speed*math.sin(math.radians(direction))
-            self.__degree_position = (degree_position[0]+y_speed,degree_position[1]+x_speed)
+            if (self.__status == "Taking-off"):
+                for plane_spec in plane_specifictaion_tuple:
+                    if self.__model == plane_spec.get_model():
+                        max_speed = plane_spec.get_speed()
+                        self.__speed += max_speed/15 # 15s to max speed
+                        if self.__speed > max_speed:
+                            self.__speed  = max_speed
+            if (self.__status == "Flying"):
+                speed = 100*self.__speed/(111*3600)   #degree/second     111km = 1 degree
+                x_speed = speed*math.cos(math.radians(direction))
+                y_speed =speed*math.sin(math.radians(direction))
+                self.__degree_position = (degree_position[0]+y_speed,degree_position[1]+x_speed)
         if (self.__status == "Landing"):
             if (self.__speed > 0):
                 for plane_spec in plane_specifictaion_tuple:
