@@ -6,7 +6,7 @@ import math
 from numpy import std, mean, random, subtract
 from pygame.constants import NOEVENT
 from configuration import AIRPORTS, FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH
-from utilities import Loader, Converter
+from utilities import Calculator, Loader, Converter
 from airport import Airport
 # from configuration import AIRLINES, PLANE_INFORMATIONS
 
@@ -153,14 +153,14 @@ class PlaneManager:
 
 
 class Plane:
-    def __init__(self, flight_code, status, airline_code, model, passenger, origin, destination, altitude, speed, degree_position, direction):
+    def __init__(self, flight_code, status, airline_code, model, passenger, origin, destination, altitude, speed, degree_position):
         self.__flight_code = flight_code
         self.__airline_code = airline_code
         self.__degree_position = degree_position
         self.__model = model
         self.__passenger = passenger
         self.__speed = speed
-        self.__direction = direction
+        self.__direction = 
         self.__altitude = altitude
         self.__origin = origin
         self.__route = None
@@ -232,34 +232,21 @@ class Plane:
         spec = random.choice(plane_information)
         model = spec.get_model()
         passenger = spec.get_max_seat()
-        normal_seat = Plane.normal_distribution_seat(passenger=passenger)
+        normal_seat = Calculator.normal_distribution_seat(passenger=passenger)
         altitude = 0
         speed = 0
-        status = 'Taking-off'
+        status = 'Flying'
         #start calculate direction
-        direction_origin = origin.get_pixel_position()
-        direction_destination = destination.get_pixel_position()
-        sub_direction = subtract(direction_destination, direction_origin)
-        degree = (math.atan2(sub_direction[1],sub_direction[0])/math.pi*180)*-1
-        direction = degree
+        # direction_origin = origin.get_pixel_position()
+        # direction_destination = destination.get_pixel_position()
+        # sub_direction = subtract(direction_destination, direction_origin)
+        # degree = (math.atan2(sub_direction[1],sub_direction[0])/math.pi*180)*-1
+        # direction = degree
         #end calculate direction
 
-        return Plane(airline_code=airline_code, model=model, passenger=normal_seat, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, status=status, direction=direction)
+        return Plane(airline_code=airline_code, model=model, passenger=normal_seat, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, status=status)
 
-    def normal_distribution_seat(passenger):
-        list_seat = []
-        count = 1000
-        passenger = passenger
-        for n in range(count):
-            count_seat = random.randint(1,passenger)
-            list_seat.append(count_seat)
-        mean_seat = mean(list_seat)
-        std_seat = std(list_seat)
-        normal_seat = int(random.normal(mean_seat, std_seat, 1))
-        while(normal_seat < 0):
-            normal_seat = int(random.normal(mean_seat, std_seat, 1))
-        return normal_seat
-
+    
     def print_data_plane(self):
         pass
         print("self.__airline_code: ",self.__airline_code)
