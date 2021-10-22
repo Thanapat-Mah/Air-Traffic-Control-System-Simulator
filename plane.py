@@ -77,7 +77,7 @@ class PlaneManager:
             current_postion = plane.get_degree_position() #current position of plane
             distance_different_destination = math.dist(current_postion,destination_position)*111 # distance different in km
             if (plane.get_status() != 'Landing' and plane.get_status() != 'Taking-off'):
-                if (distance_different_destination <= 2 or self.__pervious_distance < distance_different_destination):
+                if (distance_different_destination <= 10 or self.__pervious_distance < distance_different_destination):
                     plane.set_status('Landing')
                     plane.set_degree_position(destination_position)
                     plane.set_direction(self.__pervious_direction)
@@ -258,37 +258,38 @@ class Plane:
 
     # update plane position 
     def update_position(self,plane_specifictaion_tuple):
-        self.print_data_plane()
         #update position for flying and taking off plane
-        if (self.__status == "Taking-off" or self.__status == "Flying"):
-            # find plane direction 
-            degree_position = self.__degree_position
+        # find plane direction 
+        if (self.__status != "Landing"):
             destination_position = self.__destination.get_degree_position()
-            self.__direction = math.degrees(math.atan2(destination_position[0] - degree_position[0],
-                    destination_position[1] - degree_position[1]))
-            if (self.__status == "Taking-off"):
+            self.__direction = math.degrees(math.atan2(destination_position[0] - self.__degree_position[0],
+                    destination_position[1] - self.__degree_position[1]))
+        if (self.__status == "Taking-off"):
+            for plane_spec in plane_specifictaion_tuple:
+                if self.__model == plane_spec.get_model():
+                    average_speed = plane_spec.get_speed()
+                    avrage_altitude = plane_spec.get_altitude()
+                    avrage_altitude = (sum(avrage_altitude)/2)
+                    self.__speed += average_speed/15 # 15s to max speed
+                    self.__altitude += avrage_altitude/10
+                    if self.__speed > average_speed or self.__altitude > avrage_altitude:
+                        self.__speed  = average_speed
+                        self.__altitude = avrage_altitude
+        #update position for landing plane
+        if (self.__status == "Landing"):
+            if (self.__speed > 0):
                 for plane_spec in plane_specifictaion_tuple:
                     if self.__model == plane_spec.get_model():
                         average_speed = plane_spec.get_speed()
                         avrage_altitude = plane_spec.get_altitude()
                         avrage_altitude = (sum(avrage_altitude)/2)
-                        self.__speed += average_speed/15 # 15s to max speed
-                        self.__altitude += avrage_altitude/15
-                        if self.__speed > average_speed or self.__altitude > avrage_altitude:
-                            self.__speed  = average_speed
-                            self.__altitude = avrage_altitude
-            speed = self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
-            x_speed = speed*math.cos(math.radians(self.__direction))
-            y_speed =speed*math.sin(math.radians(self.__direction))
-            self.__degree_position = (degree_position[0]+y_speed,degree_position[1]+x_speed)
-            #update position for landing plane
-        if (self.__status == "Landing"):
-            if (self.__speed > 0):
-                for plane_spec in plane_specifictaion_tuple:
-                    if self.__model == plane_spec.get_model():
-                        max_speed = plane_spec.get_speed()
-                        self.__speed -= max_speed/15
+                        self.__speed -= average_speed/10
+                        self.__altitude -= avrage_altitude/10
             else: self.__speed = 0
+        speed = 10*self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
+        x_speed = speed*math.cos(math.radians(self.__direction))
+        y_speed =speed*math.sin(math.radians(self.__direction))
+        self.__degree_position = (self.__degree_position[0]+y_speed,self.__degree_position[1]+x_speed)
 
     def print_data_plane(self):
         #print("self.__airline_code: ",self.__airline_code)
@@ -298,7 +299,7 @@ class Plane:
         #print("self.__origin:, ",self.__origin)
         #print("self.__destination:, ",self.__destination)
         #print("self.__passenger:, ",self.__passenger)
-        #print("self.__altitude:, ",self.__altitude)
+        print("self.__altitude:, ",self.__altitude)
         print("self.__speed:, ",self.__speed)
         #print("self.__status:, ",self.__status)
         #print("self.__direction", self.__direction)
