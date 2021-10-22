@@ -73,7 +73,7 @@ class Simulator:
 		self.tick_time()
 		self.__selected_object_detail = plane_manager.mock_get_detail()
 		if self.__delta_simulated_time == self.__update_period:
-			self.__plane_information = plane_manager.mock_update_plane()
+			self.__plane_information = plane_manager.update_plane()
 			self.__airport_information = airport_manager.mock_update_airport()
 			sidebar.update_information(plane_information=self.__plane_information,
 				airport_information=self.__airport_information,

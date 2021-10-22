@@ -67,7 +67,7 @@ class PlaneManager:
             plane.update_position(plane_specifictaion_tuple = self.__plane_specifictaion_tuple)
 
     # this method will be called by Simulator in update_simulator()
-    def mock_update_plane(self):
+    def update_plane(self):
         distance_error = 0.001*100
         self.update_plane_position()
         for plane in self.__plane_list:
@@ -151,7 +151,7 @@ class PlaneManager:
     def generate_new_plane(self, airport_manager):
         if (len(self.__plane_list) != self.__LIMIT):
             num = 1 #not finished yet
-            gen_plane = Plane.mock_generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, num=num)
+            gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, num=num)
             self.__plane_list.append(gen_plane)
 
 
@@ -171,29 +171,32 @@ class Plane:
         self.__destination = destination
         self.__status = status
 
+    def get_flight_code(self):
+        return self.__flight_code
+    
     def get_degree_position(self):
         return self.__degree_position
 
-    def get_status(self):
-        return self.__status
+    def get_model(self):
+        return self.__model
 
-    def get_flight_code(self):
-        return self.__flight_code
+    def get_speeed(self):
+        return self.__speed
+        
+    def get_direction(self):
+        return self.__direction
+
+    def get_altitude(self):
+        return self.__altitude
 
     def get_origin(self):
         return self.__origin
 
     def get_destination(self):
         return self.__destination
-    
-    def get_altitude(self):
-        return self.__altitude
-    
-    def get_model(self):
-        return self.__model
 
-    def get_speeed(self):
-        return self.__speed
+    def get_status(self):
+        return self.__status
 
     def set_status(self,status):
         self.__status = status
@@ -215,8 +218,7 @@ class Plane:
 
         }
 
-    
-    def mock_generate_random_plane(plane_information, airline_information, airport_manager, num):
+    def generate_random_plane(plane_information, airline_information, airport_manager, num):
         airport_list = airport_manager.get_airport_list()
         origin = random.choice(airport_list)
         destination = random.choice(airport_list)
@@ -259,19 +261,6 @@ class Plane:
             normal_seat = int(random.normal(mean_seat, std_seat, 1))
         return normal_seat
 
-    def print_data_plane(self):
-        pass
-        print("self.__airline_code: ",self.__airline_code)
-        print("self.__model:, ",self.__model)
-        print("self.__flight_code:, ",self.__flight_code)
-        print("self.__degree_position:, ",self.__degree_position)
-        print("self.__origin:, ",self.__origin)
-        print("self.__destination:, ",self.__destination)
-        print("self.__passenger:, ",self.__passenger)
-        print("self.__altitude:, ",self.__altitude)
-        print("self.__speed:, ",self.__speed)
-        print("self.__status:, ",self.__status)
-
     # update plane position 
     def update_position(self,plane_specifictaion_tuple):
         if (self.__status == "Taking-off"):
@@ -293,3 +282,15 @@ class Plane:
             x_speed = speed*math.cos(math.radians(direction))
             y_speed =speed*math.sin(math.radians(direction))
             self.__degree_position = (degree_position[0]+y_speed,degree_position[1]+x_speed)
+
+    def print_data_plane(self):
+        print("self.__airline_code: ",self.__airline_code)
+        print("self.__model:, ",self.__model)
+        print("self.__flight_code:, ",self.__flight_code)
+        print("self.__degree_position:, ",self.__degree_position)
+        print("self.__origin:, ",self.__origin)
+        print("self.__destination:, ",self.__destination)
+        print("self.__passenger:, ",self.__passenger)
+        print("self.__altitude:, ",self.__altitude)
+        print("self.__speed:, ",self.__speed)
+        print("self.__status:, ",self.__status)
