@@ -4,6 +4,7 @@ import random
 import string
 import math
 from numpy import std, mean, random, subtract
+from pygame import surface
 from pygame.constants import NOEVENT
 from configuration import AIRPORTS, FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH
 from utilities import Calculator, Loader, Converter
@@ -132,9 +133,10 @@ class PlaneManager:
                 position = plane.get_degree_position()
                 pixel = Converter.degree_to_pixel(degree_postion=position, screen_size=size)
                 pixel = (pixel[0]-25,pixel[1]-25)
-                direction = plane.get_direction() - 45 
+                direction = plane.get_direction() - 45
                 image = pygame.transform.rotate(self.__plane_icon, direction)
-                display.blit(image, pixel)
+                new_rect = image.get_rect(center = image.get_rect(center = (pixel[0]+25, pixel[1]+25)).center)
+                display.blit(image, new_rect)
 
     # return selected plane
     def mock_check_selection (self, event=None):
