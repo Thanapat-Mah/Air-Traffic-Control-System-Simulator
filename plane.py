@@ -93,11 +93,11 @@ class PlaneManager:
             pass
         return True
 
-    def draw_plane(self, display, size, map_, simulator):
+    def draw_plane(self, display, size):
         for plane in self.__plane_list:
             if(plane.get_direction() != None):
                 position = plane.get_degree_position()
-                pixel = Converter.degree_to_pixel(degree_postion=position, screen_size=size, map_=map_, simulator=simulator)
+                pixel = Converter.degree_to_pixel(degree_postion=position, screen_size=size)
                 pixel = (pixel[0]-25,pixel[1]-25)
                 direction = plane.get_direction() - 45 
                 image = pygame.transform.rotate(self.__plane_icon, direction)

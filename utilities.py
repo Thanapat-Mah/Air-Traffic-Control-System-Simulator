@@ -27,15 +27,8 @@ class Converter:
             string_list.append(str(key)+": "+str(dict_data[key]))
         return(string_list)
 
-    def degree_to_pixel(degree_postion, screen_size, map_, simulator):
+    def degree_to_pixel(degree_postion, screen_size):
         #x_pixel = x_slope* x_degree - b_x
-        top_left_point = map_.get_top_left_point()
-        scale = 1
-        if simulator.get_state(state = "zoomed", current=True):
-            scale = ZOOM_SCALE
-        else:
-            scale = 1
-
         x_slope = screen_size[0]/(MAP_BOTTOM_RIGHT_DEGREE[1]-MAP_TOP_LEFT_DEGREE[1]) # size of screen divided by size of real map
         x_intercept = -x_slope*MAP_TOP_LEFT_DEGREE[1] 
         x_pixel = degree_postion[1] * x_slope + x_intercept
@@ -46,10 +39,7 @@ class Converter:
         y_intercept = -y_slope*MAP_TOP_LEFT_DEGREE[0]
         y_pixel = degree_postion[0]*y_slope+y_intercept
         y_int = int(y_pixel)
-
-        object_x = (x_int*scale)+top_left_point[0]
-        object_y = (y_int*scale)+top_left_point[1]
-        return (object_x, object_y)
+        return (x_int, y_int)
 
 class Calculator:
     def normal_distribution_seat(passenger):

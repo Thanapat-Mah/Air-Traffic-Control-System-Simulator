@@ -42,7 +42,7 @@ class Screen:
 		self.refresh_background()
 		map_.draw_map(self.__display)
 		airport_manager.draw_airport(self.__display,  map_=map_, simulator=simulator, size=(self.__width, self.__height))
-		plane_manager.draw_plane(self.__display, size=(self.__width, self.__height), map_=map_, simulator=simulator)
+		plane_manager.draw_plane(self.__display, size=(self.__width, self.__height))
 		toolbar.draw_toolbar(self.__display, simulated_datetime=simulator.get_simulated_datetime())
 		sidebar.draw_sidebar(self.__display, simulator=simulator)
 		self.draw_name(name=simulator.get_name())

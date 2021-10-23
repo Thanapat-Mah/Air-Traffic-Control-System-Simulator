@@ -46,21 +46,19 @@ class AirportManager :
 
     # Display the airport on the map.
     def draw_airport(self, display, map_, simulator, size):
-        # top_left_point = map_.get_top_left_point()
-        # scale = 1
-        # if simulator.get_state(state = "zoomed", current=True):
-        #     scale = ZOOM_SCALE
-        # else:
-        #     scale = 1
+        top_left_point = map_.get_top_left_point()
+        scale = 1
+        if simulator.get_state(state = "zoomed", current=True):
+            scale = ZOOM_SCALE
+        else:
+            scale = 1
         for airport in self.__airport_tuple:
-            position = airport.get_degree_position()
-            pixel = Converter.degree_to_pixel(position, size, map_=map_, simulator=simulator)
-            # airport_x = airport.get_pixel_position()[0]
-            # airport_y = airport.get_pixel_position()[1]
-            pygame.draw.circle(display, self.__airport_color, (pixel[0], pixel[1]), self.__airport_size)
+            airport_x = (airport.get_pixel_position()[0]*scale)+top_left_point[0]
+            airport_y = (airport.get_pixel_position()[1]*scale)+top_left_point[1]
+            pygame.draw.circle(display, self.__airport_color, (airport_x, airport_y), self.__airport_size)
 
             text = self.__font.render(airport.get_name(), True, self.__text_color)
-            display.blit(text, (pixel[0] + (self.__airport_size * 1.5), pixel[1] - self.__airport_size ))
+            display.blit(text, (airport_x + (self.__airport_size * 1.5), airport_y - self.__airport_size ))
 
     # this method will be called by Simulator in update_simulator()
     def update_airport(self, plane_manager=None):
