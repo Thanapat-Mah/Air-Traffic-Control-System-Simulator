@@ -77,16 +77,16 @@ class Sidebar:
 			# draw information box
 			self.__selected_object_detail.draw_information_box(display=display)
 			self.__overall_plane_information.draw_information_box(display=display)
-			self.__overall_airport_information.draw_information_box(display=display)
+			self.__overall_airport_information.draw_information_box(display=display)			
+			# draw list box
+			self.__overall_list_box.draw_list_box(display=display, simulator=simulator)
 			# draw command box
 			pygame.draw.rect(display, COLOR["dark_gray"], self.__command_input_box)
-			self.__overall_list_box.draw_list_box(display=display, simulator=simulator)
 		# draw_notch
 		self.__notch_button.x = current_x - self.__notch_button.width - self.__notch_width/2
 		self.__notch_button.draw_button(display=display)
 		pygame.draw.rect(display, self.__notch_color, (current_x - self.__notch_width, self.__y, self.__notch_width, self.__height))
 		
-
 	# check sidebar openning/closing
 	def check_event(self, event):
 		if self.__notch_button.click(event=event):
@@ -95,6 +95,7 @@ class Sidebar:
 		if self.__is_open:
 			self.__overall_list_box.check_event(event=event)
 		
+	# check if user select (click) status button in list box, return empty string or selected object code
 	def check_selection(self, event):
 		selected_object_code = ""
 		if self.__is_open:

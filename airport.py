@@ -3,17 +3,14 @@ from configuration import FONT, COLOR, AIRPORTS, ZOOM_SCALE
 from simulator import Simulator
 from utilities import Converter
 class Airport :
-    def __init__(self, name, x, y,screen_size):
+    def __init__(self, name, code, x, y, screen_size):
         self.__name = name
-        self.__code = None
+        self.__code = code
         self.__pixel_position = Converter.degree_to_pixel((x, y),screen_size)
         self.__degree_position = (x, y)
         self.__status = True
         self.__landed = None
         self.__departed = None
-        
-    def switch_status(self):
-        pass
     
     def get_pixel_position(self):
         return self.__pixel_position
@@ -24,11 +21,19 @@ class Airport :
     def get_name(self):
         return self.__name
 
+    def get_code(self):
+        return(self.__code)
 
+    def get_status(self):
+        return(self.__status)
+
+    # switch status of airport
+    def switch_status(self):
+        self.__status = not self.__status
 
 class AirportManager :
     def __init__(self, screen_size, airport_color=COLOR["black"], text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
-        airport_list = [Airport(a[1], a[2], a[3],screen_size) for a in AIRPORTS]
+        airport_list = [Airport(a[0], a[1], a[2], a[3],screen_size) for a in AIRPORTS]
         self.__airport_size = 10
         self.__airport_tuple = tuple(airport_list)
         self.__airport_color = airport_color
@@ -52,12 +57,18 @@ class AirportManager :
 
     # this method will be called by Simulator in update_simulator()
     def mock_update_airport(self, plane_manager=None):
+        status_dict = {
+            "Empty": [],
+            "In Use": []
+        }
+        for airport in self.__airport_tuple:
+            if airport.get_status():
+                status_dict["Empty"].append(airport.get_code())
+            else:
+                status_dict["In Use"].append(airport.get_code())
         # update each airport status here
         # format data and return as below
-        return({
-            "Empty": ["CNX", "KKC", "HDY"],
-            "In Use": ["BKK", "HKT"]
-        })
+        return(status_dict)
 
     def mock_check_selection(self, event=None):
         return("BKK")
