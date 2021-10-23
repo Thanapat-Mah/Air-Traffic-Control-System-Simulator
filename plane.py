@@ -115,6 +115,16 @@ class PlaneManager:
 
     # return detail of plane
     def mock_get_detail(self, code=None):
+        target_plane = None
+        for plane in self.__plane_list:
+            if plane.get_flight_code() == code:
+                target_plane = plane
+        # if target_plane != None:
+        #     detail_dict = {
+        #         "Flight Code":
+        #     }
+        # else:
+        #     return([])
         return ["Flight Code: TG200",
                 "Airline: Thai AirAsia",
                 "From: CNX To: BKK",
@@ -123,6 +133,21 @@ class PlaneManager:
                 "Speed: 900 km/h",
                 "Status: Flying"
         ]
+
+        {
+            'flight_code' : self.__flight_code,
+            'airline_code' : self.__airline_code,
+            'degree_position' : self.__degree_position,
+            'model' : self.__model,
+            'passenger' : self.__passenger,
+            'speed' : "{} km/h".format(self.__speed),
+            'direction' : self.__direction,
+            'altitude' : "{} ft".format(self.__altitude),
+            'origin' : self.__origin,
+            'route' : self.__route,
+            'destination' : self.__destination,
+            'status' : self.__status
+        }
 
     def generate_new_plane(self, airport_manager):
         if (len(self.__plane_list) != self.__LIMIT):
@@ -203,7 +228,6 @@ class Plane:
             'route' : self.__route,
             'destination' : self.__destination,
             'status' : self.__status
-
         }
 
     def generate_random_plane(plane_information, airline_information, airport_manager, num):

@@ -2,11 +2,12 @@ import pygame
 from configuration import FONT, COLOR, AIRPORTS, ZOOM_SCALE
 from simulator import Simulator
 from utilities import Converter
+
 class Airport :
     def __init__(self, name, code, x, y, screen_size):
         self.__name = name
         self.__code = code
-        self.__pixel_position = Converter.degree_to_pixel((x, y),screen_size)
+        self.__pixel_position = Converter.degree_to_pixel((x, y), screen_size)
         self.__degree_position = (x, y)
         self.__status = True
         self.__landed = None
@@ -52,11 +53,11 @@ class AirportManager :
             airport_y = (airport.get_pixel_position()[1]*scale)+top_left_point[1]
             pygame.draw.circle(display, self.__airport_color, (airport_x, airport_y), self.__airport_size)
 
-            text = self.__font.render(airport.get_name(), True, self.__text_color)
+            text = self.__font.render(airport.get_code(), True, self.__text_color)
             display.blit(text, (airport_x + (self.__airport_size * 1.5), airport_y - self.__airport_size ))
 
     # this method will be called by Simulator in update_simulator()
-    def mock_update_airport(self, plane_manager=None):
+    def update_airport(self, plane_manager=None):
         status_dict = {
             "Empty": [],
             "In Use": []
