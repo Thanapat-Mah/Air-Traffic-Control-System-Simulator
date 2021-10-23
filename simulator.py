@@ -69,10 +69,14 @@ class Simulator:
 				self.__delta_simulated_time += datetime.timedelta(seconds = 1)
 
 	# update plane and airport to next time step, also update information shown on sidebar
-	def mock_update_simulator(self, airport_manager, plane_manager, sidebar):
+	def update_simulator(self, airport_manager, plane_manager, sidebar):
 		self.tick_time()
-		# self.__selected_object_detail = plane_manager.mock_get_detail()
-		self.__selected_object_detail = airport_manager.get_detail(code=self.__selected_object_code)		
+		selected_detail = []
+		# selected_detail.append(plane_manager.get_detail(code=self.__selected_object_code))
+		selected_detail.append(airport_manager.get_detail(code=self.__selected_object_code))
+		for detail in selected_detail:
+			if detail != "":
+				self.__selected_object_detail = detail
 		if self.__delta_simulated_time == self.__update_period:
 			self.__plane_information = plane_manager.update_plane()
 			self.__airport_information = airport_manager.update_airport()
@@ -87,7 +91,6 @@ class Simulator:
 		selected_candidate.append(plane_manager.check_selection(event))
 		selected_candidate.append(airport_manager.check_selection(event))
 		selected_candidate.append(sidebar.check_selection(event))
-		# print(selected_candidate)
 		for code in selected_candidate:
 			if code != "":
 				self.__selected_object_code = code

@@ -36,13 +36,14 @@ class Airport:
             status = "Empty"
         else:
             status = "In Use"
-        return({
+        detail_dict = {
             "Name": self.__name,
             "IATA Code": self.__code,
             "Status": status,
             "Landed": self.__landed,
             "Departed": self.__departed
-            })
+        }
+        return(Converter.dict_to_string(detail_dict))
 
     # draw image and IATA code of airport
     def draw_airport(self, display, top_left_point, scale):
@@ -115,4 +116,5 @@ class AirportManager:
         airport_detail_dict = {}
         for airport in self.__airport_tuple:
             if code == airport.get_code():
-                return(Converter.dict_to_string(airport.get_detail()))
+                return(airport.get_detail())
+        return("")
