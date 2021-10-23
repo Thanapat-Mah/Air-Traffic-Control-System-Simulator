@@ -15,14 +15,16 @@ class Airport :
     def switch_status(self):
         pass
     
+    def get_name(self):
+        return self.__name
+
     def get_pixel_position(self):
         return self.__pixel_position
 
     def get_degree_position(self):
         return self.__degree_position
 
-    def get_name(self):
-        return self.__name
+
 
 
 
@@ -62,7 +64,7 @@ class AirportManager :
     def mock_check_selection(self, event=None):
         return("BKK")
 
-    def mock_get_detail(self, code=None):
+    def get_detail(self, code=None):
         return([
             "Name: Suvarnabhumi Airport",
             "IATA Code: BKK",

@@ -71,7 +71,7 @@ class Simulator:
 	# update plane and airport to next time step, also update information shown on sidebar
 	def mock_update_simulator(self, airport_manager, plane_manager, sidebar):
 		self.tick_time()
-		self.__selected_object_detail = plane_manager.mock_get_detail()
+		self.__selected_object_detail = plane_manager.get_detail(code = "TG001")
 		if self.__delta_simulated_time == self.__update_period:
 			self.__plane_information = plane_manager.update_plane()
 			self.__airport_information = airport_manager.mock_update_airport()
