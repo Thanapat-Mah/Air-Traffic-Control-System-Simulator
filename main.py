@@ -16,10 +16,10 @@ def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator,plane_ma
 			if event.type == pygame.QUIT:
 				run = False
 			else:
+				simulator.check_selection(event, plane_manager=plane_manager, airport_manager=airport_manager, sidebar=sidebar)
 				toolbar.check_event(event, simulator=simulator)
 				sidebar.check_event(event)
 				map_.check_event(event, simulator=simulator)
-				simulator.check_selection(event, plane_manager=plane_manager, sidebar=sidebar)
 
 		# update screen to next frame
 		plane_manager.generate_new_plane(airport_manager=airport_manager)

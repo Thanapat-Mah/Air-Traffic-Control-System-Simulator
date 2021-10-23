@@ -45,22 +45,24 @@ class Airport:
         text_y = image_y + (self.__airport_size - text_surface.get_size()[1])/2
         display.blit(text_surface, (text_x, text_y+3))
 
+    # check if this airport is clicked, return empty string or airport' IATA code
+    def click(self, event):
+        x, y = pygame.mouse.get_pos()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pressed()[0]:
+                hit_box = self.__airport_image.get_rect(center=(self.__pixel_position[0], self.__pixel_position[1]))
+                if hit_box.collidepoint(x, y):
+                    return(self.__code)
+        return("")
+
 ### airport manager, used to manage and coordinate all airport related task
 class AirportManager:
     def __init__(self, screen_size):
         airport_list = [Airport(name=a[0], code=a[1], x=a[2], y=a[3], screen_size=screen_size) for a in AIRPORTS]
-        self.__airport_tuple = tuple(airport_list)        
+        self.__airport_tuple = tuple(airport_list)
 
-    # draw all airport and IATA code
-    def draw_all_airport(self, display, map_, simulator):
-        top_left_point = map_.get_top_left_point()
-        scale = 1
-        if simulator.get_state(state = "zoomed", current=True):
-            scale = ZOOM_SCALE
-        else:
-            scale = 1
-        for airport in self.__airport_tuple:           
-            airport.draw_airport(display=display, top_left_point=top_left_point, scale=scale)
+    def get_airport_list(self):
+        return self.__airport_tuple
 
     # update status of airport and return all aiport in each status
     def update_airport(self, plane_manager=None):
@@ -75,8 +77,24 @@ class AirportManager:
                 status_dict["In Use"].append(airport.get_code())
         return(status_dict)
 
-    def mock_check_selection(self, event=None):
-        return("BKK")
+    # draw all airport and IATA code
+    def draw_all_airport(self, display, map_, simulator):
+        top_left_point = map_.get_top_left_point()
+        scale = 1
+        if simulator.get_state(state = "zoomed", current=True):
+            scale = ZOOM_SCALE
+        else:
+            scale = 1
+        for airport in self.__airport_tuple:
+            airport.draw_airport(display=display, top_left_point=top_left_point, scale=scale) 
+
+    # return selected aiport' IATA code
+    def check_selection (self, event):
+        selected_airport = ""
+        for airport in self.__airport_tuple:
+            if selected_airport == "":
+                selected_airport = airport.click(event)
+        return(selected_airport)
 
     def mock_get_detail(self, code=None):
         return([
@@ -85,6 +103,4 @@ class AirportManager:
             "Status: In Use",
             "Landed: 0",
             "Departed: 3"
-        ])
-    def get_airport_list(self):
-        return self.__airport_tuple
+        ])   

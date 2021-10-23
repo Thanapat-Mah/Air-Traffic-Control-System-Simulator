@@ -84,7 +84,9 @@ class Simulator:
 	def check_selection(self, event=None, airport_manager=None, plane_manager=None, sidebar=None):
 		selected_candidate = []
 		selected_candidate.append(plane_manager.check_selection(event))
+		selected_candidate.append(airport_manager.check_selection(event))
 		selected_candidate.append(sidebar.check_selection(event))
+		# print(selected_candidate)
 		for code in selected_candidate:
 			if code != "":
 				self.__selected_object_code = code
