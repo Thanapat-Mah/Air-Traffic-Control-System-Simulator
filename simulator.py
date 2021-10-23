@@ -81,8 +81,10 @@ class Simulator:
 			self.__delta_simulated_time = datetime.timedelta(seconds = 0)
 
 	# check for clicking event in simulation, including click on plane, airport or status button on sidebar
-	def mock_check_selection(self, event=None, airport_manager=None, plane_manager=None, sidebar=None):
-		selected_candidate = sidebar.check_selection(event)
-		if selected_candidate != "":
-			self.__selected_object_code = selected_candidate
-		
+	def check_selection(self, event=None, airport_manager=None, plane_manager=None, sidebar=None):
+		selected_candidate = []
+		selected_candidate.append(plane_manager.check_selection(event))
+		selected_candidate.append(sidebar.check_selection(event))
+		for code in selected_candidate:
+			if code != "":
+				self.__selected_object_code = code
