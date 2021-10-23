@@ -72,7 +72,7 @@ class Simulator:
 	def update_simulator(self, airport_manager, plane_manager, sidebar):
 		self.tick_time()
 		selected_detail = []
-		# selected_detail.append(plane_manager.get_detail(code=self.__selected_object_code))
+		selected_detail.append(plane_manager.get_detail(code=self.__selected_object_code))
 		selected_detail.append(airport_manager.get_detail(code=self.__selected_object_code))
 		for detail in selected_detail:
 			if detail != "":

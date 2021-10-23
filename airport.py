@@ -18,6 +18,15 @@ class Airport:
         self.__landed = 0
         self.__departed = 0
 
+    def switch_status(self):
+        pass
+    
+    def get_name(self):
+        return self.__name
+
+    def get_pixel_position(self):
+        return self.__pixel_position
+
     # return degree position of airport
     def get_degree_position(self):
         return(self.__degree_position)
@@ -119,3 +128,6 @@ class AirportManager:
             if code == airport.get_code():
                 return(airport.get_detail())
         return("")
+
+    def get_airport_list(self):
+        return self.__airport_tuple
