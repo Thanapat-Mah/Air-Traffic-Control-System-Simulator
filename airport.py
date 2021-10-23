@@ -30,6 +30,20 @@ class Airport:
     def set_status(self, new_status):
         self.__status = new_status
 
+    # return detail of airport
+    def get_detail(self):
+        if self.__status:
+            status = "Empty"
+        else:
+            status = "In Use"
+        return({
+            "Name": self.__name,
+            "IATA Code": self.__code,
+            "Status": status,
+            "Landed": self.__landed,
+            "Departed": self.__departed
+            })
+
     # draw image and IATA code of airport
     def draw_airport(self, display, top_left_point, scale):
         # calculate center pixel position of airport
@@ -88,7 +102,7 @@ class AirportManager:
         for airport in self.__airport_tuple:
             airport.draw_airport(display=display, top_left_point=top_left_point, scale=scale) 
 
-    # return selected aiport' IATA code
+    # return selected airport' IATA code
     def check_selection (self, event):
         selected_airport = ""
         for airport in self.__airport_tuple:
@@ -96,11 +110,9 @@ class AirportManager:
                 selected_airport = airport.click(event)
         return(selected_airport)
 
-    def mock_get_detail(self, code=None):
-        return([
-            "Name: Suvarnabhumi Airport",
-            "IATA Code: BKK",
-            "Status: In Use",
-            "Landed: 0",
-            "Departed: 3"
-        ])   
+    # return selected airports detail
+    def get_detail(self, code):
+        airport_detail_dict = {}
+        for airport in self.__airport_tuple:
+            if code == airport.get_code():
+                return(Converter.dict_to_string(airport.get_detail()))

@@ -44,8 +44,9 @@ class InformationBox:
 		x_topic = (self.__width - topic_surface.get_size()[0])/2
 		display.blit(topic_surface, (self.__x+x_topic, self.__y+self.__padding))
 		# draw content line by line
-		y_position = self.__y + topic_surface.get_size()[1] + self.__padding*2
-		for line in self.__content:
-			content_surface = self.__font.render(line, True, self.__text_color)
-			display.blit(content_surface, (self.__x+self.__padding, y_position))
-			y_position += content_surface.get_size()[1] + self.__content_padding
+		if self.__content != None:
+			y_position = self.__y + topic_surface.get_size()[1] + self.__padding*2
+			for line in self.__content:
+				content_surface = self.__font.render(line, True, self.__text_color)
+				display.blit(content_surface, (self.__x+self.__padding, y_position))
+				y_position += content_surface.get_size()[1] + self.__content_padding
