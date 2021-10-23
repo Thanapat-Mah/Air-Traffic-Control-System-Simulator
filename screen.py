@@ -41,7 +41,7 @@ class Screen:
 	def update_screen(self, simulator=None, map_=None, airport_manager=None, sidebar=None, toolbar=None, plane_manager=None):
 		self.refresh_background()
 		map_.draw_map(self.__display)
-		airport_manager.draw_airport(self.__display,  map_=map_, simulator=simulator)
+		airport_manager.draw_all_airport(self.__display,  map_=map_, simulator=simulator)
 		plane_manager.draw_plane(self.__display, size=(self.__width, self.__height))
 		toolbar.draw_toolbar(self.__display, simulated_datetime=simulator.get_simulated_datetime())
 		sidebar.draw_sidebar(self.__display, simulator=simulator)

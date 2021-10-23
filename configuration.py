@@ -19,6 +19,7 @@ COLOR = {
 }
 MAP_PATH = "assets/images/map_full_size.png"
 PLANE_PATH = "assets/images/plane.png"
+AIRPORT_PATH = "assets/images/airport.png"
 MAP_TOP_LEFT_DEGREE = (21.755940, 85.028580)		# decimal degree position of top left corner of map image
 MAP_BOTTOM_RIGHT_DEGREE = (3.614883, 118.405937)	# decimal degree position of bottom right corner of map image
 ICON_PATH = {
