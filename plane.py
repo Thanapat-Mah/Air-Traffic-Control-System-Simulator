@@ -58,7 +58,6 @@ class PlaneManager:
                     plane.set_altitude(0)
                     self.__plane_list.remove(plane)
                 
-        self.__flight_counter = len(self.__plane_list)
         status_dict ={
             'Flying': [],
             'Taking-off': [],
@@ -147,11 +146,7 @@ class PlaneManager:
     def generate_new_plane(self, airport_manager):
         if (len(self.__plane_list) != self.__LIMIT):
             gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, counter = self.__flight_counter)
-            print(gen_plane)
-            new_plane = gen_plane[0]
-            self.__flight_counter = gen_plane[1]
-            print(self.__flight_counter)
-            self.__plane_list.append(new_plane)
+            self.__plane_list.append(gen_plane)
 
 ### plane object
 class Plane:
@@ -255,19 +250,13 @@ class Plane:
         airline_code = airline.get_code()
         airline_name = airline.get_name()
         # start Flight code
-        num = 1
-        print("test ",counter)
         if (airline_code == 'FD'):
-            new_count = counter['FD'] + num
-            counter.update({'FD': new_count})
+            counter.update({'FD': counter['FD'] + 1})
             generate_num = "{:03d}".format(counter['FD'])
-        #     counter['FD'] = counter['FD'] + 1
-        else:
-            new_count = counter['TG'] + num
-            counter.update({'TG': new_count})
+        elif (airline_code == 'TG'):
+            counter.update({'TG': counter['TG'] + 1})
             generate_num = "{:03d}".format(counter['TG'])
-        #     counter['TG'] = counter['TG'] + 1
-        flight_code = "{}{}".format(airline_code,str(generate_num)) #not finished yet
+        flight_code = "{}{}".format(airline_code,str(generate_num))
         # end Flight code
         spec = random.choice(plane_information)
         model = spec.get_model()
@@ -276,15 +265,7 @@ class Plane:
         altitude = 0
         speed = 0
         status = 'Taking-off'
-        #start calculate direction
-        # direction_origin = origin.get_pixel_position()
-        # direction_destination = destination.get_pixel_position()
-        # sub_direction = subtract(direction_destination, direction_origin)
-        # degree = (math.atan2(sub_direction[1],sub_direction[0])/math.pi*180)*-1
-        # direction = degree
-        #end calculate direction
-
-        return Plane(airline_code=airline_code, model=model, passenger=normal_seat, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, status=status), counter
+        return Plane(airline_code=airline_code, model=model, passenger=normal_seat, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, status=status)
 
     # update plane position 
     def update_position(self,plane_specifictaion_tuple):
