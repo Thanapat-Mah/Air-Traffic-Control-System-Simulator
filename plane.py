@@ -14,7 +14,7 @@ from plane_airline_information import PlaneInformation, AirlineInformation
 ### plane mamager that can update plane
 class PlaneManager:
     __LIMIT = 2
-    def __init__(self, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
+    def __init__(self, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_normal"], line_color = COLOR["white"]):
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(50, 50), scale = 1)
         self.__plane_specifictaion_tuple = tuple([
             PlaneInformation(model= info[0], max_seat=info[1], speed=info[2], altitude=info[3]) for info in PLANE_INFORMATIONS
@@ -26,6 +26,7 @@ class PlaneManager:
         self.__flight_counter = 0
         self.__text_color = None
         self.__font = None
+        self.__line_color = line_color
 
     def get_plane_list(self):
         return(self.__plane_list)
@@ -53,7 +54,6 @@ class PlaneManager:
                     plane.set_altitude(0)
                     self.__plane_list.remove(plane)
                 
-        self.__flight_counter = len(self.__plane_list)
         status_dict ={
             'Flying': [],
             'Taking-off': [],
@@ -87,6 +87,9 @@ class PlaneManager:
             if(plane.get_direction() != None):
                 position = plane.get_degree_position()
                 pixel = NewConverter.mock_degree_to_pixel(degree_postion=position, screen_size=size, map_=map_, simulator=simulator)
+                airport_pixel = NewConverter.mock_degree_to_pixel(degree_postion=plane.get_destination().get_pixel_position(), screen_size=size, map_=map_, simulator=simulator)
+                if (simulator.get_selected_object_code() == plane.get_flight_code()):
+                    pygame.draw.line(display, self.__line_color, pixel, airport_pixel, width = 5)
                 pixel = (pixel[0]-25,pixel[1]-25)
                 direction = plane.get_direction() - 45 
                 image = pygame.transform.rotate(self.__plane_icon, direction)
