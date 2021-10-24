@@ -13,8 +13,8 @@ from plane_airline_information import PlaneInformation, AirlineInformation
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 5
-    def __init__(self, plane_size=50, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_small"], line_color = COLOR["white"]):
+    __LIMIT = 2
+    def __init__(self, plane_size=50, image_path=PLANE_PATH, text_color=COLOR["white"], font=FONT["bebasneue_small"], line_color = COLOR["white"]):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
         self.__plane_specifictaion_tuple = tuple([
@@ -45,7 +45,7 @@ class PlaneManager:
     def update_plane(self, delta_simulated_time, airport_manager):
         for i in range(delta_simulated_time.seconds):
             self.update_plane_position()
-        
+
             for plane in self.__plane_list:
                 if (plane.get_status() != 'Landing' and plane.get_status() != 'Taking-off'):
                     if (plane.get_remain_distance() <10):
@@ -62,7 +62,7 @@ class PlaneManager:
                         airport_manager.count_plane(plane.get_destination().get_code(), "landed")
                         plane.set_altitude(0)
                         self.__plane_list.remove(plane)
-                
+
         status_dict ={
             'Flying': [],
             'Taking-off': [],
@@ -101,7 +101,7 @@ class PlaneManager:
                 if (converter.get_selected_object_code() == plane.get_flight_code()):
                     pygame.draw.line(display, self.__line_color, pixel, airport_pixel, width = 2)
                 pixel = (pixel[0]-25,pixel[1]-25)
-                direction = plane.get_direction() - 45 
+                direction = plane.get_direction()
                 image = pygame.transform.rotate(self.__plane_icon, direction)
                 position = plane.get_degree_position()
                 pixel_position = converter.mock_degree_to_pixel(degree_postion=position)
@@ -145,7 +145,7 @@ class PlaneManager:
 
     def generate_new_plane(self, airport_manager):
         if (len(self.__plane_list) != self.__LIMIT):
-            gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, counter = self.__flight_counter)
+            gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter)
             self.__plane_list.append(gen_plane)
 
 ### plane object
@@ -199,7 +199,7 @@ class Plane:
 
     def set_degree_position(self, degree_position):
         self.__degree_position = degree_position
-    
+
     def set_speed(self, speed):
         self.__speed = speed
 
@@ -224,7 +224,8 @@ class Plane:
         distance_different_origin_destination = math.dist(origin_position,destination_position)*111
         return(distance_different_origin_destination-distance_different_current_origin)
 
-    def generate_random_plane(plane_information, airline_information, airport_manager, counter):
+    # generate random all information plane
+    def generate_random_plane(plane_information, airline_information, airport_manager, flight_counter):
         airport_list = airport_manager.get_airport_tuple()
         origin = random.choice(airport_list)
         destination = random.choice(airport_list)
@@ -233,14 +234,13 @@ class Plane:
         degree_position = origin.get_degree_position()
         airline = random.choice(airline_information)
         airline_code = airline.get_code()
-        airline_name = airline.get_name()
         # start Flight code
         if (airline_code == 'FD'):
-            counter.update({'FD': counter['FD'] + 1})
-            generate_num = "{:03d}".format(counter['FD'])
+            flight_counter.update({'FD': flight_counter['FD'] + 1})
+            generate_num = "{:03d}".format(flight_counter['FD'])
         elif (airline_code == 'TG'):
-            counter.update({'TG': counter['TG'] + 1})
-            generate_num = "{:03d}".format(counter['TG'])
+            flight_counter.update({'TG': flight_counter['TG'] + 1})
+            generate_num = "{:03d}".format(flight_counter['TG'])
         flight_code = "{}{}".format(airline_code,str(generate_num))
         # end Flight code
         spec = random.choice(plane_information)
@@ -251,7 +251,7 @@ class Plane:
         status = 'Taking-off'
         return Plane(airline_information=airline, plane_information=spec, passenger=normal_seat, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, status=status)
 
-    # update plane position 
+    # update plane position
     def update_position(self):
         #update position for Landing plane
         if (self.__status != "Landing"):
@@ -276,7 +276,7 @@ class Plane:
                 avrage_altitude = (sum(avrage_altitude)/2)
                 self.__speed =  self.__speed - average_speed/60 if self.__speed - average_speed/60 >= 0 else 0
                 self.__altitude = self.__altitude - avrage_altitude/60 if self.__altitude - avrage_altitude/60 >= 0 else 0
-            else: 
+            else:
                 self.__speed = 0
                 self.__altitude = 0
         # if plane is close the airport don't update position in map
@@ -287,7 +287,7 @@ class Plane:
             self.__degree_position = (self.__degree_position[0]+y_speed,self.__degree_position[1]+x_speed)
 
     # check if this plane is clicked, return empty string or plane' airline code
-    def click(self, event):        
+    def click(self, event):
         if self.__hit_box:     # if this plane have hit_box (is drawed at least one time)
             x, y = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
