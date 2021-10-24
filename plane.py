@@ -333,5 +333,5 @@ class Plane:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed()[0]:
                     if self.__hit_box.collidepoint(x, y):
-                        return(str(self.__flight_code))
+                        return(self.__flight_code)
         return("")
