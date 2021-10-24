@@ -114,7 +114,7 @@ class PlaneManager:
                 origin_surface = self.__font.render(f"FROM: {plane.get_origin().get_code()}", True, self.__text_color)
                 destination_surface = self.__font.render(f"TO: {plane.get_destination().get_code()}", True, self.__text_color)
                 text_x = pixel_position[0] + self.__plane_size/2
-                text_y = pixel_position[1] - origin_surface.get_size()[1]/2 - 3
+                text_y = pixel_position[1] - origin_surface.get_size()[1]
                 display.blit(flight_code_surface, (text_x, text_y))
                 text_y += origin_surface.get_size()[1]/2 + 3
                 display.blit(origin_surface, (text_x, text_y))
