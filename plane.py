@@ -13,8 +13,8 @@ from plane_airline_information import PlaneInformation, AirlineInformation
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 10
-    def __init__(self, plane_size=50, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_small"], line_color = COLOR["white"]):
+    __LIMIT = 2
+    def __init__(self, plane_size=50, image_path=PLANE_PATH, text_color=COLOR["white"], font=FONT["bebasneue_small"], line_color = COLOR["white"]):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
         self.__plane_specifictaion_tuple = tuple([
@@ -99,7 +99,7 @@ class PlaneManager:
                 if (converter.get_selected_object_code() == plane.get_flight_code()):
                     pygame.draw.line(display, self.__line_color, pixel, airport_pixel, width = 2)
                 pixel = (pixel[0]-25,pixel[1]-25)
-                direction = plane.get_direction() - 45 
+                direction = plane.get_direction()
                 image = pygame.transform.rotate(self.__plane_icon, direction)
                 position = plane.get_degree_position()
                 pixel_position = converter.mock_degree_to_pixel(degree_postion=position)
@@ -143,7 +143,7 @@ class PlaneManager:
 
     def generate_new_plane(self, airport_manager):
         if (len(self.__plane_list) != self.__LIMIT):
-            gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, counter = self.__flight_counter)
+            gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter)
             self.__plane_list.append(gen_plane)
 
 ### plane object
@@ -222,7 +222,8 @@ class Plane:
         distance_different_origin_destination = math.dist(origin_position,destination_position)*111
         return(distance_different_origin_destination-distance_different_current_origin)
 
-    def generate_random_plane(plane_information, airline_information, airport_manager, counter):
+    # generate random all information plane
+    def generate_random_plane(plane_information, airline_information, airport_manager, flight_counter):
         airport_list = airport_manager.get_airport_tuple()
         origin = random.choice(airport_list)
         destination = random.choice(airport_list)
@@ -231,14 +232,13 @@ class Plane:
         degree_position = origin.get_degree_position()
         airline = random.choice(airline_information)
         airline_code = airline.get_code()
-        airline_name = airline.get_name()
         # start Flight code
         if (airline_code == 'FD'):
-            counter.update({'FD': counter['FD'] + 1})
-            generate_num = "{:03d}".format(counter['FD'])
+            flight_counter.update({'FD': flight_counter['FD'] + 1})
+            generate_num = "{:03d}".format(flight_counter['FD'])
         elif (airline_code == 'TG'):
-            counter.update({'TG': counter['TG'] + 1})
-            generate_num = "{:03d}".format(counter['TG'])
+            flight_counter.update({'TG': flight_counter['TG'] + 1})
+            generate_num = "{:03d}".format(flight_counter['TG'])
         flight_code = "{}{}".format(airline_code,str(generate_num))
         # end Flight code
         spec = random.choice(plane_information)

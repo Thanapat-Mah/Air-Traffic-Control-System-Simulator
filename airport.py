@@ -56,7 +56,7 @@ class Airport:
 
 ### airport manager, used to manage and coordinate all airport related task
 class AirportManager:
-    def __init__(self, airport_size=20, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
+    def __init__(self, airport_size=20, text_color=COLOR["white"], font=FONT["bebasneue_normal"]):
         self.__airport_size = airport_size     
         self.__airport_icon = Loader.load_image(AIRPORT_PATH, (airport_size, airport_size))        
         airport_list = [Airport(name=a[0], code=a[1], x=a[2], y=a[3]) for a in AIRPORTS]
