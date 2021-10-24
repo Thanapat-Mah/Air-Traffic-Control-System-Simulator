@@ -96,7 +96,7 @@ class PlaneManager:
                 direction = plane.get_direction() - 45 
                 image = pygame.transform.rotate(self.__plane_icon, direction)
                 new_rect = image.get_rect(center = (pixel[0]+25, pixel[1]+25))
-                plane.set_icon(new_rect)
+                plane.set_hit_box(new_rect)
                 display.blit(image, new_rect)
 
     # return selected plane' airline code
@@ -161,7 +161,7 @@ class Plane:
         self.__route = None
         self.__destination = destination
         self.__status = status
-        self.__icon = None
+        self.__hit_box = None
 
     def get_flight_code(self):
         return self.__flight_code
@@ -211,8 +211,8 @@ class Plane:
     def set_status(self,status):
         self.__status = status
 
-    def set_icon(self, icon):
-        self.__icon = icon
+    def set_hit_box(self, new_hit_box):
+        self.__hit_box = new_hit_box
 
     def get_information(self):
         return {
@@ -328,10 +328,10 @@ class Plane:
 
     # check if this plane is clicked, return empty string or plane' airline code
     def click(self, event):        
-        if self.__icon:     # if this plane have icon (is drawed)
+        if self.__hit_box:     # if this plane have hit_box (is drawed at least one time)
             x, y = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed()[0]:
-                    if self.__icon.collidepoint(x, y):
+                    if self.__hit_box.collidepoint(x, y):
                         return(str(self.__flight_code))
         return("")
