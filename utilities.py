@@ -20,28 +20,8 @@ class Loader:
         icons_tuple = tuple(self.adjust_size(pygame.image.load(n), height_limit) for n in name)
         return(icons_tuple)
 
+
 class Converter:
-    def dict_to_string(dict_data):
-        string_list = []
-        for key in dict_data:
-            string_list.append(str(key)+": "+str(dict_data[key]))
-        return(string_list)
-
-    def degree_to_pixel(degree_postion, screen_size):
-        #x_pixel = x_slope* x_degree - b_x
-        x_slope = screen_size[0]/(MAP_BOTTOM_RIGHT_DEGREE[1]-MAP_TOP_LEFT_DEGREE[1]) # size of screen divided by size of real map
-        x_intercept = -x_slope*MAP_TOP_LEFT_DEGREE[1] 
-        x_pixel = degree_postion[1] * x_slope + x_intercept
-        x_int = int(x_pixel)
-        
-        #y_pixel = y_slope* y_degree - b_x
-        y_slope =  screen_size[1]/(MAP_BOTTOM_RIGHT_DEGREE[0]-MAP_TOP_LEFT_DEGREE[0])
-        y_intercept = -y_slope*MAP_TOP_LEFT_DEGREE[0]
-        y_pixel = degree_postion[0]*y_slope+y_intercept
-        y_int = int(y_pixel)
-        return (x_int, y_int)
-
-class NewConverter:
     def __init__(self, screen_size, map_, simulator):
         self.__screen_size = screen_size
         self.__top_left_point = map_.get_top_left_point()

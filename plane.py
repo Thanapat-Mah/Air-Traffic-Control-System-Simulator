@@ -7,14 +7,14 @@ from numpy import std, mean, random, subtract
 from pygame import surface
 from pygame.constants import NOEVENT
 from configuration import AIRPORTS, FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH, ZOOM_SCALE
-from utilities import Calculator, Loader, Converter, NewConverter
+from utilities import Calculator, Loader, Converter, Converter
 from airport import Airport
 from plane_airline_information import PlaneInformation, AirlineInformation
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 2
-    def __init__(self, plane_size=50, image_path=PLANE_PATH, text_color=COLOR["white"], font=FONT["bebasneue_small"], line_color = COLOR["white"]):
+    __LIMIT = 3
+    def __init__(self, plane_size=50, image_path=PLANE_PATH, text_color=COLOR["white"], font=FONT["bebasneue_small"], line_color = COLOR["light_gray"]):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
         self.__plane_specifictaion_tuple = tuple([

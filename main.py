@@ -28,7 +28,7 @@ def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator,plane_ma
 		pygame.display.update()
 
 	pygame.quit()
-
+	
 if __name__ == "__main__":
 	pygame.init()
 	screen = Screen(fullscreen=True)
