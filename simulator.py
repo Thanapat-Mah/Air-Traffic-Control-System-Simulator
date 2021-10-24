@@ -5,17 +5,16 @@ import datetime
 
 ### simulator data and state, keep track of state and time
 class Simulator:
-	def __init__(self, name, name_background_color=COLOR["dark_gray"], time_step=1, update_period_ratio=1):
+	def __init__(self, name, name_background_color=COLOR["dark_gray"], time_step=1):
 		self.__name = name
 		self.__name_background_color = name_background_color
 		self.__playing = True
 		self.__speed = [8, 3, 1]				# time period, less value more speed, first value is current
 		self.__zoomed = False		
 		self.__running_time_count = 0
-		self.__simulated_datetime = datetime.datetime(2022, 1, 1, 0, 0, 0)				# simulated datetime
-		self.__simulated_time_step = datetime.timedelta(seconds=time_step)				# time step per 1 time tick
-		self.__update_period = datetime.timedelta(seconds=time_step*update_period_ratio)# update plane/airport every time period
-		self.__delta_simulated_time = datetime.timedelta(seconds=0)						# time since last plane/airport update
+		self.__simulated_datetime = datetime.datetime(2022, 1, 1, 0, 0, 0)	# simulated datetime
+		self.__simulated_time_step = datetime.timedelta(seconds=time_step)	# time step per 1 time tick
+		self.__delta_simulated_time = datetime.timedelta(seconds=0)			# time since last plane/airport update
 		self.__plane_information = {}			# overall plane status Ex. Flying: 3, Landing: 2 etc.
 		self.__airport_information = {}			# airport information from AirportManager
 		self.__selected_object_code = ""		# IATA code of selected plane or airport object
@@ -81,12 +80,9 @@ class Simulator:
 		for detail in selected_detail:
 			if detail != "":
 				self.__selected_object_detail = detail
-		# update plane and get plane information when reach update period
-		if self.__delta_simulated_time == self.__update_period:
-			self.__plane_information = plane_manager.update_plane(self.__delta_simulated_time, airport_manager=airport_manager)
-			self.__delta_simulated_time = datetime.timedelta(seconds = 0)
-		else:
-			self.__plane_information = plane_manager.update_plane(datetime.timedelta(seconds = 0), airport_manager=airport_manager)		
+		# update plane and get plane information
+		self.__plane_information = plane_manager.update_plane(self.__delta_simulated_time, airport_manager=airport_manager)
+		self.__delta_simulated_time = datetime.timedelta(seconds = 0)
 		# update airport and get airport information
 		self.__airport_information = airport_manager.update_airport(plane_manager=plane_manager)
 		# update all information on sidebar
