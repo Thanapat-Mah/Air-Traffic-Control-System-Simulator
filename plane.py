@@ -259,19 +259,17 @@ class Plane:
         #update position for landing plane
         if (self.__status == "Landing"):
             if (self.__speed > 0):
-                for plane_spec in plane_specifictaion_tuple:
-                    if self.__model == plane_spec.get_model():
-                        average_speed = plane_spec.get_speed()
-                        avrage_altitude = plane_spec.get_altitude()
-                        avrage_altitude = (sum(avrage_altitude)/2)
-                        self.__speed -= average_speed/60 if self.__speed != 0 else 0
-                        self.__altitude -= avrage_altitude/60 if self.__altitude != 0 else 0
+                average_speed = self.__plane_information.get_speed()
+                avrage_altitude = self.__plane_information.get_altitude()
+                avrage_altitude = (sum(avrage_altitude)/2)
+                self.__speed -= average_speed/60 if self.__speed != 0 else 0
+                self.__altitude -= avrage_altitude/60 if self.__altitude != 0 else 0
             else: 
                 self.__speed = 0
                 self.__altitude = 0
         # if plane is close the airport don't update position in map
         if (self.get_remain_distance() > 0.1):
-            speed = self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
+            speed = 100*self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
             x_speed = speed*math.cos(math.radians(self.__direction))
             y_speed =speed*math.sin(math.radians(self.__direction))
             self.__degree_position = (self.__degree_position[0]+y_speed,self.__degree_position[1]+x_speed)
