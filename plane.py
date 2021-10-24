@@ -13,7 +13,7 @@ from plane_airline_information import PlaneInformation, AirlineInformation
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 10
+    __LIMIT = 5
     def __init__(self, plane_size=50, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_small"], line_color = COLOR["white"]):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
@@ -42,24 +42,26 @@ class PlaneManager:
             plane.update_position()
 
     # this method will be called by Simulator in update_simulator()
-    def update_plane(self, delta_simulated_time):
+    def update_plane(self, delta_simulated_time, airport_manager):
         for i in range(delta_simulated_time.seconds):
             self.update_plane_position()
         
-        for plane in self.__plane_list:
-            if (plane.get_status() != 'Landing' and plane.get_status() != 'Taking-off'):
-                if (plane.get_remain_distance() <10):
-                    plane.set_status('Landing')
-                else: plane.set_status('Flying')
+            for plane in self.__plane_list:
+                if (plane.get_status() != 'Landing' and plane.get_status() != 'Taking-off'):
+                    if (plane.get_remain_distance() <10):
+                        plane.set_status('Landing')
+                    else: plane.set_status('Flying')
 
-            if plane.get_status() == 'Taking-off': # if (plane.get_model() == plane_info.get_model() and plane.get_speed() == plane_info.get_speed()):
-                    if (plane.get_speed() == plane.get_plane_information().get_speed()):
-                        plane.set_status('Flying')
+                if plane.get_status() == 'Taking-off':
+                        if (plane.get_speed() == plane.get_plane_information().get_speed()):
+                            airport_manager.count_plane(plane.get_origin().get_code(), "departed")
+                            plane.set_status('Flying')
 
-            if plane.get_status() == 'Landing':
-                if(plane.get_speed() == 0):
-                    plane.set_altitude(0)
-                    self.__plane_list.remove(plane)
+                if plane.get_status() == 'Landing':
+                    if(plane.get_speed() == 0):
+                        airport_manager.count_plane(plane.get_destination().get_code(), "landed")
+                        plane.set_altitude(0)
+                        self.__plane_list.remove(plane)
                 
         status_dict ={
             'Flying': [],
@@ -283,19 +285,6 @@ class Plane:
             x_speed = speed*math.cos(math.radians(self.__direction))
             y_speed =speed*math.sin(math.radians(self.__direction))
             self.__degree_position = (self.__degree_position[0]+y_speed,self.__degree_position[1]+x_speed)
-        
-    def print_data_plane(self):
-        print("self.__airline_code: ",self.__airline_information)
-        print("self.__model:, ",self.__plane_information)
-        print("self.__flight_code:, ",self.__flight_code)
-        #print("self.__degree_position:, ",self.__degree_position)
-        #print("self.__origin:, ",self.__origin)
-        #print("self.__destination:, ",self.__destination)
-        #print("self.__passenger:, ",self.__passenger)
-        #print("self.__altitude:, ",self.__altitude)
-        #print("self.__speed:, ",self.__speed)
-        #print("self.__status:, ",self.__status)
-        #print("self.__direction", self.__direction)
 
     # check if this plane is clicked, return empty string or plane' airline code
     def click(self, event):        

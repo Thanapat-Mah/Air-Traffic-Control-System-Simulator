@@ -54,6 +54,13 @@ class Airport:
                         return(self.__code)
         return("")
 
+    # count plane departed/landed on airport
+    def count_plane(self, action):
+        if action == "departed":
+            self.__departed += 1
+        elif action == "landed":
+            self.__landed += 1
+
 ### airport manager, used to manage and coordinate all airport related task
 class AirportManager:
     def __init__(self, airport_size=20, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
@@ -68,13 +75,13 @@ class AirportManager:
         return self.__airport_tuple
 
     # update status of airport and return all aiport in each status
-    def update_airport(self, plane_manager=None):
+    def update_airport(self, plane_manager):
         status_dict = {
             "Empty": [],
             "In Use": []
         }
         for airport in self.__airport_tuple:
-            if airport.get_available():
+            if plane_manager.is_empty(airport.get_code()):
                 status_dict["Empty"].append(airport.get_code())
             else:
                 status_dict["In Use"].append(airport.get_code())
@@ -111,3 +118,9 @@ class AirportManager:
             if code == airport.get_code():
                 return(airport.get_detail())
         return("")
+
+    # count plane departed/landed on specific airport
+    def count_plane(self, airport_code, action):
+        for airport in self.__airport_tuple:
+            if airport.get_code() == airport_code:
+                airport.count_plane(action=action)
