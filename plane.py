@@ -269,7 +269,7 @@ class Plane:
                 self.__altitude = 0
         # if plane is close the airport don't update position in map
         if (self.get_remain_distance() > 0.1):
-            speed = 100*self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
+            speed = self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
             x_speed = speed*math.cos(math.radians(self.__direction))
             y_speed =speed*math.sin(math.radians(self.__direction))
             self.__degree_position = (self.__degree_position[0]+y_speed,self.__degree_position[1]+x_speed)
