@@ -13,7 +13,7 @@ from plane_airline_information import PlaneInformation, AirlineInformation
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 2
+    __LIMIT = 10
     def __init__(self, plane_size=50, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_small"], line_color = COLOR["white"]):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
@@ -223,7 +223,7 @@ class Plane:
         return(distance_different_origin_destination-distance_different_current_origin)
 
     def generate_random_plane(plane_information, airline_information, airport_manager, counter):
-        airport_list = airport_manager.get_airport_list()
+        airport_list = airport_manager.get_airport_tuple()
         origin = random.choice(airport_list)
         destination = random.choice(airport_list)
         while(destination == origin):
@@ -247,7 +247,7 @@ class Plane:
         altitude = 0
         speed = 0
         status = 'Taking-off'
-        return Plane(airline_code=airline_code, model=model, passenger=normal_seat, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, status=status)
+        return Plane(airline_information=airline, plane_information=spec, passenger=normal_seat, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, status=status)
 
     # update plane position 
     def update_position(self):
