@@ -14,7 +14,7 @@ from plane_airline_information import PlaneInformation, AirlineInformation
 ### plane mamager that can update plane
 class PlaneManager:
     __LIMIT = 2
-    def __init__(self, plane_size=50, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_small"]):
+    def __init__(self, plane_size=50, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_small"], line_color = COLOR["white"]):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
         self.__plane_specifictaion_tuple = tuple([
@@ -24,9 +24,10 @@ class PlaneManager:
         self.__airline_tuple = tuple([
             AirlineInformation(code= info[0], name=info[1]) for info in AIRLINES
         ])
-        self.__flight_counter = 0
+        self.__flight_counter = {}
         self.__text_color = text_color
         self.__font = font
+        self.__line_color = line_color
 
     def get_plane_list(self):
         return(self.__plane_list)
@@ -34,14 +35,16 @@ class PlaneManager:
     # update all plane position in plane list
     def update_plane_position(self):
         for plane in self.__plane_list:
-            plane.update_position(plane_specifictaion_tuple = self.__plane_specifictaion_tuple)
+            plane.update_position()
 
     # this method will be called by Simulator in update_simulator()
-    def update_plane(self):
-        self.update_plane_position()
+    def update_plane(self, delta_simulated_time):
+        for i in range(delta_simulated_time.seconds):
+            self.update_plane_position()
+        
         for plane in self.__plane_list:
             if (plane.get_status() != 'Landing' and plane.get_status() != 'Taking-off'):
-                if (plane.get_remain_distance() <2):
+                if (plane.get_remain_distance() <10):
                     plane.set_status('Landing')
                 else: plane.set_status('Flying')
 
@@ -54,7 +57,6 @@ class PlaneManager:
                     plane.set_altitude(0)
                     self.__plane_list.remove(plane)
                 
-        self.__flight_counter = len(self.__plane_list)
         status_dict ={
             'Flying': [],
             'Taking-off': [],
@@ -87,7 +89,13 @@ class PlaneManager:
         for plane in self.__plane_list:
             if(plane.get_direction() != None):
                 # set new hit box
-                direction = plane.get_direction() - 45
+                position = plane.get_degree_position()
+                pixel = converter.mock_degree_to_pixel(degree_postion=position)
+                airport_pixel = converter.mock_degree_to_pixel(degree_postion=plane.get_destination().get_degree_position())
+                if (converter.get_selected_object_code() == plane.get_flight_code()):
+                    pygame.draw.line(display, self.__line_color, pixel, airport_pixel, width = 2)
+                pixel = (pixel[0]-25,pixel[1]-25)
+                direction = plane.get_direction() - 45 
                 image = pygame.transform.rotate(self.__plane_icon, direction)
                 position = plane.get_degree_position()
                 pixel_position = converter.mock_degree_to_pixel(degree_postion=position)
@@ -147,7 +155,6 @@ class Plane:
         self.__direction = None
         self.__altitude = altitude
         self.__origin = origin
-        self.__route = []
         self.__destination = destination
         self.__status = status
         self.__hit_box = None
@@ -203,22 +210,7 @@ class Plane:
     def set_hit_box(self, new_hit_box):
         self.__hit_box = new_hit_box
 
-    def get_information(self):
-        return({
-            'flight_code' : self.__flight_code,
-            'airline_code' : self.__airline_code,
-            'degree_position' : self.__degree_position,
-            'model' : self.__model,
-            'passenger' : self.__passenger,
-            'speed' : "{} km/h".format(self.__speed),
-            'direction' : self.__direction,
-            'altitude' : "{} ft".format(self.__altitude),
-            'origin' : self.__origin,
-            'route' : self.__route,
-            'destination' : self.__destination,
-            'status' : self.__status
-        })
-
+    # get remain distance between plane position and destination position
     def get_remain_distance(self):
         origin_position = self.get_origin().get_degree_position()
         destination_position = self.get_destination().get_degree_position()
@@ -255,11 +247,13 @@ class Plane:
         return Plane(airline_information=airline, plane_information=spec, passenger=normal_seat, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, status=status)
 
     # update plane position 
-    def update_position(self,plane_specifictaion_tuple):
+    def update_position(self):
+        #update position for Landing plane
         if (self.__status != "Landing"):
             destination_position = self.__destination.get_degree_position()
             self.__direction = math.degrees(math.atan2(destination_position[0] - self.__degree_position[0],
                     destination_position[1] - self.__degree_position[1]))
+        #update position for Taking off plane
         if (self.__status == "Taking-off"):
                 average_speed = self.__plane_information.get_speed()
                 avrage_altitude = self.__plane_information.get_altitude()
@@ -275,13 +269,13 @@ class Plane:
                 average_speed = self.__plane_information.get_speed()
                 avrage_altitude = self.__plane_information.get_altitude()
                 avrage_altitude = (sum(avrage_altitude)/2)
-                self.__speed -= average_speed/60 if self.__speed != 0 else 0
-                self.__altitude -= avrage_altitude/60 if self.__altitude != 0 else 0
+                self.__speed =  self.__speed - average_speed/60 if self.__speed - average_speed/60 >= 0 else 0
+                self.__altitude = self.__altitude - avrage_altitude/60 if self.__altitude - avrage_altitude/60 >= 0 else 0
             else: 
                 self.__speed = 0
                 self.__altitude = 0
         # if plane is close the airport don't update position in map
-        if (self.get_remain_distance() > 0.1):
+        if (self.get_remain_distance() >= 1):
             speed = self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
             x_speed = speed*math.cos(math.radians(self.__direction))
             y_speed =speed*math.sin(math.radians(self.__direction))
@@ -299,14 +293,6 @@ class Plane:
         #print("self.__speed:, ",self.__speed)
         #print("self.__status:, ",self.__status)
         #print("self.__direction", self.__direction)
-
-    def get_remain_distance(self):
-        origin_position = self.get_origin().get_degree_position()
-        destination_position = self.get_destination().get_degree_position()
-        current_postion = self.get_degree_position() #current position of plane
-        distance_different_current_origin = math.dist(origin_position,current_postion)*111
-        distance_different_origin_destination = math.dist(origin_position,destination_position)*111
-        return(distance_different_origin_destination-distance_different_current_origin)
 
     # check if this plane is clicked, return empty string or plane' airline code
     def click(self, event):        
