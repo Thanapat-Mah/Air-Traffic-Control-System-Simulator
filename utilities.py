@@ -42,30 +42,31 @@ class Converter:
         return (x_int, y_int)
 
 class NewConverter:
-    def mock_degree_to_pixel(degree_postion, screen_size, map_, simulator):
-        #check state when zoomed
-        top_left_point = map_.get_top_left_point()
-        scale = 1
+    def __init__(self, screen_size, map_, simulator):
+        self.__screen_size = screen_size
+        self.__top_left_point = map_.get_top_left_point()
+        # check state when zoomed
         if simulator.get_state(state = "zoomed", current=True):
-            scale = ZOOM_SCALE
+            self.__scale = ZOOM_SCALE
         else:
-            scale = 1
+            self.__scale = 1
 
+    def mock_degree_to_pixel(self, degree_postion):
         #x_pixel = x_slope* x_degree - b_x
-        x_slope = screen_size[0]/(MAP_BOTTOM_RIGHT_DEGREE[1]-MAP_TOP_LEFT_DEGREE[1]) # size of screen divided by size of real map
+        x_slope = self.__screen_size[0]/(MAP_BOTTOM_RIGHT_DEGREE[1]-MAP_TOP_LEFT_DEGREE[1]) # size of screen divided by size of real map
         x_intercept = -x_slope*MAP_TOP_LEFT_DEGREE[1] 
         x_pixel = degree_postion[1] * x_slope + x_intercept
         x_int = int(x_pixel)
 
         #y_pixel = y_slope* y_degree - b_x
-        y_slope =  screen_size[1]/(MAP_BOTTOM_RIGHT_DEGREE[0]-MAP_TOP_LEFT_DEGREE[0])
+        y_slope =  self.__screen_size[1]/(MAP_BOTTOM_RIGHT_DEGREE[0]-MAP_TOP_LEFT_DEGREE[0])
         y_intercept = -y_slope*MAP_TOP_LEFT_DEGREE[0]
         y_pixel = degree_postion[0]*y_slope+y_intercept
         y_int = int(y_pixel)
 
         #Calculate pixel after check state scale is 1 or 2 
-        object_x = (x_int*scale)+top_left_point[0]
-        object_y = (y_int*scale)+top_left_point[1]
+        object_x = (x_int*self.__scale)+self.__top_left_point[0]
+        object_y = (y_int*self.__scale)+self.__top_left_point[1]
         return (object_x, object_y)
 
 class Calculator:
