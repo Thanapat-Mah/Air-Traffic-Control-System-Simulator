@@ -45,6 +45,7 @@ class NewConverter:
     def __init__(self, screen_size, map_, simulator):
         self.__screen_size = screen_size
         self.__top_left_point = map_.get_top_left_point()
+        self.__selected_object_code = simulator.get_selected_object_code()
         # check state when zoomed
         if simulator.get_state(state = "zoomed", current=True):
             self.__scale = ZOOM_SCALE
@@ -68,6 +69,9 @@ class NewConverter:
         object_x = (x_int*self.__scale)+self.__top_left_point[0]
         object_y = (y_int*self.__scale)+self.__top_left_point[1]
         return (object_x, object_y)
+
+    def get_selected_object_code(self):
+        return self.__selected_object_code
 
 class Calculator:
     def normal_distribution_seat(passenger):

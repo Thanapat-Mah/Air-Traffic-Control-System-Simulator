@@ -78,7 +78,7 @@ class Simulator:
 			if detail != "":
 				self.__selected_object_detail = detail
 		if self.__delta_simulated_time == self.__update_period:
-			self.__plane_information = plane_manager.update_plane()
+			self.__plane_information = plane_manager.update_plane(self.__delta_simulated_time)
 			self.__airport_information = airport_manager.update_airport()
 			sidebar.update_information(plane_information=self.__plane_information,
 				airport_information=self.__airport_information,
