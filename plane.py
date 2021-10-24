@@ -23,9 +23,13 @@ class PlaneManager:
         self.__airline_tuple = tuple([
             AirlineInformation(code= info[0], name=info[1]) for info in AIRLINES
         ])
-        self.__flight_counter = 0
+        self.__flight_counter = {
+            'FD' : 0,
+            'TG' : 0
+        }
         self.__text_color = None
         self.__font = None
+
 
     def get_plane_list(self):
         return self.__plane_list
@@ -142,9 +146,12 @@ class PlaneManager:
 
     def generate_new_plane(self, airport_manager):
         if (len(self.__plane_list) != self.__LIMIT):
-            num = 1 #not finished yet
-            gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, num=num)
-            self.__plane_list.append(gen_plane)
+            gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, counter = self.__flight_counter)
+            print(gen_plane)
+            new_plane = gen_plane[0]
+            self.__flight_counter = gen_plane[1]
+            print(self.__flight_counter)
+            self.__plane_list.append(new_plane)
 
 ### plane object
 class Plane:
@@ -237,7 +244,7 @@ class Plane:
         distance_different_origin_destination = math.dist(origin_position,destination_position)*111
         return distance_different_origin_destination-distance_different_current_origin
 
-    def generate_random_plane(plane_information, airline_information, airport_manager, num):
+    def generate_random_plane(plane_information, airline_information, airport_manager, counter):
         airport_list = airport_manager.get_airport_list()
         origin = random.choice(airport_list)
         destination = random.choice(airport_list)
@@ -247,8 +254,21 @@ class Plane:
         airline = random.choice(airline_information)
         airline_code = airline.get_code()
         airline_name = airline.get_name()
-        generate_num = "{:03d}".format(num)
+        # start Flight code
+        num = 1
+        print("test ",counter)
+        if (airline_code == 'FD'):
+            new_count = counter['FD'] + num
+            counter.update({'FD': new_count})
+            generate_num = "{:03d}".format(counter['FD'])
+        #     counter['FD'] = counter['FD'] + 1
+        else:
+            new_count = counter['TG'] + num
+            counter.update({'TG': new_count})
+            generate_num = "{:03d}".format(counter['TG'])
+        #     counter['TG'] = counter['TG'] + 1
         flight_code = "{}{}".format(airline_code,str(generate_num)) #not finished yet
+        # end Flight code
         spec = random.choice(plane_information)
         model = spec.get_model()
         passenger = spec.get_max_seat()
@@ -264,7 +284,7 @@ class Plane:
         # direction = degree
         #end calculate direction
 
-        return Plane(airline_code=airline_code, model=model, passenger=normal_seat, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, status=status)
+        return Plane(airline_code=airline_code, model=model, passenger=normal_seat, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, status=status), counter
 
     # update plane position 
     def update_position(self,plane_specifictaion_tuple):
@@ -300,7 +320,7 @@ class Plane:
                 self.__altitude = 0
         # if close the airport
         if (self.get_remain_distance() > 0.1):
-            speed = self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
+            speed = 100*self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
             x_speed = speed*math.cos(math.radians(self.__direction))
             y_speed =speed*math.sin(math.radians(self.__direction))
             self.__degree_position = (self.__degree_position[0]+y_speed,self.__degree_position[1]+x_speed)
