@@ -13,9 +13,6 @@ class Airport:
         self.__landed = 0
         self.__departed = 0
         self.__hit_box = None
-    
-    def get_name(self):
-        return self.__name
 
     def get_code(self):
         return(self.__code)
@@ -47,21 +44,6 @@ class Airport:
         ]
         return(detail_string_list)
 
-    # # draw image and IATA code of airport
-    # def draw_airport(self, display, top_left_point, scale):
-    #     # calculate center pixel position of airport
-    #     airport_x = (self.__pixel_position[0]*scale)+top_left_point[0]
-    #     airport_y = (self.__pixel_position[1]*scale)+top_left_point[1]
-    #     # draw image
-    #     image_x = airport_x - 0.5 * self.__airport_size
-    #     image_y = airport_y - 0.5 * self.__airport_size
-    #     display.blit(self.__airport_image, (image_x, image_y))
-    #     # draw IATA code at right side of image
-    #     text_surface = self.__font.render(self.__code, True, self.__text_color)
-    #     text_x = image_x + 1.5 * self.__airport_size
-    #     text_y = image_y + (self.__airport_size - text_surface.get_size()[1])/2
-    #     display.blit(text_surface, (text_x, text_y+3))
-
     # check if this airport is clicked, return empty string or airport' IATA code
     def click(self, event):
         if self.__hit_box:
@@ -82,7 +64,7 @@ class AirportManager:
         self.__text_color = text_color
         self.__font = font
 
-    def get_airport_list(self):
+    def get_airport_tuple(self):
         return self.__airport_tuple
 
     # update status of airport and return all aiport in each status
@@ -110,8 +92,8 @@ class AirportManager:
             display.blit(self.__airport_icon, new_hit_box)
             # draw IATA code
             text_surface = self.__font.render(airport.get_code(), True, self.__text_color)
-            text_x = pixel_position[0] + self.__airport_size/2 + 10
-            text_y = pixel_position[1] - text_surface.get_size()[1]/2 +3
+            text_x = pixel_position[0] - text_surface.get_size()[0]/2
+            text_y = pixel_position[1] + self.__airport_size/2
             display.blit(text_surface, (text_x, text_y))
 
     # return selected airport' IATA code
@@ -129,6 +111,3 @@ class AirportManager:
             if code == airport.get_code():
                 return(airport.get_detail())
         return("")
-
-    def get_airport_list(self):
-        return self.__airport_tuple

@@ -14,8 +14,9 @@ from plane_airline_information import PlaneInformation, AirlineInformation
 ### plane mamager that can update plane
 class PlaneManager:
     __LIMIT = 2
-    def __init__(self, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_normal"]):
-        self.__plane_icon = Loader.load_image(image_path = image_path, size=(50, 50), scale = 1)
+    def __init__(self, plane_size=50, image_path=PLANE_PATH, text_color=COLOR["black"], font=FONT["bebasneue_small"]):
+        self.__plane_size = plane_size
+        self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
         self.__plane_specifictaion_tuple = tuple([
             PlaneInformation(model= info[0], max_seat=info[1], speed=info[2], altitude=info[3]) for info in PLANE_INFORMATIONS
         ])
@@ -24,8 +25,8 @@ class PlaneManager:
             AirlineInformation(code= info[0], name=info[1]) for info in AIRLINES
         ])
         self.__flight_counter = 0
-        self.__text_color = None
-        self.__font = None
+        self.__text_color = text_color
+        self.__font = font
 
     def get_plane_list(self):
         return self.__plane_list
@@ -90,14 +91,26 @@ class PlaneManager:
     def draw_plane(self, display, converter):
         for plane in self.__plane_list:
             if(plane.get_direction() != None):
-                position = plane.get_degree_position()
-                pixel = converter.mock_degree_to_pixel(degree_postion=position)
-                pixel = (pixel[0]-25,pixel[1]-25)
-                direction = plane.get_direction() - 45 
+                # set new hit box
+                direction = plane.get_direction() - 45
                 image = pygame.transform.rotate(self.__plane_icon, direction)
-                new_rect = image.get_rect(center = (pixel[0]+25, pixel[1]+25))
-                plane.set_hit_box(new_rect)
-                display.blit(image, new_rect)
+                position = plane.get_degree_position()
+                pixel_position = converter.mock_degree_to_pixel(degree_postion=position)
+                new_hit_box = image.get_rect(center = pixel_position)
+                plane.set_hit_box(new_hit_box)
+                # draw plane
+                display.blit(image, new_hit_box)
+                # draw text right side of plane
+                flight_code_surface = self.__font.render(plane.get_flight_code(), True, self.__text_color)
+                origin_surface = self.__font.render(f"FROM: {plane.get_origin().get_code()}", True, self.__text_color)
+                destination_surface = self.__font.render(f"TO: {plane.get_destination().get_code()}", True, self.__text_color)
+                text_x = pixel_position[0] + self.__plane_size/2
+                text_y = pixel_position[1] - origin_surface.get_size()[1]/2 - 3
+                display.blit(flight_code_surface, (text_x, text_y))
+                text_y += origin_surface.get_size()[1]/2 + 3
+                display.blit(origin_surface, (text_x, text_y))
+                text_y += origin_surface.get_size()[1]/2 + 3
+                display.blit(destination_surface, (text_x, text_y))
 
     # return selected plane' airline code
     def check_selection (self, event):
@@ -238,7 +251,7 @@ class Plane:
         return distance_different_origin_destination-distance_different_current_origin
 
     def generate_random_plane(plane_information, airline_information, airport_manager, num):
-        airport_list = airport_manager.get_airport_list()
+        airport_list = airport_manager.get_airport_tuple()
         origin = random.choice(airport_list)
         destination = random.choice(airport_list)
         while(destination == origin):
