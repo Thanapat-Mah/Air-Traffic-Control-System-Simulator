@@ -6,8 +6,8 @@ import math
 from numpy import std, mean, random, subtract
 from pygame import surface
 from pygame.constants import NOEVENT
-from configuration import AIRPORTS, FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH
-from utilities import Calculator, Loader, Converter
+from configuration import AIRPORTS, FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH, ZOOM_SCALE
+from utilities import Calculator, Loader, Converter, NewConverter
 from airport import Airport
 from plane_airline_information import PlaneInformation, AirlineInformation
 
@@ -87,15 +87,15 @@ class PlaneManager:
             pass
         return True
 
-    def draw_plane(self, display, size):
+    def draw_plane(self, display, size, map_, simulator):
         for plane in self.__plane_list:
             if(plane.get_direction() != None):
                 position = plane.get_degree_position()
-                pixel = Converter.degree_to_pixel(degree_postion=position, screen_size=size)
+                pixel = NewConverter.mock_degree_to_pixel(degree_postion=position, screen_size=size, map_=map_, simulator=simulator)
                 pixel = (pixel[0]-25,pixel[1]-25)
                 direction = plane.get_direction() - 45 
                 image = pygame.transform.rotate(self.__plane_icon, direction)
-                new_rect = image.get_rect(center = image.get_rect(center = (pixel[0]+25, pixel[1]+25)).center)
+                new_rect = image.get_rect(center = (pixel[0]+25, pixel[1]+25))
                 plane.set_icon(new_rect)
                 display.blit(image, new_rect)
 
