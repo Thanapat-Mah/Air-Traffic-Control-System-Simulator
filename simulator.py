@@ -7,10 +7,9 @@ import datetime
 class Simulator:
 	def __init__(self, name, name_background_color=COLOR["dark_gray"], time_step=1, spawn_period=260):
 		self.__name = name
-		self.__name_background_color = name_background_color
-		self.__playing = True
+		self.__is_play = True
 		self.__speed = [8, 3, 1]				# time period, less value more speed, first value is current
-		self.__zoomed = False		
+		self.__is_zoom = False		
 		self.__running_time_count = 0
 		self.__simulated_datetime = datetime.datetime(2022, 1, 1, 0, 0, 0)	# simulated datetime
 		self.__simulated_time_step = datetime.timedelta(seconds=time_step)	# time step per 1 time tick
@@ -38,12 +37,12 @@ class Simulator:
 	def get_state(self, state, current=False):		
 		state_list = [None]
 		# calculate all possible state
-		if state == "play_pause":
-			state_list = [self.__playing, not self.__playing]
+		if state == "is_play":
+			state_list = [self.__is_play, not self.__is_play]
 		elif state == "speed":
 			state_list = self.__speed
-		elif state == "zoomed":
-			state_list = [self.__zoomed, not self.__zoomed]
+		elif state == "is_zoom":
+			state_list = [self.__is_zoom, not self.__is_zoom]
 		# return only current value
 		if current:
 			return(state_list[0])
@@ -53,18 +52,18 @@ class Simulator:
 
 	# update specific state
 	def update_state(self, state):
-		if state == "play_pause":
-			self.__playing = not self.__playing
+		if state == "is_play":
+			self.__is_play = not self.__is_play
 		elif state == "speed":
 			self.__speed.append(self.__speed[0])
 			self.__speed = self.__speed[1:]
 			self.__running_time_count = 0
-		elif state == "zoomed":
-			self.__zoomed = not self.__zoomed
+		elif state == "is_zoom":
+			self.__is_zoom = not self.__is_zoom
 
 	# count time and calculate simulated datetime
 	def tick_time(self):
-		if self.__playing:
+		if self.__is_play:
 			self.__running_time_count += 1
 			# increase simulated datetime by 1 minutes when reach the time period in speed
 			if self.__running_time_count%self.get_state("speed", current = True) == 0:
@@ -98,7 +97,7 @@ class Simulator:
 			selected_object_detail=self.__selected_object_detail)
 
 	# check for clicking event in simulation, including click on plane, airport or status button on sidebar
-	def check_selection(self, event=None, airport_manager=None, plane_manager=None, sidebar=None):
+	def check_selection(self, event, airport_manager, plane_manager, sidebar):
 		selected_candidate = []
 		selected_candidate.append(plane_manager.check_selection(event))
 		selected_candidate.append(airport_manager.check_selection(event))

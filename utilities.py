@@ -27,7 +27,7 @@ class Converter:
         self.__top_left_point = map_.get_top_left_point()
         self.__selected_object_code = simulator.get_selected_object_code()
         # check state when zoomed
-        if simulator.get_state(state = "zoomed", current=True):
+        if simulator.get_state(state = "is_zoom", current=True):
             self.__scale = ZOOM_SCALE
         else:
             self.__scale = 1

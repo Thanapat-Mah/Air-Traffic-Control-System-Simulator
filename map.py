@@ -56,7 +56,7 @@ class Map:
 
     #check event
     def check_event(self, event, simulator):
-        zoom_status = simulator.get_state(state = "zoomed", current=True)
+        zoom_status = simulator.get_state(state = "is_zoom", current=True)
         if zoom_status:
             self.zoom_in()
         else: self.zoom_out()

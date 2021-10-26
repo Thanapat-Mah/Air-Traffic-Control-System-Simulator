@@ -56,11 +56,11 @@ class Toolbar:
 	def check_event(self, event, simulator):
 		if self.__play_pause_button.click(event):
 			self.__play_pause_button.switch_state()
-			simulator.update_state("play_pause")
+			simulator.update_state("is_play")
 		elif self.__speed_button.click(event):
 			self.__speed_button.switch_state()
 			simulator.update_state("speed")
 		elif self.__zoom_button.click(event):
 			self.__zoom_button.switch_state()
-			simulator.update_state("zoomed")
+			simulator.update_state("is_zoom")
 		self.__exit_button.click(event)
