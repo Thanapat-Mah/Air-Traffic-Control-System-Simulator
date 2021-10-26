@@ -6,7 +6,8 @@ from sidebar import Sidebar
 from simulator import Simulator
 from map import Map
 from airport import AirportManager
-from plane import PlaneManager
+from planemanager import PlaneManager
+
 
 def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator,plane_manager):
 	run = True
