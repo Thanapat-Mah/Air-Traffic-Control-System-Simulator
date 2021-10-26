@@ -57,6 +57,6 @@ AIRLINES = (
 )
 PLANE_INFORMATIONS = (
 	("Airbus A320-200", 180, 863, (29000, 39000)),
-	("Boeing 787-9", 236, 1050, (35000, 43000))
+	("Boeing 787-9", 236, 903, (35000, 43000))
 )
 ZOOM_SCALE = 2		# map zoom scaling

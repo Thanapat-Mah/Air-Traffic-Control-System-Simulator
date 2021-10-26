@@ -64,11 +64,11 @@ class PlaneManager:
                         self.__plane_list.remove(plane)
 
         status_dict ={
-            'Flying': [],
+            'Waiting': [],
+            'Circling': [],
             'Taking-off': [],
             'Landing': [],
-            'Circling': [],
-            'Waiting': []
+            'Flying': []
         }
         for plane in self.__plane_list:
             if plane.get_status() == 'Flying':
