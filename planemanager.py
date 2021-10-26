@@ -12,7 +12,7 @@ class PlaneManager:
     def __init__(self, plane_size=50, image_path=PLANE_PATH, text_color=COLOR["white"], font=FONT["bebasneue_small"], line_color = COLOR["light_gray"]):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
-        self.__plane_specifictaion_tuple = tuple([
+        self.__plane_specification_tuple = tuple([
             PlaneInformation(model= info[0], max_seat=info[1], speed=info[2], altitude=info[3]) for info in PLANE_INFORMATIONS
         ])
         self.__plane_list = []
@@ -146,5 +146,5 @@ class PlaneManager:
     # generate new plane
     def generate_new_plane(self, airport_manager):
         # if (len(self.__plane_list) != self.__LIMIT):
-        gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter)
+        gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specification_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter)
         self.__plane_list.append(gen_plane)

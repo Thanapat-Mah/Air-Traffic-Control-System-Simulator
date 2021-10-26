@@ -15,7 +15,7 @@ class Airport:
         self.__hit_box = None
 
     def get_code(self):
-        return(self.__code)
+        return(self.__code)      
 
     def get_degree_position(self):
         return(self.__degree_position)
