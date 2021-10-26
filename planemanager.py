@@ -37,8 +37,8 @@ class PlaneManager:
             plane.update_position()
 
     # this method will be called by Simulator in update_simulator()
-    def update_plane(self, delta_simulated_time, airport_manager):
-        for i in range(delta_simulated_time.seconds):
+    def update_plane(self, simulated_delta_count, airport_manager):
+        for i in range(simulated_delta_count.seconds):
             self.update_plane_position()
             #chaing plane status
             for plane in self.__plane_list:
@@ -59,11 +59,11 @@ class PlaneManager:
                         self.__plane_list.remove(plane)
         # dict for return
         status_dict ={
-            'Flying': [],
-            'Taking-off': [],
-            'Landing': [],
+            'Waiting': [],
             'Circling': [],
-            'Waiting': []
+            'Taking-off': [],
+            'Flying': [],
+            'Landing': []
         }
         #check status
         for plane in self.__plane_list:
@@ -144,6 +144,6 @@ class PlaneManager:
 
     # generate new plane
     def generate_new_plane(self, airport_manager):
-        if (len(self.__plane_list) != self.__LIMIT):
-            gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter)
-            self.__plane_list.append(gen_plane)
+        # if (len(self.__plane_list) != self.__LIMIT):
+        gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter)
+        self.__plane_list.append(gen_plane)
