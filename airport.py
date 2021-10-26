@@ -85,7 +85,7 @@ class AirportManager:
         for airport in self.__airport_tuple:
             # set new hit box
             position = airport.get_degree_position()
-            pixel_position = converter.mock_degree_to_pixel(degree_postion=position)
+            pixel_position = converter.degree_to_pixel(degree_postion=position)
             new_hit_box = self.__airport_icon.get_rect(center = pixel_position)
             airport.set_hit_box(new_hit_box)
             # draw airport

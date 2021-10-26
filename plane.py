@@ -146,7 +146,7 @@ class PlaneManager:
             gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specifictaion_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter)
             self.__plane_list.append(gen_plane)
 
-### plane object
+### flight, store information, generate random plane, mark plane position on map
 class Plane:
     def __init__(self, flight_code, status, airline_information, plane_information, passenger, origin, destination, altitude, speed, degree_position):
         self.__flight_code = flight_code
@@ -232,7 +232,7 @@ class Plane:
         degree_position = origin.get_degree_position()
         airline = random.choice(airline_information)
         airline_code = airline.get_code()
-        # start Flight code
+        # start generate Flight code
         if (airline_code == 'FD'):
             flight_counter.update({'FD': flight_counter['FD'] + 1})
             generate_num = "{:03d}".format(flight_counter['FD'])
@@ -240,14 +240,14 @@ class Plane:
             flight_counter.update({'TG': flight_counter['TG'] + 1})
             generate_num = "{:03d}".format(flight_counter['TG'])
         flight_code = "{}{}".format(airline_code,str(generate_num))
-        # end Flight code
-        spec = random.choice(plane_information)
-        passenger = spec.get_max_seat()
-        normal_seat = Calculator.normal_distribution_seat(passenger=passenger)
+        # end generate Flight code
+        plane_info = random.choice(plane_information)
+        passenger = plane_info.get_max_seat()
+        normal_passenger = Calculator.normal_distribution_seat(passenger=passenger)
         altitude = 0
         speed = 0
         status = 'Taking-off'
-        return Plane(airline_information=airline, plane_information=spec, passenger=normal_seat, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, status=status)
+        return (Plane(airline_information=airline, plane_information=plane_info, passenger=normal_passenger, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, status=status))
 
     # update plane position 
     def update_position(self):

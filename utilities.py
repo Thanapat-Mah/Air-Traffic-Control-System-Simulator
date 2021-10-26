@@ -52,7 +52,7 @@ class NewConverter:
         else:
             self.__scale = 1
 
-    def mock_degree_to_pixel(self, degree_postion):
+    def degree_to_pixel(self, degree_postion):
         #x_pixel = x_slope* x_degree - b_x
         x_slope = self.__screen_size[0]/(MAP_BOTTOM_RIGHT_DEGREE[1]-MAP_TOP_LEFT_DEGREE[1]) # size of screen divided by size of real map
         x_intercept = -x_slope*MAP_TOP_LEFT_DEGREE[1] 
@@ -74,16 +74,16 @@ class NewConverter:
         return self.__selected_object_code
 
 class Calculator:
+    #Calculate normal distribution of passenger
     def normal_distribution_seat(passenger):
         list_seat = []
         count = 1000
-        passenger = passenger
         for n in range(count):
             count_seat = random.randint(1,passenger)
             list_seat.append(count_seat)
         mean_seat = mean(list_seat)
         std_seat = std(list_seat)
-        normal_seat = int(random.normal(mean_seat, std_seat, 1))
-        while(normal_seat < 0):
-            normal_seat = int(random.normal(mean_seat, std_seat, 1))
-        return normal_seat
+        normal_passenger = int(random.normal(mean_seat, std_seat, 1))
+        while(normal_passenger < 0):
+            normal_passenger = int(random.normal(mean_seat, std_seat, 1))
+        return normal_passenger
