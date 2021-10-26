@@ -39,12 +39,12 @@ class Screen:
 		self.__display.blit(text_surface, ((self.__width-text_size[0])/2, padding))
 
 	# update screen by re-draw every components
-	def update_screen(self, simulator=None, map_=None, airport_manager=None, sidebar=None, toolbar=None, plane_manager=None):
+	def update_screen(self, simulator, map_, airport_manager, sidebar, toolbar, plane_manager):
 		self.refresh_background()
 		converter = Converter(screen_size=(self.__width, self.__height), map_=map_, simulator=simulator)
 		map_.draw_map(self.__display)
 		airport_manager.draw_all_airport(self.__display, converter=converter)
-		plane_manager.draw_plane(self.__display, converter=converter)
+		plane_manager.draw_all_plane(self.__display, converter=converter)
 		toolbar.draw_toolbar(self.__display, simulated_datetime=simulator.get_simulated_datetime())
 		sidebar.draw_sidebar(self.__display, simulator=simulator)
 		self.draw_name(name=simulator.get_name())

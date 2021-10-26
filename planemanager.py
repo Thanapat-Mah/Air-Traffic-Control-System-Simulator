@@ -62,8 +62,8 @@ class PlaneManager:
             'Waiting': [],
             'Circling': [],
             'Taking-off': [],
-            'Flying': [],
-            'Landing': []
+            'Landing': [],
+            'Flying': []            
         }
         #check status
         for plane in self.__plane_list:
@@ -89,7 +89,7 @@ class PlaneManager:
         return(True)
 
     #draw plane, route line and side plane detail
-    def draw_plane(self, display, converter):
+    def draw_all_plane(self, display, converter):
         for plane in self.__plane_list:
             if(plane.get_direction() != None):
                 # set new hit box
