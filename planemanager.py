@@ -4,7 +4,7 @@ from configuration import PLANE_PATH
 from utilities import Loader
 from plane_airline_information import PlaneInformation,AirlineInformation
 from configuration import FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH
-from plane import Plane 
+from plane import Plane
 
 ### plane mamager that can update plane
 class PlaneManager:
@@ -88,7 +88,7 @@ class PlaneManager:
                 return(False)
         return(True)
 
-    #draw plane, route line and side plane detail 
+    #draw plane, route line and side plane detail
     def draw_plane(self, display, converter):
         for plane in self.__plane_list:
             if(plane.get_direction() != None):
