@@ -44,6 +44,8 @@ AIRPORTS = (
 	# ("Khon Kaen Airport", "KKC", 1020, 320),
 	# ("Phuket International Airport", "HKT", 770, 800),
 	# ("Hat Yai International Airport", "HDY", 890, 890)
+	# ("Bara Airport", "BAR", 13, 90),
+	# ("MAJU Airport", "MAJ", 12, 110),
 	("Chiang Mai International Airport", "CNX", 18.767750, 98.964000),
     ("Suvarnabhumi Airport", "BKK", 13.690000, 100.750111),
     ("Khon Kaen Airport", "KKC", 16.465417, 102.787361),
@@ -57,6 +59,6 @@ AIRLINES = (
 )
 PLANE_INFORMATIONS = (
 	("Airbus A320-200", 180, 863, (29000, 39000)),
-	("Boeing 787-9", 236, 1050, (35000, 43000))
+	("Boeing 787-9", 236, 903, (35000, 43000))
 )
 ZOOM_SCALE = 2		# map zoom scaling

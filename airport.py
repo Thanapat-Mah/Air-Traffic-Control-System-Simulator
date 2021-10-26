@@ -76,9 +76,9 @@ class AirportManager:
 
     # update status of airport and return all aiport in each status
     def update_airport(self, plane_manager):
-        status_dict = {
-            "Empty": [],
-            "In Use": []
+        status_dict = {        
+            "In Use": [],
+            "Empty": []
         }
         for airport in self.__airport_tuple:
             if plane_manager.is_empty(airport.get_code()):

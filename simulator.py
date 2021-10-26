@@ -5,7 +5,7 @@ import datetime
 
 ### simulator data and state, keep track of state and time
 class Simulator:
-	def __init__(self, name, name_background_color=COLOR["dark_gray"], time_step=1):
+	def __init__(self, name, name_background_color=COLOR["dark_gray"], time_step=1, spawn_period=260):
 		self.__name = name
 		self.__name_background_color = name_background_color
 		self.__playing = True
@@ -14,7 +14,9 @@ class Simulator:
 		self.__running_time_count = 0
 		self.__simulated_datetime = datetime.datetime(2022, 1, 1, 0, 0, 0)	# simulated datetime
 		self.__simulated_time_step = datetime.timedelta(seconds=time_step)	# time step per 1 time tick
-		self.__delta_simulated_time = datetime.timedelta(seconds=0)			# time since last plane/airport update
+		self.__simulated_delta_count = datetime.timedelta(seconds=0)		# time since last plane/airport update
+		self.__spawn_period = datetime.timedelta(seconds=spawn_period)		# time period for spawn new plane
+		self.__spawn_delta_count = datetime.timedelta(seconds=0)			# time since last spawn
 		self.__plane_information = {}			# overall plane status Ex. Flying: 3, Landing: 2 etc.
 		self.__airport_information = {}			# airport information from AirportManager
 		self.__selected_object_code = ""		# IATA code of selected plane or airport object
@@ -67,7 +69,8 @@ class Simulator:
 			# increase simulated datetime by 1 minutes when reach the time period in speed
 			if self.__running_time_count%self.get_state("speed", current = True) == 0:
 				self.__simulated_datetime += self.__simulated_time_step
-				self.__delta_simulated_time += self.__simulated_time_step
+				self.__spawn_delta_count += self.__simulated_time_step
+				self.__simulated_delta_count += self.__simulated_time_step
 
 	# update plane and airport to next time step, also update information shown on sidebar
 	def update_simulator(self, airport_manager, plane_manager, sidebar):
@@ -80,9 +83,13 @@ class Simulator:
 		for detail in selected_detail:
 			if detail != "":
 				self.__selected_object_detail = detail
+		# spawn plane when reach time period
+		if self.__spawn_delta_count == self.__spawn_period:
+			plane_manager.generate_new_plane(airport_manager=airport_manager)
+			self.__spawn_delta_count = datetime.timedelta(seconds = 0)
 		# update plane and get plane information
-		self.__plane_information = plane_manager.update_plane(self.__delta_simulated_time, airport_manager=airport_manager)
-		self.__delta_simulated_time = datetime.timedelta(seconds = 0)
+		self.__plane_information = plane_manager.update_plane(simulated_delta_count=self.__simulated_delta_count, airport_manager=airport_manager)		
+		self.__simulated_delta_count = datetime.timedelta(seconds = 0)
 		# update airport and get airport information
 		self.__airport_information = airport_manager.update_airport(plane_manager=plane_manager)
 		# update all information on sidebar
