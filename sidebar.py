@@ -25,19 +25,19 @@ class Sidebar:
 		# align and create components on sidebar
 		component_x = self.__x - self.__width + self.__padding
 		component_width_space = self.__width - 2*self.__padding
-		half_width_space = (component_width_space-padding)/2
+		half_width_space = (component_width_space-padding)/2		
+		self.__command_input_box = pygame.Rect((0, 0), (component_width_space, 40))
+		self.__command_input_box.bottomleft = (component_x, self.__y+self.__height-self.__padding)
+		self.__selected_object_detail = InformationBox(
+			x=component_x, y=self.__command_input_box.topleft[1]-self.__padding-220,
+			width=component_width_space, height=220, topic="Details", font=self.__font
+			)		
 		self.__overall_plane_information = InformationBox(
 			x=component_x, y=self.__y+self.__padding, width=half_width_space, height=170, topic="Plane", font=self.__font
 			)
 		self.__overall_airport_information = InformationBox(
 			x=component_x+half_width_space+self.__padding, y=self.__y+self.__padding,
 			width=half_width_space, height=170, topic="Airport", font=self.__font
-			)
-		self.__command_input_box = pygame.Rect((0, 0), (component_width_space, 40))
-		self.__command_input_box.bottomleft = (component_x, self.__y+self.__height-self.__padding)
-		self.__selected_object_detail = InformationBox(
-			x=component_x, y=self.__command_input_box.topleft[1]-self.__padding-220,
-			width=component_width_space, height=220, topic="Details", font=self.__font
 			)
 		list_box_y = self.__overall_plane_information.get_corner_point(2)[1]+padding
 		list_box_height = self.__selected_object_detail.get_corner_point(0)[1] - list_box_y - padding
@@ -60,13 +60,13 @@ class Sidebar:
 			for airport in airport_information[key]:
 				airport_status_list.append({"code": airport, "detail": key})
 		# update content in each components
-		self.__overall_plane_information.update_content(new_content=overall_plane_information)
-		self.__overall_airport_information.update_content(new_content=overall_airport_information)
+		self.__overall_plane_information.set_content(new_content=overall_plane_information)
+		self.__overall_airport_information.set_content(new_content=overall_airport_information)
 		self.__overall_list_box.update_button(airport_status_list=airport_status_list, plane_status_list=plane_status_list)
-		self.__selected_object_detail.update_content(new_content=selected_object_detail)
+		self.__selected_object_detail.set_content(new_content=selected_object_detail)
 
 	# draw all components on sidebar
-	def draw_sidebar(self, display, simulator=None):
+	def draw_sidebar(self, display, simulator):
 		# change x position when sidebar is open
 		if not self.__is_open:
 			current_x = self.__x

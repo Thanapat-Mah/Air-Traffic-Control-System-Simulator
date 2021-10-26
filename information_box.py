@@ -30,8 +30,8 @@ class InformationBox:
 			corner_point = corner_point[index]
 		return(corner_point)
 
-	# update content in box
-	def update_content(self, new_content):
+	# set content in box
+	def set_content(self, new_content):
 		self.__content = new_content
 
 	# draw information box on screen
