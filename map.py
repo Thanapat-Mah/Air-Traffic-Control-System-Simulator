@@ -7,8 +7,8 @@ class Map:
     __first_click_position = None # position when rightclick is be down
     __previous_distance = 0 # __previous_distance is used to calulate in move method
     def __init__ (self, image_path, screen_size, top_left_point = ((0, 0))):
-        self.__width = screen_size[0]
-        self.__height = screen_size[1]
+        self.__width = screen_size[0] # width of map at zoomed out
+        self.__height = screen_size[1] # height of map at zoomed out
         self.__source_image = Loader.load_image(image_path = image_path, size=(self.__width, self.__height), scale=ZOOM_SCALE) 
         self.__image = pygame.transform.scale( self.__source_image, (self.__width, self.__height))
         self.__top_left_point = top_left_point
@@ -43,7 +43,7 @@ class Map:
         moving_distance = last_click_position[1] - self.__first_click_position[1]
         top_left_point_list[1] = top_left_point_list[1] + moving_distance - self.__previous_distance
         self.__previous_distance = moving_distance # store the distance for future calculation.
-        border_bottom = -self.__height
+        border_bottom = -self.__height * (ZOOM_SCALE -1) 
         if top_left_point_list[1] > 0: #if moving more than top border
             top_left_point_list[1] = 0
         elif top_left_point_list[1] < border_bottom: #if moving more than bottom border
