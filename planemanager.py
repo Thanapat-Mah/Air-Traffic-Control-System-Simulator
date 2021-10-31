@@ -9,7 +9,7 @@ from plane import Plane
 ### plane mamager that can update plane
 class PlaneManager:
     __LIMIT = 3
-    def __init__(self, plane_size=50, image_path=PLANE_PATH, text_color=COLOR["white"], font=FONT["bebasneue_small"], line_color = COLOR["light_gray"]):
+    def __init__(self, plane_size=30, image_path=PLANE_PATH, text_color=COLOR["white"], font=FONT["bebasneue_small"], line_color = COLOR["light_gray"]):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
         self.__plane_specification_tuple = tuple([
@@ -111,15 +111,11 @@ class PlaneManager:
                 display.blit(image, new_hit_box)
                 # draw text right side of plane
                 flight_code_surface = self.__font.render(plane.get_flight_code(), True, self.__text_color)
-                origin_surface = self.__font.render(f"FROM: {plane.get_origin().get_code()}", True, self.__text_color)
-                destination_surface = self.__font.render(f"TO: {plane.get_destination().get_code()}", True, self.__text_color)
+                route_surface = self.__font.render(f"{plane.get_origin().get_code()} - {plane.get_destination().get_code()}", True, self.__text_color)
                 text_x = pixel_position[0] + self.__plane_size/2
-                text_y = pixel_position[1] - origin_surface.get_size()[1]
-                display.blit(flight_code_surface, (text_x, text_y))
-                text_y += origin_surface.get_size()[1]/2 + 3
-                display.blit(origin_surface, (text_x, text_y))
-                text_y += origin_surface.get_size()[1]/2 + 3
-                display.blit(destination_surface, (text_x, text_y))
+                text_y = pixel_position[1] - flight_code_surface.get_size()[1]
+                display.blit(flight_code_surface, (text_x, pixel_position[1]-flight_code_surface.get_size()[1]/2-5))
+                display.blit(route_surface, (text_x, pixel_position[1]))
 
     # return selected plane' airline code
     def check_selection (self, event):
