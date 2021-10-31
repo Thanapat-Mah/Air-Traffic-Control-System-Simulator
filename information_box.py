@@ -3,7 +3,7 @@ from configuration import FONT, COLOR
 
 ### static information box for display overall and specific object information on sidebar
 class InformationBox:
-	def __init__(self, x, y, width, height, border_radius=10, topic="topic", content=[""], padding=15, content_padding=5,
+	def __init__(self, x, y, width, height, border_radius=10, topic="topic", content=[""], padding=10, content_padding=5,
 		font=FONT["roboto_normal"], text_color=COLOR["white"], background_color=COLOR["dark_gray"]):
 		self.__x = x
 		self.__y = y

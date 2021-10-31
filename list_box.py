@@ -35,8 +35,8 @@ class ListBox:
 				font=self.__font, background_color=self.__background_color, border_color=self.__text_color, border_size=1)
 			)		
 		# calculate button per page
-		self.__status_button_padding = 10
-		self.__status_button_height = 40
+		self.__status_button_padding = 8
+		self.__status_button_height = 30
 		status_button_height_space = page_button_y - (self.__menu_topic_rect[0].bottomleft[1])
 		self.__status_button_per_page = math.floor(status_button_height_space/(self.__status_button_height+self.__status_button_padding))
 		self.__status_button_list = []
@@ -59,8 +59,8 @@ class ListBox:
 		status_button_y = self.__menu_topic_rect[0].bottomleft[1] + self.__status_button_padding
 		for item in displayed:
 			self.__status_button_list.append(
-				StatusButton(x=self.__x+self.__status_button_padding, y=status_button_y,
-					width=self.__width-2*self.__status_button_padding, height=self.__status_button_height,
+				StatusButton(x=self.__x+self.__status_button_padding*2, y=status_button_y,
+					width=self.__width-self.__status_button_padding*4, height=self.__status_button_height,
 					code=item["code"], detail=item["detail"])
 				)
 			status_button_y += self.__status_button_height + self.__status_button_padding
