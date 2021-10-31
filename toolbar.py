@@ -5,7 +5,7 @@ from utilities import Loader
 
 ### toolbar at bottom side of screen, provide tool for modify simulation behavior
 class Toolbar:
-	def __init__(self, screen_size, simulator, height=80, background_color=COLOR["black"], font=FONT["roboto_normal"], datetime_color=COLOR["white"]):
+	def __init__(self, screen_size, simulator, height=50, background_color=COLOR["black"], font=FONT["roboto_normal"], datetime_color=COLOR["white"]):
 		self.__x = 0
 		self.__y = screen_size[1] - height	# adjust position to buttom of screen
 		self.__width = screen_size[0]
@@ -14,18 +14,18 @@ class Toolbar:
 		self.__font = font
 		self.__datetime_color = datetime_color
 		# initiate control button
-		button_y_padding = 15
+		button_y_padding = 10
 		loader = Loader()
 		self.__play_pause_button = MultiStateButton(label_tuple=("Playing", "Paused"),
-			icon_tuple=loader.load_icons(25, ICON_PATH["pause"], ICON_PATH["play"]),
-			x=290, y=self.__y+button_y_padding, width=150, height=self.__height-button_y_padding*2)
+			icon_tuple=loader.load_icons(self.__height-button_y_padding*2-12, ICON_PATH["pause"], ICON_PATH["play"]),
+			x=210, y=self.__y+button_y_padding, width=120, height=self.__height-button_y_padding*2)
 		self.__speed_button = MultiStateButton(label_tuple=("Speed", "Speed", "Speed"),
-			icon_tuple=loader.load_icons(25, ICON_PATH["speed1"], ICON_PATH["speed2"], ICON_PATH["speed3"]),
-			x=450, y=self.__y+button_y_padding, width=180, height=self.__height-button_y_padding*2)
+			icon_tuple=loader.load_icons(self.__height-button_y_padding*2-12, ICON_PATH["speed1"], ICON_PATH["speed2"], ICON_PATH["speed3"]),
+			x=340, y=self.__y+button_y_padding, width=150, height=self.__height-button_y_padding*2)
 		self.__zoom_button = MultiStateButton(label_tuple=("Zoom", "Zoom"),
-			icon_tuple=loader.load_icons(25, ICON_PATH["zoom_in"], ICON_PATH["zoom_out"]),
-			x=640, y=self.__y+button_y_padding, width=130, height=self.__height-button_y_padding*2)
-		self.__exit_button = ExitButton(x=self.__width-120, y=self.__y+button_y_padding, width=100, height=self.__height-button_y_padding*2)
+			icon_tuple=loader.load_icons(self.__height-button_y_padding*2-12, ICON_PATH["zoom_in"], ICON_PATH["zoom_out"]),
+			x=500, y=self.__y+button_y_padding, width=110, height=self.__height-button_y_padding*2)
+		self.__exit_button = ExitButton(x=self.__width-90, y=self.__y+button_y_padding, width=80, height=self.__height-button_y_padding*2)
 
 	# getter for toolbar height
 	def get_height(self):

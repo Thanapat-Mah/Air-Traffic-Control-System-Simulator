@@ -3,8 +3,8 @@
 import pygame
 pygame.font.init()
 FONT = {
-	"roboto_normal": pygame.font.Font('assets/fonts/Roboto-Regular.ttf', 24),
-	"roboto_small": pygame.font.Font('assets/fonts/Roboto-Regular.ttf', 16),
+	"roboto_normal": pygame.font.Font('assets/fonts/Roboto-Regular.ttf', 16),
+	"roboto_small": pygame.font.Font('assets/fonts/Roboto-Regular.ttf', 12),
 	"bebasneue_normal": pygame.font.Font('assets/fonts/BebasNeue-Regular.ttf', 22),
 	"bebasneue_small": pygame.font.Font('assets/fonts/BebasNeue-Regular.ttf', 16)
 }
@@ -61,4 +61,4 @@ PLANE_INFORMATIONS = (
 	("Airbus A320-200", 180, 863, (29000, 39000)),
 	("Boeing 787-9", 236, 903, (35000, 43000))
 )
-ZOOM_SCALE = 3	# map zoom scaling
+ZOOM_SCALE = 2	# map zoom scaling

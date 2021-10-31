@@ -4,7 +4,7 @@ from utilities import Loader
 
 ### button UI
 class Button:
-	def __init__(self, x, y, width, height, border_size=3, border_color=COLOR["dark_gray"], border_radius=5,
+	def __init__(self, x, y, width, height, border_size=2, border_color=COLOR["dark_gray"], border_radius=5,
 		background_color=COLOR["black"], text="Button", font=FONT["roboto_normal"], text_color=COLOR["white"]):
 		self.x = x
 		self.y = y
