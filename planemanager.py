@@ -19,13 +19,17 @@ class PlaneManager:
         self.__airline_tuple = tuple([
             AirlineInformation(code= info[0], name=info[1]) for info in AIRLINES
         ])
-        self.__text_color = text_color
-        self.__font = font
-        self.__line_color = line_color
         self.__flight_counter = {
             'FD' : 0,
             'TG' : 0
         }
+        self.__text_color = text_color
+        self.__font = font
+
+        self.__route_color = line_color
+        self.__route_width = None
+        self.__collision_circle_color = None
+        self.__collision_circle_width = None
 
     # get plane list that contain all plane object
     def get_plane_list(self):
