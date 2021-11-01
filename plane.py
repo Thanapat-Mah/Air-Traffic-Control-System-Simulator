@@ -3,6 +3,7 @@ import random
 import math
 from numpy import random
 from utilities import Calculator
+from configuration import ROC, PLNAE_PHASE, ACCELERATE
 
 ### flight, store information, generate random plane, mark plane position on map
 class Plane:
@@ -110,29 +111,24 @@ class Plane:
     # update plane position
     def update_position(self):
         #update position for Landing plane
-        if (self.__status != "Landing"):
-            destination_position = self.__destination.get_degree_position()
-            self.__direction = math.degrees(math.atan2(destination_position[0] - self.__degree_position[0],
-                    destination_position[1] - self.__degree_position[1]))
+        if (self.__status != PLNAE_PHASE["landing"]):
+            self.find_direction()
+
         #update position for Taking off plane
-        if (self.__status == "Taking-off"):
-                average_speed = self.__plane_information.get_speed()
-                avrage_altitude = self.__plane_information.get_altitude()
-                avrage_altitude = (sum(avrage_altitude)/2)
-                self.__speed += average_speed/60 # 15s to max speed
-                self.__altitude += avrage_altitude/60
-                if self.__speed > average_speed or self.__altitude > avrage_altitude:
-                    self.__speed  = average_speed
-                    self.__altitude = avrage_altitude
+        if (self.__status == PLNAE_PHASE["takingoff"]):
+            self.taking_off()
+
+        if (self.__status == PLNAE_PHASE["climbing"]):
+            self.climbing()
+
         #update position for landing plane
-        if (self.__status == "Landing"):
-            if (self.__speed > 0):
-                average_speed = self.__plane_information.get_speed()
-                avrage_altitude = self.__plane_information.get_altitude()
-                avrage_altitude = (sum(avrage_altitude)/2)
-                self.__speed =  self.__speed - average_speed/60 if self.__speed - average_speed/60 >= 0 else 0
-                self.__altitude = self.__altitude - avrage_altitude/60 if self.__altitude - avrage_altitude/60 >= 0 else 0
+        if (self.__status == PLNAE_PHASE["landing"]):
+            self.landing()
+
         # if plane is close the airport don't update position in map
+        if (self.__status == PLNAE_PHASE["descending"]):
+            self.descending()
+
         if (self.get_remain_distance() >= 1):
             speed = self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
             x_speed = speed*math.cos(math.radians(self.__direction))
@@ -148,3 +144,41 @@ class Plane:
                     if self.__hit_box.collidepoint(x, y):
                         return(self.__flight_code)
         return("")
+
+    def find_direction(self):
+        destination_position = self.__destination.get_degree_position()
+        self.__direction = math.degrees(math.atan2(destination_position[0] - self.__degree_position[0],
+        destination_position[1] - self.__degree_position[1]))
+
+    def waiting(self):
+        pass
+
+    def taking_off(self):
+        average_speed = self.__plane_information.get_speed()
+        self.__speed += ACCELERATE # 15s to max speed
+        if self.__speed > 0.8*average_speed:
+            self.__speed  = 0.8*average_speed
+
+    def climbing(self):
+        avrage_altitude = self.__plane_information.get_altitude()
+        avrage_altitude = (sum(avrage_altitude)/2)
+        self.__altitude += ROC/60
+        if self.__altitude > avrage_altitude:
+            self.__altitude = avrage_altitude
+
+    def cruise(self):
+        pass
+
+    def descending(self):
+        pass
+
+    def landing(self):
+        if (self.__speed > 0):
+            average_speed = self.__plane_information.get_speed()
+            avrage_altitude = self.__plane_information.get_altitude()
+            avrage_altitude = (sum(avrage_altitude)/2)
+            self.__speed =  self.__speed - average_speed/60 if self.__speed - average_speed/60 >= 0 else 0
+            self.__altitude = self.__altitude - avrage_altitude/60 if self.__altitude - avrage_altitude/60 >= 0 else 0
+
+    def holding(self):
+        pass

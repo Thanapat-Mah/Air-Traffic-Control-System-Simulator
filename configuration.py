@@ -63,3 +63,15 @@ PLANE_INFORMATIONS = (
 	("Boeing 787-9", 236, 903, (35000, 43000))
 )
 ZOOM_SCALE = 3	# map zoom scaling
+
+ROC = 3500 # rate of climbing (ft/min)
+ACCELERATE = 6 #accelerate when taking off and landing (m/s^2)
+PLNAE_PHASE = {
+	"waiting":"Waiting",
+	"takingoff":"Taking-off",
+	"climbing":"Climbing",
+	"cruising":"Cruising",
+	"descending":"Descending",
+	"landing":"Landing",
+	"holding":"Holding"
+}

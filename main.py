@@ -1,3 +1,4 @@
+from numpy.random.mtrand import f
 import pygame
 from configuration import MAP_PATH, PLANE_PATH
 from screen import Screen
@@ -31,7 +32,7 @@ def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator,plane_ma
 	
 if __name__ == "__main__":
 	pygame.init()
-	screen = Screen(fullscreen=True)
+	screen = Screen(fullscreen=False)
 	simulator = Simulator(name="Air Traffic Control System Simulator")
 	toolbar = Toolbar(screen_size=screen.get_size(), simulator=simulator)
 	sidebar = Sidebar(screen_size=screen.get_size(), toolbar_height=toolbar.get_height())
