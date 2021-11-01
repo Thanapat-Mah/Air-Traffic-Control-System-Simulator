@@ -66,7 +66,7 @@ class ListBox:
 			status_button_y += self.__status_button_height + self.__status_button_padding
 
 	# draw list box
-	def draw_list_box(self, display, simulator):
+	def draw_list_box(self, display, simulator, collision_detector):
 		# draw background of list box
 		pygame.draw.rect(display, self.__background_color, (self.__x, self.__y, self.__width, self.__height), border_radius=self.__border_radius)
 		# draw topic
@@ -82,9 +82,15 @@ class ListBox:
 			topic_x = self.__x + count*self.__width/2 + (self.__width/2-topic_text_surface.get_size()[0])/2
 			display.blit(topic_text_surface, (topic_x, self.__y+10))
 		# draw status button
+		i = 0
 		for status_button in self.__status_button_list:			
-			is_selected = (status_button.code == simulator.get_selected_object_code())
-			status_button.draw_button(display=display, is_selected=is_selected)
+			is_selected = (status_button.get_code() == simulator.get_selected_object_code())
+			# is_collide = (status_button.get_code() in collision_detector.get_collision_set())
+			is_collide = True
+			i += 1
+			if i > 2:
+				is_collide = False
+			status_button.draw_button(display=display, is_selected=is_selected, is_collide=is_collide)
 		# draw page number
 		page_text_surface = self.__font.render(f"{self.__selected_page}/{self.__all_page_count}", True, self.__text_color)
 		left_switch_button = self.__switch_page_button[0]

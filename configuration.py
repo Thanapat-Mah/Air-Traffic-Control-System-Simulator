@@ -17,7 +17,8 @@ COLOR = {
 	"dark_gray": (57, 62, 70),
 	"light_gray": (194, 194, 194),
 	"white": (255, 255, 255),
-	"pink": (255, 82, 96)
+	"pink": (255, 82, 96),
+	"red": (197, 0, 0)
 }
 MAP_PATH = "assets/images/map_full_size.png"
 PLANE_PATH = "assets/images/plane.png"

@@ -64,7 +64,7 @@ class Sidebar:
 		self.__selected_object_detail.set_content(new_content=selected_object_detail)
 
 	# draw all components on sidebar
-	def draw_sidebar(self, display, simulator):
+	def draw_sidebar(self, display, simulator, collision_detector=None):
 		# change x position when sidebar is open
 		if not self.__is_open:
 			current_x = self.__x
@@ -77,9 +77,9 @@ class Sidebar:
 			self.__overall_plane_information.draw_information_box(display=display)
 			self.__overall_airport_information.draw_information_box(display=display)			
 			# draw list box
-			self.__overall_list_box.draw_list_box(display=display, simulator=simulator)
+			self.__overall_list_box.draw_list_box(display=display, simulator=simulator, collision_detector=collision_detector)
 		# draw_notch
-		self.__notch_button.x = current_x - self.__notch_button.width
+		self.__notch_button.set_x(current_x - self.__notch_button.width)
 		self.__notch_button.draw_button(display=display)
 		pygame.draw.rect(display, self.__notch_color, (current_x - self.__notch_width, self.__y, self.__notch_width, self.__height))
 		

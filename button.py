@@ -19,6 +19,9 @@ class Button:
 		self.text_color = text_color
 		self.hit_box = pygame.Rect(self.x, self.y, self.width, self.height)
 
+	def set_x(self, new_x):
+		self.x = new_x
+
 	# draw button with text
 	def draw_button(self, display):
 		# adjust hit box and text on button
@@ -104,28 +107,39 @@ class MultiStateButton(Button):
 ### clickable status button for plane and airport on list box on sidebar
 class StatusButton(Button):
 	def __init__(self, code, detail, icon=Loader.load_image(image_path=ICON_PATH["magnifier"], size=(20, 20)),
-		selected_background_color=COLOR["black"], *args, **kwargs):
+		selected_background_color=COLOR["black"], collision_color=COLOR["red"], *args, **kwargs):
 		super().__init__(font=FONT["roboto_small"], background_color=COLOR["dark_gray"],
 			border_color=COLOR["white"], border_size=1, *args, **kwargs)
 		self.code = code
 		self.detail = detail
 		self.icon = icon
 		self.selected_background_color = selected_background_color
+		self.collision_color = collision_color
 		self.text = str(self.code) + " | " + str(self.detail)
 
+	def get_code(self):
+		return(self.code)
+
 	# draw button with fix icon at left
-	def draw_button(self, display, is_selected=False):
+	def draw_button(self, display, is_selected=False, is_collide=False):
 		# adjust hit box and text on button
 		self.hit_box = pygame.Rect(self.x, self.y, self.width, self.height)
 		self.text_surface = self.font.render(self.text, True, self.text_color)
 		# draw button background and border
+		drawing_background_color = self.background_color
+		drawing_border_color = self.border_color
+		# check if this button is collide
+		if is_collide:
+			drawing_background_color = self.collision_color
+			drawing_border_color = self.collision_color
+		# check if this button is selected
 		if is_selected:
-			background_color = self.selected_background_color
-		else:
-			background_color = self.background_color
-		pygame.draw.rect(display, background_color, self.hit_box, width=0, border_radius=self.border_radius)
+			drawing_background_color = self.selected_background_color
+		# draw background
+		pygame.draw.rect(display, drawing_background_color, self.hit_box, width=0, border_radius=self.border_radius)
+		# draw border
 		if self.border_size != 0:
-			pygame.draw.rect(display, self.border_color, self.hit_box, width=self.border_size, border_radius=self.border_radius)
+			pygame.draw.rect(display, drawing_border_color, self.hit_box, width=self.border_size, border_radius=self.border_radius)
 		# draw text on left of button
 		padding = (self.height - self.text_surface.get_size()[1])/2
 		display.blit(self.text_surface, (self.x+padding, self.y+padding))
