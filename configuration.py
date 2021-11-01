@@ -14,10 +14,13 @@ FONT = {
 # RGB code for every color used in program
 COLOR = {
 	"black": (28, 28, 28),
+	"transparance_black": (28, 28, 28, int(255*0.8)),
 	"dark_gray": (57, 62, 70),
 	"light_gray": (194, 194, 194),
 	"white": (255, 255, 255),
-	"pink": (255, 82, 96)
+	"pink": (255, 82, 96),
+	"red": (197, 0, 0),
+	"green": (63, 181, 61)
 }
 MAP_PATH = "assets/images/map_full_size.png"
 PLANE_PATH = "assets/images/plane.png"
@@ -75,3 +78,29 @@ PLNAE_PHASE = {
 	"landing":"Landing",
 	"holding":"Holding"
 }
+FAIL_RESPONSE = {
+	"invalid_value": "Invalid value",
+	"can_not_command": "Can not command"
+}
+# command syntax
+KEYWORD = "keyword"
+FORMAT = "format"
+OPTIONAL = "optional"
+REQUIRED = "require"
+SYNTAX = [
+	# generate A320, BKK, CNX
+	{KEYWORD: "generate",
+	FORMAT: [KEYWORD, OPTIONAL, OPTIONAL, OPTIONAL]},
+	# TG001 takeoff
+	{KEYWORD: "takeoff",
+	FORMAT: [REQUIRED, KEYWORD]},
+	# TG001 hold
+	{KEYWORD: "hold",
+	FORMAT: [REQUIRED, KEYWORD]},
+	# TG001 continue
+	{KEYWORD: "continue",
+	FORMAT: [REQUIRED, KEYWORD]},
+	# TG001 altitude 30000
+	{KEYWORD: "altitude",
+	FORMAT: [REQUIRED, KEYWORD, REQUIRED]},
+]

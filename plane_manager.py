@@ -63,7 +63,7 @@ class PlaneManager:
 
                 if plane.get_status() == PLNAE_PHASE['landing']:
                     if(plane.get_speed() == 0):
-                        airport_manager.count_plane(plane.get_destination().get_code(), 'landed')
+                        airport_manager.count_plane(plane.get_destination().get_code(), "arrived")
                         plane.set_altitude(0)
                         self.__plane_list.remove(plane)
         # dict for return
@@ -159,3 +159,34 @@ class PlaneManager:
         # if (len(self.__plane_list) != self.__LIMIT):
         gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specification_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter)
         self.__plane_list.append(gen_plane)
+
+    def respond_command(self, command): 
+        if command[0] == 'generate':
+            pass
+        elif command[1] == 'takeoff':
+            pass
+        elif command[1] == 'hold':
+            pass
+        elif command[1] == 'continue':
+            pass
+        elif command[1] == 'altitude':
+            pass
+        else:
+            pass
+
+        return
+    
+    def command_generate(self, model, origin, destination):
+        return
+
+    def command_takeoff(self, flight_code):
+        return
+    
+    def command_hold(self, flight_code):
+        return
+
+    def command_continue(self, flight_code):
+        return
+
+    def command_altitude(self, flight_code, altitude):
+        return
