@@ -8,7 +8,7 @@ class Simulator:
 	def __init__(self, name, name_background_color=COLOR["dark_gray"], time_step=1, spawn_period=260):
 		self.__name = name
 		self.__is_play = True
-		self.__speed = [8, 3, 1]				# time period, less value more speed, first value is current
+		self.__speed = [25, 5, 1]				# time period, less value more speed, first value is current
 		self.__is_zoom = False		
 		self.__running_time_count = 0
 		self.__simulated_datetime = datetime.datetime(2022, 1, 1, 0, 0, 0)	# simulated datetime
@@ -16,10 +16,10 @@ class Simulator:
 		self.__simulated_delta_count = datetime.timedelta(seconds=0)		# time since last plane/airport update
 		self.__spawn_period = datetime.timedelta(seconds=spawn_period)		# time period for spawn new plane
 		self.__spawn_delta_count = datetime.timedelta(seconds=0)			# time since last spawn
-		self.__plane_information = {}			# overall plane status Ex. Flying: 3, Landing: 2 etc.
+		self.__plane_information = {}			# plane information from PlaneManager
 		self.__airport_information = {}			# airport information from AirportManager
 		self.__selected_object_code = ""		# IATA code of selected plane or airport object
-		self.__selected_object_detail = []
+		self.__selected_object_detail = []		# details of selected object
 
 	# return name of simulator
 	def get_name(self):

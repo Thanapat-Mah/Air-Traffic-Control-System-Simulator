@@ -82,8 +82,10 @@ class AirportManager:
         }
         for airport in self.__airport_tuple:
             if plane_manager.is_empty(airport.get_code()):
+                airport.set_available(True)
                 status_dict["Empty"].append(airport.get_code())
             else:
+                airport.set_available(False)
                 status_dict["In Use"].append(airport.get_code())
         return(status_dict)
 
