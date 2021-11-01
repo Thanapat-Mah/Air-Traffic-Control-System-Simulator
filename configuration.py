@@ -64,3 +64,8 @@ PLANE_INFORMATIONS = (
 	("Boeing 787-9", 236, 903, (35000, 43000))
 )
 ZOOM_SCALE = 3	# map zoom scaling
+
+FAIL_RESPONSE = {
+	"invalid_value": "Invalid value",
+	"can_not_command": "Can not command"
+}
