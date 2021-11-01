@@ -102,7 +102,7 @@ class PlaneManager:
                 # draw route line when is selected
                 airport_pixel = converter.degree_to_pixel(degree_postion=plane.get_destination().get_degree_position())
                 if (converter.get_selected_object_code() == plane.get_flight_code()):
-                    pygame.draw.line(display, self.__line_color, pixel, airport_pixel, width = 2)
+                    pygame.draw.line(display, self.__route_color, pixel, airport_pixel, width = 2)
                 pixel = (pixel[0]-25,pixel[1]-25)
                 direction = plane.get_direction()
                 # rotate the plane in the direction of the destination.

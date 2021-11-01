@@ -22,6 +22,9 @@ class Button:
 	def set_x(self, new_x):
 		self.x = new_x
 
+	def set_background_color(self, new_background_color):
+		self.background_color = new_background_color
+
 	# draw button with text
 	def draw_button(self, display):
 		# adjust hit box and text on button

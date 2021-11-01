@@ -7,7 +7,7 @@ from list_box import ListBox
 ### sidebar at left of screen, display simulation's infomations
 class Sidebar:
 	def __init__(self, screen_size, toolbar_height, notch_width=10, notch_color=COLOR["black"], width=300,
-		background_color=COLOR["black"], font=FONT["roboto_small"], padding=10):
+		background_color=COLOR["black"], font=FONT["roboto_small"], padding=10, collision_notch_color=COLOR["red"]):
 		self.__x = screen_size[0]						# x position of sidebar background, at closing state
 		self.__y = 0
 		self.__width = width
@@ -40,6 +40,7 @@ class Sidebar:
 		list_box_y = self.__overall_plane_information.get_corner_point(2)[1]+padding
 		list_box_height = self.__selected_object_detail.get_corner_point(0)[1] - list_box_y - padding
 		self.__overall_list_box = ListBox(x=component_x, y=list_box_y, width=component_width_space, height=list_box_height)
+		self.__collision_notch_color = collision_notch_color
 
 	# update simulations information on sidebar
 	def update_information(self, plane_information, airport_information, selected_object_detail):		
@@ -64,7 +65,7 @@ class Sidebar:
 		self.__selected_object_detail.set_content(new_content=selected_object_detail)
 
 	# draw all components on sidebar
-	def draw_sidebar(self, display, simulator, collision_detector=None):
+	def draw_sidebar(self, display, simulator, collision_detector):
 		# change x position when sidebar is open
 		if not self.__is_open:
 			current_x = self.__x
@@ -79,9 +80,13 @@ class Sidebar:
 			# draw list box
 			self.__overall_list_box.draw_list_box(display=display, simulator=simulator, collision_detector=collision_detector)
 		# draw_notch
+		drawing_notch_color = self.__notch_color
+		if len(collision_detector.mock_get_collision_set()) > 0:
+			drawing_notch_color = self.__collision_notch_color
 		self.__notch_button.set_x(current_x - self.__notch_button.width)
+		self.__notch_button.set_background_color(drawing_notch_color)
 		self.__notch_button.draw_button(display=display)
-		pygame.draw.rect(display, self.__notch_color, (current_x - self.__notch_width, self.__y, self.__notch_width, self.__height))
+		pygame.draw.rect(display, drawing_notch_color, (current_x - self.__notch_width, self.__y, self.__notch_width, self.__height))
 		
 	# check sidebar openning/closing
 	def check_event(self, event):
