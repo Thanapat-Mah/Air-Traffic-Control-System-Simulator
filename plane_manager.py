@@ -58,7 +58,7 @@ class PlaneManager:
 
                 if plane.get_status() == 'Landing':
                     if(plane.get_speed() == 0):
-                        airport_manager.count_plane(plane.get_destination().get_code(), "landed")
+                        airport_manager.count_plane(plane.get_destination().get_code(), "arrived")
                         plane.set_altitude(0)
                         self.__plane_list.remove(plane)
         # dict for return

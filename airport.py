@@ -10,7 +10,7 @@ class Airport:
         self.__code = code        
         self.__degree_position = (x, y)
         self.__available = True
-        self.__landed = 0
+        self.__arrived = 0
         self.__departed = 0
         self.__hit_box = None
 
@@ -39,7 +39,7 @@ class Airport:
             "Name: {}".format(self.__name),
             "IATA Code: {}".format(self.__code),
             "Status: {}".format(status),
-            "Landed: {}".format(self.__landed),
+            "Arrived: {}".format(self.__arrived),
             "Departed: {}".format(self.__departed)
         ]
         return(detail_string_list)
@@ -58,8 +58,8 @@ class Airport:
     def count_plane(self, action):
         if action == "departed":
             self.__departed += 1
-        elif action == "landed":
-            self.__landed += 1
+        elif action == "arrived":
+            self.__arrived += 1
 
 ### airport manager, used to manage and coordinate all airport related task
 class AirportManager:
