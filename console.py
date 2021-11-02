@@ -1,6 +1,7 @@
 import pygame
 from configuration import COLOR, FONT, KEYWORD, FORMAT, OPTIONAL, REQUIRED, SYNTAX
 from button import MultiStateButton
+from command_input import CommandInput
 
 ### console for input command, show response and notify collision detection
 class Console:
@@ -29,7 +30,7 @@ class Console:
 		}
 		self.__command_log = [{"success_response": "Initailizing..."}]
 		self.__syntax = SYNTAX
-		self.__command_input = None 	# CommandInput()
+		self.__command_input = CommandInput(x=10, y=self.__height-40, width=self.__width/2, height=30)
 		self.__help_button = None 		# MultiStateButton()
 
 	### mock method
@@ -53,5 +54,6 @@ class Console:
 		text = "> TG001 Capybara 555555555555555555555555555555555555555555555555555555555555555555555 bara"
 		text_surface = self.__font.render(text, True, self.__text_color["user"])
 		self.__background_surface.blit(text_surface, (50, 50))
-
+		# draw command input box
+		self.__command_input.draw_command_input(display=self.__background_surface)
 		display.blit(self.__background_surface, (self.__x, self.__y))
