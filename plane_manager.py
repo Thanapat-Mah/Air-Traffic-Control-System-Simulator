@@ -3,12 +3,13 @@ from numpy import frompyfunc
 from configuration import PLANE_PATH
 from utilities import Loader
 from plane_airline_information import PlaneInformation,AirlineInformation
-from configuration import FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH, PLNAE_PHASE
+from configuration import FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH, PLNAE_PHASE,ROC
 from plane import Plane
 
 ### plane mamager that can update plane
 class PlaneManager:
-    def __init__(self, plane_size=30, image_path=PLANE_PATH, text_color=COLOR['white'], font=FONT['bebasneue_small'], line_color = COLOR['light_gray']):
+    __LIMIT = 4
+    def __init__(self, plane_size=30, image_path=PLANE_PATH, text_color=COLOR['white'], font=FONT['bebasneue_small'], route_color = COLOR['light_gray'], route_width = 2):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
         self.__plane_specification_tuple = tuple([
@@ -25,8 +26,8 @@ class PlaneManager:
         self.__text_color = text_color
         self.__font = font
 
-        self.__route_color = line_color
-        self.__route_width = None
+        self.__route_color = route_color
+        self.__route_width = route_width
         self.__collision_circle_color = None
         self.__collision_circle_width = None
 
@@ -45,24 +46,26 @@ class PlaneManager:
             self.update_plane_position()
             #chaing plane status
             for plane in self.__plane_list:
-                # if (plane.get_status() != PLNAE_PHASE['landing'] and plane.get_status() != PLNAE_PHASE['takingoff']):
-                #     if (plane.get_remain_distance() <20):
-                #         plane.set_status(PLNAE_PHASE['landing'])
-                #     else: plane.set_status(PLNAE_PHASE['cruising'])
-
                 if plane.get_status() == PLNAE_PHASE['takingoff']:
-                        if (plane.get_speed() == plane.get_plane_information().get_speed()):
+                        if (plane.get_speed() == 0.8*plane.get_plane_information().get_speed()):
                             airport_manager.count_plane(plane.get_origin().get_code(), 'departed')
                             plane.set_status(PLNAE_PHASE['climbing'])
 
-                if plane.get_status() == PLNAE_PHASE['climbing']:
+                elif plane.get_status() == PLNAE_PHASE['climbing']:
                     avrage_altitude = (sum(plane.get_plane_information().get_altitude())/2)
                     if (plane.get_altitude() == avrage_altitude):
-                        plane.set_status(PLNAE_PHASE['cruising'])
+                        plane.set_status(PLNAE_PHASE['holding']) ############
 
+                elif plane.get_status() == PLNAE_PHASE['cruising']:
+                    if (plane.get_remain_distance() <= plane.get_starting_descending_point()/1000):
+                        plane.set_status(PLNAE_PHASE['descending'])
 
-                if plane.get_status() == PLNAE_PHASE['landing']:
-                    if(plane.get_speed() == 0):
+                elif plane.get_status() == PLNAE_PHASE['descending']:
+                    if (plane.get_altitude() <= 0):
+                        plane.set_status(PLNAE_PHASE['landing'])
+
+                elif plane.get_status() == PLNAE_PHASE['landing']:
+                    if(plane.get_speed() <= 0):
                         airport_manager.count_plane(plane.get_destination().get_code(), "arrived")
                         plane.set_altitude(0)
                         self.__plane_list.remove(plane)
@@ -113,7 +116,7 @@ class PlaneManager:
                 # draw route line when is selected
                 airport_pixel = converter.degree_to_pixel(degree_postion=plane.get_destination().get_degree_position())
                 if (converter.get_selected_object_code() == plane.get_flight_code()):
-                    pygame.draw.line(display, self.__route_color, pixel, airport_pixel, width = 2)
+                    pygame.draw.line(display, self.__route_color, pixel, airport_pixel, width = self.__route_width)
                 pixel = (pixel[0]-25,pixel[1]-25)
                 direction = plane.get_direction()
                 # rotate the plane in the direction of the destination.
@@ -128,7 +131,7 @@ class PlaneManager:
                 flight_code_surface = self.__font.render(plane.get_flight_code(), True, self.__text_color)
                 route_surface = self.__font.render(f'{plane.get_origin().get_code()} - {plane.get_destination().get_code()}', True, self.__text_color)
                 text_x = pixel_position[0] + self.__plane_size/2
-                text_y = pixel_position[1] - flight_code_surface.get_size()[1]
+                #text_y = pixel_position[1] - flight_code_surface.get_size()[1]
                 display.blit(flight_code_surface, (text_x, pixel_position[1]-flight_code_surface.get_size()[1]/2-5))
                 display.blit(route_surface, (text_x, pixel_position[1]))
 
@@ -148,15 +151,17 @@ class PlaneManager:
                 'Airline: '+plane.get_airline_information().get_name(),
                 'From: '+plane.get_origin().get_code()+' To: '+plane.get_destination().get_code(),
                 'Passenger: '+str(plane.get_passenger()),
-                'Altitude: '+str(round(plane.get_altitude(),2))+' ft',
-                'Speed: '+str(round(plane.get_speed(),2))+' km/h',
+                #"{:03d}".format(flight_counter['TG'])
+                'Altitude: '+"{:.2f}".format(plane.get_altitude())+' ft',
+                # 'Altitude: '+str(round(plane.get_altitude(),2))+' ft',
+                'Speed: '+"{:.2f}".format(plane.get_speed())+' km/h',
                 'Status: '+str(plane.get_status())
             ])
         return([''])
 
     # generate new plane
     def generate_new_plane(self, airport_manager):
-        # if (len(self.__plane_list) != self.__LIMIT):
+        #if (len(self.__plane_list) != self.__LIMIT):
         gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specification_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter)
         self.__plane_list.append(gen_plane)
 

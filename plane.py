@@ -7,6 +7,7 @@ from configuration import ROC, PLNAE_PHASE, ACCELERATE
 
 ### flight, store information, generate random plane, mark plane position on map
 class Plane:
+    fix_direction = None
     def __init__(self, flight_code, status, airline_information, plane_information, passenger, origin, destination, altitude, speed, degree_position):
         self.__flight_code = flight_code
         self.__airline_information = airline_information
@@ -20,6 +21,12 @@ class Plane:
         self.__destination = destination
         self.__status = status
         self.__hit_box = None
+        v_plane = 0.8*self.__plane_information.get_speed() * 1000/3600 #m/s
+        avrage_altitude = (sum(self.__plane_information.get_altitude())/2)
+        t_descending = avrage_altitude/(ROC/60)
+        t_landing = v_plane/6
+        descending_distance = v_plane * t_descending + ((v_plane*t_landing)+0.5*(-6)*((t_landing)**2))
+        self.__starting_descending_point = descending_distance
 
     def get_flight_code(self):
         return(self.__flight_code)
@@ -53,6 +60,9 @@ class Plane:
 
     def get_status(self):
         return(self.__status)
+
+    def get_starting_descending_point(self):
+        return(self.__starting_descending_point)
 
     def set_degree_position(self, degree_position):
         self.__degree_position = degree_position
@@ -111,29 +121,30 @@ class Plane:
     # update plane position
     def update_position(self):
         #update position for Landing plane
-        if (self.__status != PLNAE_PHASE["landing"]):
+        if (self.__status != PLNAE_PHASE["landing"] and self.__status != PLNAE_PHASE["holding"]):
             self.find_direction()
 
         #update position for Taking off plane
         if (self.__status == PLNAE_PHASE["takingoff"]):
             self.taking_off()
 
-        if (self.__status == PLNAE_PHASE["climbing"]):
+        elif (self.__status == PLNAE_PHASE["climbing"]):
             self.climbing()
-
-        #update position for landing plane
-        if (self.__status == PLNAE_PHASE["landing"]):
-            self.landing()
-
-        # if plane is close the airport don't update position in map
-        if (self.__status == PLNAE_PHASE["descending"]):
+        
+        elif (self.__status == PLNAE_PHASE["descending"]):
             self.descending()
 
-        if (self.get_remain_distance() >= 1):
-            speed = self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
-            x_speed = speed*math.cos(math.radians(self.__direction))
-            y_speed =speed*math.sin(math.radians(self.__direction))
-            self.__degree_position = (self.__degree_position[0]+y_speed,self.__degree_position[1]+x_speed)
+        #update position for landing plane
+        elif (self.__status == PLNAE_PHASE["landing"]):
+            self.landing()
+
+        elif (self.__status == PLNAE_PHASE["holding"]):
+            self.holding()
+    
+        speed = self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
+        x_speed = speed*math.cos(math.radians(self.__direction))
+        y_speed =speed*math.sin(math.radians(self.__direction))
+        self.__degree_position = (self.__degree_position[0]+y_speed,self.__degree_position[1]+x_speed)
 
     # check if this plane is clicked, return empty string or plane' airline code
     def click(self, event):
@@ -153,12 +164,14 @@ class Plane:
     def waiting(self):
         pass
 
+    #movment for taking off plane
     def taking_off(self):
         average_speed = self.__plane_information.get_speed()
-        self.__speed += ACCELERATE # 15s to max speed
+        self.__speed += ACCELERATE*3600/1000 
         if self.__speed > 0.8*average_speed:
             self.__speed  = 0.8*average_speed
 
+    #movment for climing plane
     def climbing(self):
         avrage_altitude = self.__plane_information.get_altitude()
         avrage_altitude = (sum(avrage_altitude)/2)
@@ -166,19 +179,23 @@ class Plane:
         if self.__altitude > avrage_altitude:
             self.__altitude = avrage_altitude
 
-    def cruise(self):
-        pass
-
+    #movment for descending plane
     def descending(self):
-        pass
+        self.__altitude -= ROC/60
+        if self.__altitude < 0:
+            self.__altitude = 0
 
+    #movment for landing plane
     def landing(self):
-        if (self.__speed > 0):
-            average_speed = self.__plane_information.get_speed()
-            avrage_altitude = self.__plane_information.get_altitude()
-            avrage_altitude = (sum(avrage_altitude)/2)
-            self.__speed =  self.__speed - average_speed/60 if self.__speed - average_speed/60 >= 0 else 0
-            self.__altitude = self.__altitude - avrage_altitude/60 if self.__altitude - avrage_altitude/60 >= 0 else 0
+        self.__speed -= ACCELERATE*3600/1000
+        if self.__speed < 0: 
+            self.__speed  = 0
 
     def holding(self):
-        pass
+        if self.fix_direction == None:
+            self.fix_direction = self.__direction
+
+        print(self.fix_direction-self.__direction)
+
+        if self.__direction - self.fix_direction <= 180:
+            self.__direction += 3
