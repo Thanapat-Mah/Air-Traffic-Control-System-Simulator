@@ -3,7 +3,7 @@ from numpy import frompyfunc
 from configuration import PLANE_PATH
 from utilities import Loader
 from plane_airline_information import PlaneInformation,AirlineInformation
-from configuration import FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH, PLNAE_PHASE,ROC
+from configuration import FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH, PLNAE_PHASE
 from plane import Plane
 
 ### plane mamager that can update plane
@@ -115,9 +115,27 @@ class PlaneManager:
                 pixel = converter.degree_to_pixel(degree_postion=position)
                 # draw route line when is selected
                 airport_pixel = converter.degree_to_pixel(degree_postion=plane.get_destination().get_degree_position())
-                if (converter.get_selected_object_code() == plane.get_flight_code()):
-                    pygame.draw.line(display, self.__route_color, pixel, airport_pixel, width = self.__route_width)
-                pixel = (pixel[0]-25,pixel[1]-25)
+
+                if converter.get_selected_object_code() == plane.get_flight_code():
+                    if plane.get_status() != PLNAE_PHASE['holding']:
+                        pygame.draw.line(display, self.__route_color, pixel, airport_pixel, width = self.__route_width)
+                    else: 
+                        #pygame.draw.arc(display, self.__route_color, [plane.get_holding_fix_direction()], width = self.__route_width)
+                        #plane.get_all()
+                        test = []
+                        if (plane.get_all != None):
+                            for i in plane.get_all():
+                                if (i!= None):
+                                    con = converter.degree_to_pixel(degree_postion=i)
+                                    test.append(con)
+                            if (len(test)== 4):
+                                
+                                pygame.draw.line(display, (255,0,0), test[0], test[1], width = self.__route_width) #red
+                                pygame.draw.line(display, (0,85,255), test[1], test[2], width = self.__route_width)  
+                                pygame.draw.line(display, (222,87,255), test[2], test[3], width = self.__route_width)
+                                pygame.draw.line(display, (20,255,36), test[3], test[0], width = self.__route_width)
+
+
                 direction = plane.get_direction()
                 # rotate the plane in the direction of the destination.
                 image = pygame.transform.rotate(self.__plane_icon, direction)
@@ -131,7 +149,6 @@ class PlaneManager:
                 flight_code_surface = self.__font.render(plane.get_flight_code(), True, self.__text_color)
                 route_surface = self.__font.render(f'{plane.get_origin().get_code()} - {plane.get_destination().get_code()}', True, self.__text_color)
                 text_x = pixel_position[0] + self.__plane_size/2
-                #text_y = pixel_position[1] - flight_code_surface.get_size()[1]
                 display.blit(flight_code_surface, (text_x, pixel_position[1]-flight_code_surface.get_size()[1]/2-5))
                 display.blit(route_surface, (text_x, pixel_position[1]))
 
