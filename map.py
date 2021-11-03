@@ -52,8 +52,8 @@ class Map:
     
     # draw map in a screen
     def draw_map(self, display):
-        #display.blit(self.__image, self.__top_left_point)
-        pass
+        display.blit(self.__image, self.__top_left_point)
+
 
     #check event
     def check_event(self, event, simulator):

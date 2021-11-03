@@ -89,20 +89,19 @@ class AirportManager:
 
     # draw all airport and IATA code
     def draw_all_airport(self, display, converter):
-        pass
-        # for airport in self.__airport_tuple:
-        #     # set new hit box
-        #     position = airport.get_degree_position()
-        #     pixel_position = converter.degree_to_pixel(degree_postion=position)
-        #     new_hit_box = self.__airport_icon.get_rect(center = pixel_position)
-        #     airport.set_hit_box(new_hit_box)
-        #     # draw airport
-        #     display.blit(self.__airport_icon, new_hit_box)
-        #     # draw IATA code
-        #     text_surface = self.__font.render(airport.get_code(), True, self.__text_color)
-        #     text_x = pixel_position[0] - text_surface.get_size()[0]/2
-        #     text_y = pixel_position[1] + self.__airport_size/2
-        #     display.blit(text_surface, (text_x, text_y))
+        for airport in self.__airport_tuple:
+            # set new hit box
+            position = airport.get_degree_position()
+            pixel_position = converter.degree_to_pixel(degree_postion=position)
+            new_hit_box = self.__airport_icon.get_rect(center = pixel_position)
+            airport.set_hit_box(new_hit_box)
+            # draw airport
+            display.blit(self.__airport_icon, new_hit_box)
+            # draw IATA code
+            text_surface = self.__font.render(airport.get_code(), True, self.__text_color)
+            text_x = pixel_position[0] - text_surface.get_size()[0]/2
+            text_y = pixel_position[1] + self.__airport_size/2
+            display.blit(text_surface, (text_x, text_y))
 
     # return selected airport' IATA code
     def check_selection (self, event):
