@@ -8,7 +8,7 @@ from plane import Plane
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 4
+    __LIMIT = 1
     def __init__(self, plane_size=30, image_path=PLANE_PATH, text_color=COLOR['white'], font=FONT['bebasneue_small'], route_color = COLOR['light_gray'], route_width = 2):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
@@ -161,9 +161,9 @@ class PlaneManager:
 
     # generate new plane
     def generate_new_plane(self, airport_manager):
-        #if (len(self.__plane_list) != self.__LIMIT):
-        gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specification_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter)
-        self.__plane_list.append(gen_plane)
+        if (len(self.__plane_list) != self.__LIMIT):
+            gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specification_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter)
+            self.__plane_list.append(gen_plane)
 
     def respond_command(self, command): 
         if command[0] == 'generate':

@@ -26,7 +26,8 @@ class Screen:
 
 	# refresh plain color background
 	def refresh_background(self):
-		self.__display.fill(self.__background_color)
+		#self.__display.fill(self.__background_color)
+		pass
 
 	# draw name of simulation
 	def draw_name(self, name):

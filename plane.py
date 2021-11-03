@@ -7,7 +7,7 @@ from configuration import ROC, PLNAE_PHASE, ACCELERATE
 
 ### flight, store information, generate random plane, mark plane position on map
 class Plane:
-    fix_direction = None
+
     def __init__(self, flight_code, status, airline_information, plane_information, passenger, origin, destination, altitude, speed, degree_position):
         self.__flight_code = flight_code
         self.__airline_information = airline_information
@@ -27,6 +27,11 @@ class Plane:
         t_landing = v_plane/6
         descending_distance = v_plane * t_descending + ((v_plane*t_landing)+0.5*(-6)*((t_landing)**2))
         self.__starting_descending_point = descending_distance
+
+        self.__fix_direction = None
+        self.__fix_degree_position = None
+        self.__fix_end_degree_position = None
+        self.__holding_state = ""
 
     def get_flight_code(self):
         return(self.__flight_code)
@@ -141,7 +146,7 @@ class Plane:
         elif (self.__status == PLNAE_PHASE["holding"]):
             self.holding()
     
-        speed = self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
+        speed = 1*self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
         x_speed = speed*math.cos(math.radians(self.__direction))
         y_speed =speed*math.sin(math.radians(self.__direction))
         self.__degree_position = (self.__degree_position[0]+y_speed,self.__degree_position[1]+x_speed)
@@ -192,10 +197,34 @@ class Plane:
             self.__speed  = 0
 
     def holding(self):
-        if self.fix_direction == None:
-            self.fix_direction = self.__direction
+        print("state: ",self.__holding_state)
+        if self.__holding_state == "":
+            self.__fix_direction = self.__direction
+            self.__fix_degree_position = self.__degree_position
+            self.__holding_state = "fix end"
 
-        print(self.fix_direction-self.__direction)
 
-        if self.__direction - self.fix_direction <= 180:
-            self.__direction += 3
+
+        if self.__holding_state == "fix end":
+            if self.__direction - self.__fix_direction < 180:       
+                self.__direction += 3
+            else : self.__holding_state = "outbound"
+
+        if self.__holding_state == "outbound":
+            leg_distance = self.__speed/3600 * 90
+            if (self.__fix_end_degree_position == None):
+                self.__fix_end_degree_position = self.__degree_position  
+            if (leg_distance - math.dist(self.__fix_end_degree_position, self.__degree_position)*111  <= 1):
+                self.__holding_state = "outbound end"
+
+        if self.__holding_state == "outbound end":
+            if self.__direction - self.__fix_direction < 360:              
+                    self.__direction += 3
+            else: self.__holding_state = "inbound"
+        
+        if self.__holding_state == "inbound":
+            if math.dist(self.__fix_degree_position, self.__degree_position)*111 <= 1:
+                self.__holding_state = ""
+                self.__direction = self.__fix_direction
+                self.__degree_position = self.__fix_degree_position
+            
