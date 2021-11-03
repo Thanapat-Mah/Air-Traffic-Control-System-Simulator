@@ -34,6 +34,23 @@ class CommandInput:
 					self.__is_typing = False
 					self.__input_buffer = ""
 
+	# return input buffer after user press enter
+	def check_input(self, event):
+		if self.__is_typing and (event.type == pygame.KEYDOWN):
+			# check for backspace
+			if event.key == pygame.K_BACKSPACE:
+				if len(self.__input_buffer) > 0:
+					self.__input_buffer = self.__input_buffer[:-1]
+			# check for enter
+			elif event.key == pygame.K_RETURN:
+				input_text = self.__input_buffer
+				self.__input_buffer = ""
+				return(input_text)
+			# anything else count as input, collect them
+			else:
+				self.__input_buffer += event.unicode
+		return("")
+
 	# draw command input box and buffer if it available
 	def draw_command_input(self, display):
 		# choose color and border width, up to current is_typing value		
@@ -45,6 +62,10 @@ class CommandInput:
 			# draw rounded rect border on its surface
 			pygame.draw.rect(self.__background_surface, self.__background_color, self.__background_surface.get_rect(),
 				width=self.__border_size, border_radius=self.__border_radius)
+			# draw input buffer text
+			input_buffer_surface = self.__font.render(self.__input_buffer, True, self.__text_color)
+			input_buffer_y = (self.__background_surface.get_size()[1] - input_buffer_surface.get_size()[1])/2
+			self.__background_surface.blit(input_buffer_surface, (10, input_buffer_y))
 		else:
 			# draw rounded rect on its surface
 			pygame.draw.rect(self.__background_surface, self.__background_color, self.__background_surface.get_rect(), border_radius=self.__border_radius)
