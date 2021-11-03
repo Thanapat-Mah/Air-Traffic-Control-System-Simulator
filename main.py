@@ -18,6 +18,7 @@ def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_m
 			if event.type == pygame.QUIT:
 				run = False
 			else:
+				console.check_event(event)
 				simulator.check_selection(event, plane_manager=plane_manager, airport_manager=airport_manager, sidebar=sidebar)
 				toolbar.check_event(event, simulator=simulator)
 				sidebar.check_event(event)
@@ -41,7 +42,7 @@ if __name__ == "__main__":
 	airport_manager = AirportManager()
 	plane_manager = PlaneManager(image_path=PLANE_PATH)
 	collision_detector = CollisionDetector()
-	console = Console(10, 500, 340, 300)
+	console = Console(10, screen.get_size()[1]-toolbar.get_height()-310, 340, 300)
 	for i in range(3):
 		plane_manager.generate_new_plane(airport_manager=airport_manager)
 	simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_manager, collision_detector, console)

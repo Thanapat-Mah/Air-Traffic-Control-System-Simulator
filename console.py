@@ -44,8 +44,9 @@ class Console:
 		l.append(["altitude", "TG001", "30000"])
 		return(l[1])
 
-	def mock_check_clicking(self):
-		return(False)
+	# check for clicking on command input box or help button
+	def check_event(self, event):
+		self.__command_input.check_clicking(event, parent_surface_position=(self.__x, self.__y))
 
 	# draw console including command log, command input and help button
 	def draw_console(self, display):
