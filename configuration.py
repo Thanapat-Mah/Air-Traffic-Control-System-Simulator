@@ -7,7 +7,8 @@ FONT = {
 	"roboto_small": pygame.font.Font('assets/fonts/Roboto-Regular.ttf', 14),
 	"roboto_large": pygame.font.Font('assets/fonts/Roboto-Regular.ttf', 24),
 	"bebasneue_normal": pygame.font.Font('assets/fonts/BebasNeue-Regular.ttf', 22),
-	"bebasneue_small": pygame.font.Font('assets/fonts/BebasNeue-Regular.ttf', 16)
+	"bebasneue_small": pygame.font.Font('assets/fonts/BebasNeue-Regular.ttf', 16),
+	"consolas_normal": pygame.font.Font('assets/fonts/CONSOLA.TTF', 18)
 }
 # roboto_normal = pygame.font.Font('assets/fonts/Roboto-Regular.ttf', 24)
 # bebasneue_normal = pygame.font.Font('assets/fonts/BebasNeue-Regular.ttf', 22)

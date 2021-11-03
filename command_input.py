@@ -4,7 +4,7 @@ from configuration import COLOR, FONT
 ### command input box for receive command text input from user
 class CommandInput:
 	def __init__(self, x, y, width, height, border_radius=5, border_size=2, background_color=COLOR["dark_gray"],
-		typing_background_color=COLOR["black"], font=FONT["roboto_normal"], text_color=COLOR["white"]):
+		typing_background_color=COLOR["black"], font=FONT["consolas_normal"], text_color=COLOR["white"]):
 		self.__x = x
 		self.__y = y
 		self.__width = width
@@ -32,7 +32,6 @@ class CommandInput:
 					self.__is_typing = True
 				else:
 					self.__is_typing = False
-					self.__input_buffer = ""
 
 	# return input buffer after user press enter
 	def check_input(self, event):
@@ -54,7 +53,7 @@ class CommandInput:
 	# draw command input box and buffer if it available
 	def draw_command_input(self, display):
 		# choose color and border width, up to current is_typing value		
-		if self.__is_typing:
+		if self.__is_typing or self.__input_buffer != "":
 			background_color = self.__typing_background_color
 			border_size = self.__border_size
 			# draw rounded rect on its surface
