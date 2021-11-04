@@ -10,8 +10,8 @@ from plane import Plane
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 1
-    def __init__(self, plane_size=15, image_path=PLANE_PATH, text_color=COLOR['white'], font=FONT['bebasneue_small'], route_color = COLOR['light_gray'], route_width = 2):
+    __LIMIT = 10
+    def __init__(self, plane_size=20, image_path=PLANE_PATH, text_color=COLOR['white'], font=FONT['bebasneue_small'], route_color = COLOR['light_gray'], route_width = 2):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
         self.__plane_specification_tuple = tuple([
@@ -123,16 +123,18 @@ class PlaneManager:
                         pygame.draw.line(display, self.__route_color, pixel, airport_pixel, width = self.__route_width)
                     else: 
                         #pygame.draw.arc(display, self.__route_color, [plane.get_holding_fix_direction()], width = self.__route_width)
-                        test = copy.deepcopy(plane.get_all())
-                        if (test["outboundend"] != None):
-                            test["fix"] = converter.degree_to_pixel(degree_postion=test["fix"])
-                            test["fix_end"] = converter.degree_to_pixel(degree_postion=test["fix_end"])
-                            test["outbound"] = converter.degree_to_pixel(degree_postion=test["outbound"])
-                            test["outboundend"] = converter.degree_to_pixel(degree_postion=test["outboundend"])
-                            pygame.draw.line(display, (255,0,0), test["fix"], test["fix_end"], width = 2) #red
-                            pygame.draw.line(display, (30,144,255), test["fix_end"], test["outbound"], width = 2) # blue
-                            pygame.draw.line(display, (222,87,255), test["outbound"], test["outboundend"], width = 2) #violet
-                            pygame.draw.line(display, (20,255,36), test["outboundend"], test["fix"], width = 2) #light green
+                        tmp = copy.deepcopy(plane.get_holding_point())
+                        ###test###
+                        if (tmp["outboundend"] != None):
+                            tmp["fix"] = converter.degree_to_pixel(degree_postion=tmp["fix"])
+                            tmp["fix_end"] = converter.degree_to_pixel(degree_postion=tmp["fix_end"])
+                            tmp["outbound"] = converter.degree_to_pixel(degree_postion=tmp["outbound"])
+                            tmp["outboundend"] = converter.degree_to_pixel(degree_postion=tmp["outboundend"])
+                            pygame.draw.line(display, (255,0,0), tmp["fix"], tmp["fix_end"], width = 2) #red
+                            pygame.draw.line(display, (30,144,255), tmp["fix_end"], tmp["outbound"], width = 2) # blue
+                            pygame.draw.line(display, (222,87,255), tmp["outbound"], tmp["outboundend"], width = 2) #violet
+                            pygame.draw.line(display, (20,255,36), tmp["outboundend"], tmp["fix"], width = 2) #light green
+                        ###test###
                 direction = plane.get_direction()
                 # rotate the plane in the direction of the destination.
                 image = pygame.transform.rotate(self.__plane_icon, direction)
