@@ -1,5 +1,5 @@
 import pygame
-from configuration import COLOR, FONT, KEYWORD, FORMAT, OPTIONAL, REQUIRED, SYNTAX
+from configuration import COLOR, FONT, KEYWORD, FORMAT, OPTIONAL, REQUIRED, SYNTAX, FAIL_RESPONSE
 from button import MultiStateButton
 from command_input import CommandInput
 
@@ -36,26 +36,74 @@ class Console:
 
 	# handle incoming command input
 	def handle_input(self):
+		formatted_input = []
 		if self.__command_input_text != "":
 			self.__command_log.append({"user": f"{self.__user_text_prefix} {self.__command_input_text}"})
-			self.__command_log.append({"fail_response": "Can't process command yet"})
+			# tokenize input
+			input_tokens = self.__command_input_text.split()
+			input_syntax = False
+			invalid_command = False
+			invalid_syntax = False
+			# check for keyword
+			for input_token in input_tokens:
+				for command_syntax in self.__syntax:
+					if input_token == command_syntax[KEYWORD]:
+						input_syntax = command_syntax
+			# if there is no keyword (command) in input, respond with invalid command
+			if not input_syntax:
+				invalid_command = True
+				# print("no command(keyword)")
+			# else, check for syntax
+			else:
+				# check if input exceed the number of token in correct syntax format
+				if len(input_tokens) > len(input_syntax[FORMAT]):
+					invalid_syntax = True
+					# print("exceed")
+				# else, process command input token by token
+				else:
+					for i in range(len(input_syntax[FORMAT])):
+						# extract token from input and correct syntax
+						input_token = ""
+						if i < len(input_tokens):
+							input_token = input_tokens[i]
+						command_token = input_syntax[FORMAT][i]
+						if command_token == KEYWORD:
+							# check if keyword is in wrong order
+							if input_token != input_syntax["keyword"]:
+								invalid_syntax = True
+								# print("wrong order")
+							# else, collect keyword to formatted input
+							else:
+								formatted_input.insert(0, input_token)
+						else:
+							# check if required parameter is missing
+							if command_token == REQUIRED:
+								if input_token == "":
+									invalid_syntax = True
+									# print("required missing")
+							# check for optional parameter..., maybe no need to check
+							# collect parameter to formatted input
+							formatted_input.append(input_token)
+			# if something is invalid, clear formatted input and send fail response
+			if invalid_command:
+				formatted_input.clear()
+				self.__command_log.append({"fail_response": FAIL_RESPONSE["invalid_command"]})
+			elif invalid_syntax:
+				formatted_input.clear()
+				self.__command_log.append({"fail_response": FAIL_RESPONSE["invalid_syntax"]})
+			else:
+				self.__command_log.append({"success_response": "keyword and syntax is pass!"})
+			# clear input text after process
 			self.__command_input_text = ""
-		l = []
-		l.append(["generate"])
-		l.append(["generate", "A320", "BKK", "CNX"])
-		l.append(["takeoff", "TG001"])
-		l.append(["hold", "TG001"])
-		l.append(["continue", "TG001"])
-		l.append(["altitude", "TG001", "30000"])
-		return(l[1])
+		return(formatted_input)
 
 	# check for clicking on command input box or help button
 	def check_event(self, event):
-		self.handle_input()
 		self.__command_input.check_clicking(event, parent_surface_position=(self.__x, self.__y))
 		input_text = self.__command_input.check_input(event)
 		if input_text != "":
 			self.__command_input_text = input_text
+			self.handle_input()
 
 	# draw console including command log, command input and help button
 	def draw_console(self, display):
