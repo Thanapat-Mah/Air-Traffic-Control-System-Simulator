@@ -26,7 +26,8 @@ class Screen:
 
 	# refresh plain color background
 	def refresh_background(self):
-		self.__display.fill(self.__background_color)
+		#self.__display.fill(self.__background_color)
+		pass
 
 	# draw name of simulation
 	def draw_name(self, name):
@@ -43,7 +44,7 @@ class Screen:
 		self.refresh_background()
 		converter = Converter(screen_size=(self.__width, self.__height), map_=map_, simulator=simulator)
 		map_.draw_map(self.__display)
-		airport_manager.draw_all_airport(self.__display, converter=converter)
+		#airport_manager.draw_all_airport(self.__display, converter=converter)
 		plane_manager.draw_all_plane(self.__display, converter=converter)
 		toolbar.draw_toolbar(self.__display, simulated_datetime=simulator.get_simulated_datetime())
 		sidebar.draw_sidebar(self.__display, simulator=simulator, collision_detector=collision_detector)

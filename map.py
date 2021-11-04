@@ -54,6 +54,7 @@ class Map:
     def draw_map(self, display):
         display.blit(self.__image, self.__top_left_point)
 
+
     #check event
     def check_event(self, event, simulator):
         zoom_status = simulator.get_state(state = "is_zoom", current=True)

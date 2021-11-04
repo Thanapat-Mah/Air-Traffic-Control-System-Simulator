@@ -1,11 +1,14 @@
+from numpy.lib.function_base import select
 import pygame
 import random
 import math
 from numpy import random
 from utilities import Calculator
+from configuration import ROC, PLNAE_PHASE, ACCELERATE, ROT
 
 ### flight, store information, generate random plane, mark plane position on map
 class Plane:
+
     def __init__(self, flight_code, status, airline_information, plane_information, passenger, origin, destination, altitude, speed, degree_position):
         self.__flight_code = flight_code
         self.__airline_information = airline_information
@@ -19,6 +22,21 @@ class Plane:
         self.__destination = destination
         self.__status = status
         self.__hit_box = None
+        v_plane = 0.8*self.__plane_information.get_speed() * 1000/3600 #m/s
+        avrage_altitude = (sum(self.__plane_information.get_altitude())/2)
+        t_descending = avrage_altitude/ROC
+        t_landing = v_plane/6
+        self.__starting_descending_point = v_plane * t_descending + ((v_plane*t_landing)+0.5*(-6)*((t_landing)**2))
+        self.__holding_state = ""
+        self.__holding_fix_direction = None 
+        #self.__holding_fix_degree_position = None # fix point
+        #self.__holding_fix_end_degree_position = None # end of fix end line
+        #self.__holding_outbound_degree_position = None # end of outbound line
+        #self.__holding_outbound_end_degree_position = None # end of outbound end line
+        self.__holding_point = {"fix": None,
+                        "fix_end":None,
+                        "outbound": None,
+                        "outboundend": None}
 
     def get_flight_code(self):
         return(self.__flight_code)
@@ -53,6 +71,12 @@ class Plane:
     def get_status(self):
         return(self.__status)
 
+    def get_starting_descending_point(self):
+        return(self.__starting_descending_point)
+
+    def get_holding_point(self):
+        return(self.__holding_point)
+
     def set_degree_position(self, degree_position):
         self.__degree_position = degree_position
 
@@ -85,6 +109,8 @@ class Plane:
         airport_list = airport_manager.get_airport_tuple()
         origin = random.choice(airport_list)
         destination = random.choice(airport_list)
+        # origin = airport_list[1]
+        # destination = airport_list[2]
         while(destination == origin):
             destination = random.choice(airport_list)
         degree_position = origin.get_degree_position()
@@ -110,34 +136,30 @@ class Plane:
     # update plane position
     def update_position(self):
         #update position for Landing plane
-        if (self.__status != "Landing"):
-            destination_position = self.__destination.get_degree_position()
-            self.__direction = math.degrees(math.atan2(destination_position[0] - self.__degree_position[0],
-                    destination_position[1] - self.__degree_position[1]))
+        if (self.__status != PLNAE_PHASE["landing"] and self.__status != PLNAE_PHASE["holding"]):
+            self.find_direction()
+
         #update position for Taking off plane
-        if (self.__status == "Taking-off"):
-                average_speed = self.__plane_information.get_speed()
-                avrage_altitude = self.__plane_information.get_altitude()
-                avrage_altitude = (sum(avrage_altitude)/2)
-                self.__speed += average_speed/60 # 15s to max speed
-                self.__altitude += avrage_altitude/60
-                if self.__speed > average_speed or self.__altitude > avrage_altitude:
-                    self.__speed  = average_speed
-                    self.__altitude = avrage_altitude
+        if (self.__status == PLNAE_PHASE["takingoff"]):
+            self.taking_off()
+
+        elif (self.__status == PLNAE_PHASE["climbing"]):
+            self.climbing()
+        
+        elif (self.__status == PLNAE_PHASE["descending"]):
+            self.descending()
+
         #update position for landing plane
-        if (self.__status == "Landing"):
-            if (self.__speed > 0):
-                average_speed = self.__plane_information.get_speed()
-                avrage_altitude = self.__plane_information.get_altitude()
-                avrage_altitude = (sum(avrage_altitude)/2)
-                self.__speed =  self.__speed - average_speed/60 if self.__speed - average_speed/60 >= 0 else 0
-                self.__altitude = self.__altitude - avrage_altitude/60 if self.__altitude - avrage_altitude/60 >= 0 else 0
-        # if plane is close the airport don't update position in map
-        if (self.get_remain_distance() >= 1):
-            speed = self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
-            x_speed = speed*math.cos(math.radians(self.__direction))
-            y_speed =speed*math.sin(math.radians(self.__direction))
-            self.__degree_position = (self.__degree_position[0]+y_speed,self.__degree_position[1]+x_speed)
+        elif (self.__status == PLNAE_PHASE["landing"]):
+            self.landing()
+
+        elif (self.__status == PLNAE_PHASE["holding"]):
+            self.holding()
+    
+        speed = self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
+        x_speed = speed*math.cos(math.radians(self.__direction))
+        y_speed =speed*math.sin(math.radians(self.__direction))
+        self.__degree_position = (self.__degree_position[0]+y_speed,self.__degree_position[1]+x_speed)
 
     # check if this plane is clicked, return empty string or plane' airline code
     def click(self, event):
@@ -148,3 +170,99 @@ class Plane:
                     if self.__hit_box.collidepoint(x, y):
                         return(self.__flight_code)
         return("")
+
+    def find_direction(self):
+        destination_position = self.__destination.get_degree_position()
+        self.__direction = math.degrees(math.atan2(destination_position[0] - self.__degree_position[0],
+        destination_position[1] - self.__degree_position[1]))
+
+    def waiting(self):
+        pass
+
+    #movment for taking off plane
+    def taking_off(self):
+        average_speed = self.__plane_information.get_speed()
+        self.__speed += ACCELERATE*3600/1000 
+        if self.__speed > 0.8*average_speed:
+            self.__speed  = 0.8*average_speed
+
+    #movment for climing plane
+    def climbing(self):
+        avrage_altitude = self.__plane_information.get_altitude()
+        avrage_altitude = (sum(avrage_altitude)/2)
+        self.__altitude += ROC
+        if self.__altitude > avrage_altitude:
+            self.__altitude = avrage_altitude
+
+    #movment for descending plane
+    def descending(self):
+        self.__altitude -= ROC
+        if self.__altitude < 0:
+            self.__altitude = 0
+
+    #movment for landing plane
+    def landing(self):
+        self.__speed -= ACCELERATE*3600/1000
+        if self.__speed < 0: 
+            self.__speed  = 0
+
+    def holding(self):
+        if self.__holding_state == "":
+            if  self.__holding_fix_direction == None and  self.__holding_point["fix"] == None:
+                self.__holding_fix_direction = self.__direction
+                #self.__holding_fix_degree_position = self.__degree_position ##correct
+                self.__holding_point["fix"]=(self.__degree_position)
+            if (self.__holding_point["fix_end"] == None):
+                radius = ((self.__speed/3600) / (math.pi/(180/ROT))) /111 # (degree position)
+                x_radius =2*radius*math.cos(math.radians(90+self.__holding_fix_direction))
+                y_radius =2*radius*math.sin(math.radians(90+self.__holding_fix_direction))
+                # self.__holding_fix_end_degree_position = (self.__holding_point["fix"][0]+y_radius,
+                #                                             self.__holding_point["fix"][1]+x_radius)
+                self.__holding_point["fix_end"]=(self.__holding_point["fix"][0]+y_radius,
+                                                            self.__holding_point["fix"][1]+x_radius)
+            if (self.__holding_point["outbound"] == None):
+                leg_distance = self.__speed/(111*3600)*90 # (degree position)
+                x_leg_distance = leg_distance*math.cos(math.radians(self.__holding_fix_direction+180))
+                y_leg_distance =leg_distance*math.sin(math.radians(self.__holding_fix_direction+180))
+                # self.__holding_outbound_degree_position = (self.__holding_point["fix_end"][0]+y_leg_distance,
+                #                                             self.__holding_point["fix_end"][1]+x_leg_distance)
+                self.__holding_point["outbound"]=(self.__holding_point["fix_end"][0]+y_leg_distance,
+                                                            self.__holding_point["fix_end"][1]+x_leg_distance)
+            if (self.__holding_point["outboundend"] == None):
+                radius = ((self.__speed/3600) / (math.pi/(180/ROT))) /111 # (degree position)
+                x_radius = 2*radius*math.cos(math.radians(self.__holding_fix_direction+270))
+                y_radius =2*radius*math.sin(math.radians(self.__holding_fix_direction+270))
+                # self.__holding_outbound_end_degree_position = (self.__holding_point["outbound"][0]+y_radius,
+                #                                             self.__holding_point["outbound"][1]+x_radius)
+                self.__holding_point["outboundend"]=(self.__holding_point["outbound"][0]+y_radius,
+                                                        self.__holding_point["outbound"][1]+x_radius)
+            self.__holding_state = "fix end"
+
+        if self.__holding_state == "fix end":
+            if self.__direction - self.__holding_fix_direction < 180:       
+                self.__direction += ROT
+            else :
+                self.__holding_state = "outbound"
+
+
+
+
+        if self.__holding_state == "outbound":
+            self.__holding_point["fix_end"]
+            leg_distance = self.__speed/(111*3600)*90
+            if (leg_distance - math.dist(self.__degree_position,  self.__holding_point["fix_end"]))*111 <= 0.5:
+                self.__holding_state = "outbound end"
+
+
+        if self.__holding_state == "outbound end":
+            if self.__direction - self.__holding_fix_direction < 360:              
+                    self.__direction += ROT
+            else: 
+                self.__holding_state = "inbound"
+        
+        if self.__holding_state == "inbound":
+            if math.dist( self.__holding_point["fix"], self.__degree_position)*111 <= 1:
+                self.__holding_state = ""
+                self.__direction = self.__holding_fix_direction
+                self.__degree_position =  self.__holding_point["fix"]
+            

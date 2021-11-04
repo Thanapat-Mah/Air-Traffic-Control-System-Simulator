@@ -68,6 +68,18 @@ PLANE_INFORMATIONS = (
 )
 ZOOM_SCALE = 3	# map zoom scaling
 
+ROC = 3500/60 # rate of climbing 3500 ft/min
+ROT = 1 # rate of turn 3 degree / second
+ACCELERATE = 6 #accelerate when taking off and landing (m/s^2)
+PLNAE_PHASE = {
+	"waiting":"Waiting",
+	"takingoff":"Taking-off",
+	"climbing":"Climbing",
+	"cruising":"Cruising",
+	"descending":"Descending",
+	"landing":"Landing",
+	"holding":"Holding"
+}
 FAIL_RESPONSE = {
 	"invalid_value": "Invalid value",
 	"can_not_command": "Can not command"
