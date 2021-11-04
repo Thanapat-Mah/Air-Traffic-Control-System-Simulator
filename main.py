@@ -1,4 +1,3 @@
-from numpy.random.mtrand import f
 import pygame
 from configuration import MAP_PATH, PLANE_PATH
 from screen import Screen

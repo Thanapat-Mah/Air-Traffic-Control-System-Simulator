@@ -1,4 +1,5 @@
 import pygame
+import copy
 from numpy import frompyfunc
 from configuration import PLANE_PATH
 from utilities import Loader
@@ -121,21 +122,17 @@ class PlaneManager:
                         pygame.draw.line(display, self.__route_color, pixel, airport_pixel, width = self.__route_width)
                     else: 
                         #pygame.draw.arc(display, self.__route_color, [plane.get_holding_fix_direction()], width = self.__route_width)
-                        #plane.get_all()
-                        test = []
-                        if (plane.get_all != None):
-                            for i in plane.get_all():
-                                if (i!= None):
-                                    con = converter.degree_to_pixel(degree_postion=i)
-                                    test.append(con)
-                            if (len(test)== 4):
-                                
-                                pygame.draw.line(display, (255,0,0), test[0], test[1], width = self.__route_width) #red
-                                pygame.draw.line(display, (0,85,255), test[1], test[2], width = self.__route_width)  
-                                pygame.draw.line(display, (222,87,255), test[2], test[3], width = self.__route_width)
-                                pygame.draw.line(display, (20,255,36), test[3], test[0], width = self.__route_width)
-
-
+                        test = copy.deepcopy(plane.get_all())
+                        if (test["outboundend"] != None):
+                            test["fix"] = converter.degree_to_pixel(degree_postion=test["fix"])
+                            test["fix_end"] = converter.degree_to_pixel(degree_postion=test["fix_end"])
+                            test["outbound"] = converter.degree_to_pixel(degree_postion=test["outbound"])
+                            test["outboundend"] = converter.degree_to_pixel(degree_postion=test["outboundend"])
+                            pygame.draw.line(display, (255,0,0), test["fix"], test["fix_end"], width = self.__route_width) #red
+                            #pygame.draw.line(display, (30,144,255), test["fix_end"], test["outbound"], width = self.__route_width) # blue
+                            #pygame.draw.line(display, (222,87,255), test["outbound"], test["outboundend"], width = self.__route_width) #violet
+                            #pygame.draw.line(display, (20,255,36), test["outboundend"], test["fix"], width = self.__route_width) #light green
+                        pass
                 direction = plane.get_direction()
                 # rotate the plane in the direction of the destination.
                 image = pygame.transform.rotate(self.__plane_icon, direction)
@@ -143,14 +140,17 @@ class PlaneManager:
                 pixel_position = converter.degree_to_pixel(degree_postion=position)
                 new_hit_box = image.get_rect(center = pixel_position)
                 plane.set_hit_box(new_hit_box)
+                image = pygame.Surface((1,1))
+                image.fill((255,255,255))
                 # draw plane according to current position.
-                display.blit(image, new_hit_box)
+                display.blit(image, pixel)
+                #display.blit(image, new_hit_box)
                 # draw text right side of plane
                 flight_code_surface = self.__font.render(plane.get_flight_code(), True, self.__text_color)
                 route_surface = self.__font.render(f'{plane.get_origin().get_code()} - {plane.get_destination().get_code()}', True, self.__text_color)
                 text_x = pixel_position[0] + self.__plane_size/2
-                display.blit(flight_code_surface, (text_x, pixel_position[1]-flight_code_surface.get_size()[1]/2-5))
-                display.blit(route_surface, (text_x, pixel_position[1]))
+                #display.blit(flight_code_surface, (text_x, pixel_position[1]-flight_code_surface.get_size()[1]/2-5))
+                #display.blit(route_surface, (text_x, pixel_position[1]))
 
     # return selected plane' airline code
     def check_selection (self, event):
