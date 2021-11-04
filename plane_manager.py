@@ -184,16 +184,21 @@ class PlaneManager:
             gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specification_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter)
             self.__plane_list.append(gen_plane)
 
-    def respond_command(self, command): 
+
+    def respond_command(self, command):
         if command[0] == 'generate':
             pass
-        elif command[1] == 'takeoff':
+        elif command[0] == 'takeoff':
+            for plane in self.__plane_list:
+                if plane.get_flight_code() == command[1]:
+                    if plane.get_status() == PLNAE_PHASE['waiting']:
+                        pass
+                    
+        elif command[0] == 'hold':
             pass
-        elif command[1] == 'hold':
+        elif command[0] == 'continue':
             pass
-        elif command[1] == 'continue':
-            pass
-        elif command[1] == 'altitude':
+        elif command[0] == 'altitude':
             pass
         else:
             pass
@@ -214,3 +219,6 @@ class PlaneManager:
 
     def command_altitude(self, flight_code, altitude):
         return
+
+
+
