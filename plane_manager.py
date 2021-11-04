@@ -1,6 +1,7 @@
 import pygame
 import copy
-from numpy import frompyfunc
+import math
+from numpy import arctan, frompyfunc
 from configuration import PLANE_PATH
 from utilities import Loader
 from plane_airline_information import PlaneInformation,AirlineInformation
@@ -10,7 +11,7 @@ from plane import Plane
 ### plane mamager that can update plane
 class PlaneManager:
     __LIMIT = 1
-    def __init__(self, plane_size=30, image_path=PLANE_PATH, text_color=COLOR['white'], font=FONT['bebasneue_small'], route_color = COLOR['light_gray'], route_width = 2):
+    def __init__(self, plane_size=15, image_path=PLANE_PATH, text_color=COLOR['white'], font=FONT['bebasneue_small'], route_color = COLOR['light_gray'], route_width = 2):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
         self.__plane_specification_tuple = tuple([
@@ -128,11 +129,10 @@ class PlaneManager:
                             test["fix_end"] = converter.degree_to_pixel(degree_postion=test["fix_end"])
                             test["outbound"] = converter.degree_to_pixel(degree_postion=test["outbound"])
                             test["outboundend"] = converter.degree_to_pixel(degree_postion=test["outboundend"])
-                            pygame.draw.line(display, (255,0,0), test["fix"], test["fix_end"], width = self.__route_width) #red
-                            #pygame.draw.line(display, (30,144,255), test["fix_end"], test["outbound"], width = self.__route_width) # blue
-                            #pygame.draw.line(display, (222,87,255), test["outbound"], test["outboundend"], width = self.__route_width) #violet
-                            #pygame.draw.line(display, (20,255,36), test["outboundend"], test["fix"], width = self.__route_width) #light green
-                        pass
+                            pygame.draw.line(display, (255,0,0), test["fix"], test["fix_end"], width = 2) #red
+                            pygame.draw.line(display, (30,144,255), test["fix_end"], test["outbound"], width = 2) # blue
+                            pygame.draw.line(display, (222,87,255), test["outbound"], test["outboundend"], width = 2) #violet
+                            pygame.draw.line(display, (20,255,36), test["outboundend"], test["fix"], width = 2) #light green
                 direction = plane.get_direction()
                 # rotate the plane in the direction of the destination.
                 image = pygame.transform.rotate(self.__plane_icon, direction)
@@ -140,10 +140,10 @@ class PlaneManager:
                 pixel_position = converter.degree_to_pixel(degree_postion=position)
                 new_hit_box = image.get_rect(center = pixel_position)
                 plane.set_hit_box(new_hit_box)
-                image = pygame.Surface((1,1))
-                image.fill((255,255,255))
+                # image = pygame.Surface((2,2))
+                # image.fill((255,255,255))
                 # draw plane according to current position.
-                display.blit(image, pixel)
+                display.blit(image, new_hit_box)
                 #display.blit(image, new_hit_box)
                 # draw text right side of plane
                 flight_code_surface = self.__font.render(plane.get_flight_code(), True, self.__text_color)

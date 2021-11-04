@@ -205,38 +205,44 @@ class Plane:
             self.__speed  = 0
 
     def holding(self):
+        #print("state:", self.__holding_state)
+        #print(self.__direction)
         if self.__holding_state == "":
             if self.__holding_fix_direction == None and  self.__holding_fix_degree_position == None:
                 self.__holding_fix_direction = self.__direction
                 self.__holding_fix_degree_position = self.__degree_position ##correct
                 self.__point["fix"]=(self.__degree_position)
+                print("1", self.__holding_fix_direction)
 
 
             if (self.__point["fix_end"] == None):
-                radius = ((self.__speed/3600) / (math.pi/60)) /111 # (degree position)
+                radius = ((self.__speed/3600) / (math.pi/180)) /111 # (degree position)
                 x_radius =2*radius*math.cos(math.radians(90+self.__holding_fix_direction))
                 y_radius =2*radius*math.sin(math.radians(90+self.__holding_fix_direction))
                 self.__holding_fix_end_degree_position = (self.__holding_fix_degree_position[0]+y_radius,
                                                             self.__holding_fix_degree_position[1]+x_radius)
-                self.__point["fix_end"]=self.__holding_fix_end_degree_position
+                self.__point["fix_end"]=self.__holding_fix_end_degree_position ##correct
+
 
 
             if (self.__holding_outbound_degree_position == None):
                 leg_distance = self.__speed/(111*3600)*90 # (degree position)
-                #print("leg_distance : ",leg_distance*111)
                 x_leg_distance = leg_distance*math.cos(math.radians(self.__holding_fix_direction-180))
                 y_leg_distance =leg_distance*math.sin(math.radians(self.__holding_fix_direction-180))
                 self.__holding_outbound_degree_position = (self.__holding_fix_end_degree_position[0]+y_leg_distance,
                                                             self.__holding_fix_degree_position[1]+x_leg_distance)
                 self.__point["outbound"]=(self.__holding_outbound_degree_position)
-                
+                print("2 ",180+self.__holding_fix_direction)
+                #print(self.__holding_outbound_degree_position, self.__holding_fix_end_degree_position)
+            
             if (self.__holding_outbound_end_degree_position == None):
-                radius = ((self.__speed/3600) / (math.pi/60)) /111 # (degree position)
-                x_radius = 2*radius*math.cos(math.radians(90-self.__holding_fix_direction))
-                y_radius =2*radius*math.sin(math.radians(90-self.__holding_fix_direction))
+                radius = ((self.__speed/3600) / (math.pi/180)) /111 # (degree position)
+                x_radius = 2*radius*math.cos(math.radians(self.__holding_fix_direction+270))
+                y_radius =2*radius*math.sin(math.radians(self.__holding_fix_direction+270))
                 self.__holding_outbound_end_degree_position = (self.__holding_outbound_degree_position[0]+y_radius,
                                                             self.__holding_outbound_degree_position[1]+x_radius)
                 self.__point["outboundend"]=(self.__holding_outbound_end_degree_position)
+                print("3", self.__holding_fix_direction+270)
 
             # print(self.__holding_fix_degree_position[0]*111,self.__holding_fix_degree_position[1]*111)
             # print(self.__holding_fix_end_degree_position[0]*111,self.__holding_fix_end_degree_position[1]*111)
@@ -245,7 +251,7 @@ class Plane:
 
         if self.__holding_state == "fix end":
             if self.__direction - self.__holding_fix_direction < 180:       
-                self.__direction += 3
+                self.__direction += 1
             else :
                 self.__holding_state = "outbound"
                 self.__holding_fix_end_degree_position = self.__degree_position ####temp
@@ -254,13 +260,13 @@ class Plane:
 
         if self.__holding_state == "outbound":
 
-            leg_distance = self.__speed/(111*3600)*90 ####tmp
-            if (leg_distance - math.dist(self.__degree_position, self.__holding_fix_end_degree_position))*111 <= 1:
+            leg_distance = self.__speed/(111*3600)*90 ####tmp  
+            if (leg_distance - math.dist(self.__degree_position, self.__holding_fix_end_degree_position))*111 <= 0.5:
                 self.__holding_state = "outbound end"
 
         if self.__holding_state == "outbound end":
             if self.__direction - self.__holding_fix_direction < 360:              
-                    self.__direction += 3
+                    self.__direction += 1
             else: 
                 self.__holding_state = "inbound"
         
