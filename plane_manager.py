@@ -151,8 +151,8 @@ class PlaneManager:
                 flight_code_surface = self.__font.render(plane.get_flight_code(), True, self.__text_color)
                 route_surface = self.__font.render(f'{plane.get_origin().get_code()} - {plane.get_destination().get_code()}', True, self.__text_color)
                 text_x = pixel_position[0] + self.__plane_size/2
-                #display.blit(flight_code_surface, (text_x, pixel_position[1]-flight_code_surface.get_size()[1]/2-5))
-                #display.blit(route_surface, (text_x, pixel_position[1]))
+                display.blit(flight_code_surface, (text_x, pixel_position[1]-flight_code_surface.get_size()[1]/2-5))
+                display.blit(route_surface, (text_x, pixel_position[1]))
 
     # return selected plane' airline code
     def check_selection (self, event):
