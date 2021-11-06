@@ -37,7 +37,7 @@ class ListBox:
 		# calculate button per page
 		self.__status_button_padding = 8
 		self.__status_button_height = 30
-		status_button_height_space = page_button_y - (self.__menu_topic_rect[0].bottomleft[1])
+		status_button_height_space = page_button_y - (self.__menu_topic_rect[0].bottomleft[1]) - self.__status_button_padding
 		self.__status_button_per_page = math.floor(status_button_height_space/(self.__status_button_height+self.__status_button_padding))
 		self.__status_button_list = []
 

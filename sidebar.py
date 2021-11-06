@@ -27,15 +27,15 @@ class Sidebar:
 		component_width_space = self.__width - 2*self.__padding
 		half_width_space = (component_width_space-padding)/2
 		self.__selected_object_detail = InformationBox(
-			x=component_x, y=self.__y+self.__height-self.__padding-220,
-			width=component_width_space, height=220, topic="Details", font=self.__font
+			x=component_x, y=self.__y+self.__height-self.__padding-195,
+			width=component_width_space, height=195, topic="Details", font=self.__font
 			)		
 		self.__overall_plane_information = InformationBox(
-			x=component_x, y=self.__y+self.__padding, width=half_width_space, height=150, topic="Plane", font=self.__font
+			x=component_x, y=self.__y+self.__padding, width=half_width_space, height=195, topic="Plane", font=self.__font
 			)
 		self.__overall_airport_information = InformationBox(
 			x=component_x+half_width_space+self.__padding, y=self.__y+self.__padding,
-			width=half_width_space, height=150, topic="Airport", font=self.__font
+			width=half_width_space, height=195, topic="Airport", font=self.__font
 			)
 		list_box_y = self.__overall_plane_information.get_corner_point(2)[1]+padding
 		list_box_height = self.__selected_object_detail.get_corner_point(0)[1] - list_box_y - padding

@@ -5,7 +5,7 @@ from numpy import arctan, frompyfunc
 from configuration import PLANE_PATH
 from utilities import Loader
 from plane_airline_information import PlaneInformation,AirlineInformation
-from configuration import FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH, PLNAE_PHASE
+from configuration import FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH, PLNAE_PHASE, FAIL_RESPONSE
 from plane import Plane
 
 ### plane mamager that can update plane
@@ -79,7 +79,7 @@ class PlaneManager:
             PLNAE_PHASE['descending']: [],
             PLNAE_PHASE['takingoff']: [],
             PLNAE_PHASE['landing']: [],
-            PLNAE_PHASE['cruising']: []          
+            PLNAE_PHASE['cruising']: []
         }
         #check status
         for plane in self.__plane_list:
@@ -121,7 +121,7 @@ class PlaneManager:
                 if converter.get_selected_object_code() == plane.get_flight_code():
                     if plane.get_status() != PLNAE_PHASE['holding']:
                         pygame.draw.line(display, self.__route_color, pixel, airport_pixel, width = self.__route_width)
-                    else: 
+                    else:
                         #pygame.draw.arc(display, self.__route_color, [plane.get_holding_fix_direction()], width = self.__route_width)
                         tmp = copy.deepcopy(plane.get_holding_point())
                         ###test###
@@ -184,33 +184,48 @@ class PlaneManager:
             gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specification_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter)
             self.__plane_list.append(gen_plane)
 
+    def respond_command(self, console):
+        formatted_input = console.pop_formatted_input()
+        if(len(formatted_input)) > 0:
+            response_message = []
 
-    def respond_command(self, command):
-        if command[0] == 'generate':
-            pass
-        elif command[0] == 'takeoff':
-            for plane in self.__plane_list:
-                if plane.get_flight_code() == command[1]:
-                    if plane.get_status() == PLNAE_PHASE['waiting']:
-                        pass
-                    
-        elif command[0] == 'hold':
-            pass
-        elif command[0] == 'continue':
-            pass
-        elif command[0] == 'altitude':
-            pass
-        else:
-            pass
+            # unpack keyword and parameters
+            keyword, *parameters = formatted_input
+            print("---------------------------------------------")
+            print(f"keyword    value: {keyword}")
+            # parameters is a list
+            print(f"parameters type:  {type(parameters)}")
+            print(f"parameters value: {parameters}")
 
-        return
-    
+            if keyword == 'generate':
+                pass
+            elif keyword == 'takeoff':
+                # set response like this
+                response_message.append({"fail_response": FAIL_RESPONSE["can_not_command"]})
+                response_message.append({"fail_response": "TG001 is now Cruising"})     # "TG001" and "Cruising" is variable
+                # or
+                # response_message.append({"success_response": "TG001 is taking off"})
+            elif keyword == 'hold':
+                pass
+            elif keyword == 'continue':
+                pass
+            elif keyword == 'altitude':
+                pass
+            else:
+                pass
+
+            # send response to console this way
+            console.handle_response(response_message)
+
     def command_generate(self, model, origin, destination):
         return
 
     def command_takeoff(self, flight_code):
-        return
-    
+        for plane in self.__plane_list:
+            if plane.get_flight_code() == command[1]:
+                if plane.get_status() == PLNAE_PHASE['waiting']:
+                    pass
+
     def command_hold(self, flight_code):
         return
 
@@ -219,6 +234,3 @@ class PlaneManager:
 
     def command_altitude(self, flight_code, altitude):
         return
-
-
-
