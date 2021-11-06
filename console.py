@@ -1,12 +1,13 @@
 import pygame
-from configuration import COLOR, FONT, KEYWORD, FORMAT, OPTIONAL, REQUIRED, SYNTAX, FAIL_RESPONSE
+from configuration import COLOR, FONT, ICON_PATH, KEYWORD, FORMAT, OPTIONAL, REQUIRED, SYNTAX, FAIL_RESPONSE
+from utilities import Loader
 from button import MultiStateButton
 from command_input import CommandInput
 
 ### console for input command, show response and notify collision detection
 class Console:
 	def __init__(self, x, y, width, height, border_radius=10, background_color=COLOR["transparance_black"],
-		font=FONT["consolas_normal"], user_text_prefix=">"):
+		font=FONT["consolas_small"], user_text_prefix=">"):
 		self.__x = x
 		self.__y = y
 		self.__width = width
@@ -30,10 +31,13 @@ class Console:
 		self.__user_text_prefix = user_text_prefix
 		self.__syntax = SYNTAX
 		self.__command_log = [{"success_response": "Type something in!"}]
-		self.__command_input = CommandInput(x=25, y=self.__height-40, width=self.__width-40, height=30, font=self.__font)
+		self.__command_input = CommandInput(x=25, y=self.__height-40, width=self.__width-80, height=30, font=self.__font)
 		self.__command_input_text = ""
 		self.__formatted_input = []
-		self.__help_button = None 		# MultiStateButton()
+		loader = Loader()
+		self.__help_button = MultiStateButton(x=self.__width-40, y=self.__y+self.__height-40, width=30, height=30,
+			label_tuple=("", ""), icon_tuple=loader.load_icons(30, ICON_PATH["help_inactive"], ICON_PATH["help_active"]),
+			border_radius=15)
 		self.__is_help_open = False 	# open status of commnand help
 
 	# pop out formatted input (return value and clear value)
@@ -118,6 +122,10 @@ class Console:
 		if input_text != "":
 			self.__command_input_text = input_text
 			self.handle_input()
+		if self.__help_button.click(event):
+			self.__is_help_open = not self.__is_help_open
+			self.__help_button.switch_state()
+			self.__command_log.append({"warning": f"now help opening is {self.__is_help_open}"})
 
 	# draw console including command log, command input and help button
 	def draw_console(self, display):
@@ -143,5 +151,8 @@ class Console:
 		# draw command input box
 		prefix_surface = self.__font.render(self.__user_text_prefix, True, self.__text_color["user"])
 		self.__background_surface.blit(prefix_surface, (10, self.__height-35))
-		self.__command_input.draw_command_input(display=self.__background_surface)
+		self.__command_input.draw_command_input(display=self.__background_surface)		
+		# draw console surface
 		display.blit(self.__background_surface, (self.__x, self.__y))
+		# draw help button
+		self.__help_button.draw_button(display)

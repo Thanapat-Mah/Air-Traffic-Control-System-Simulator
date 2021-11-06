@@ -90,10 +90,12 @@ class MultiStateButton(Button):
 		# adjust hit box and text on button
 		self.hit_box = pygame.Rect(self.x, self.y, self.width, self.height)
 		self.text_surface = self.font.render(self.text, True, self.text_color)
-		# draw button background and border
-		pygame.draw.rect(display, self.background_color, self.hit_box, width=0, border_radius=self.border_radius)
-		if self.border_size != 0:
-			pygame.draw.rect(display, self.border_color, self.hit_box, width=self.border_size, border_radius=self.border_radius)
+		# if button have only icon, do not draw button background and border
+		if self.text != "":
+			# draw button background and border
+			pygame.draw.rect(display, self.background_color, self.hit_box, width=0, border_radius=self.border_radius)
+			if self.border_size != 0:
+				pygame.draw.rect(display, self.border_color, self.hit_box, width=self.border_size, border_radius=self.border_radius)
 		# draw text and icon on center of button
 		# if this button have icon
 		if self.icon != None:

@@ -8,7 +8,7 @@ FONT = {
 	"roboto_large": pygame.font.Font('assets/fonts/Roboto-Regular.ttf', 24),
 	"bebasneue_normal": pygame.font.Font('assets/fonts/BebasNeue-Regular.ttf', 22),
 	"bebasneue_small": pygame.font.Font('assets/fonts/BebasNeue-Regular.ttf', 16),
-	"consolas_normal": pygame.font.Font('assets/fonts/CONSOLA.TTF', 18)
+	"consolas_small": pygame.font.Font('assets/fonts/CONSOLA.TTF', 14)
 }
 # roboto_normal = pygame.font.Font('assets/fonts/Roboto-Regular.ttf', 24)
 # bebasneue_normal = pygame.font.Font('assets/fonts/BebasNeue-Regular.ttf', 22)
@@ -36,7 +36,9 @@ ICON_PATH = {
 	"speed3": "assets/icons/icon_speed_3.png",
 	"zoom_in": "assets/icons/icon_zoom_in.png",
 	"zoom_out": "assets/icons/icon_zoom_out.png",
-	"magnifier": "assets/icons/icon_magnifier.png"
+	"magnifier": "assets/icons/icon_magnifier.png",
+	"help_active": "assets/icons/help_active.png",
+	"help_inactive": "assets/icons/help_inactive.png"
 }
 
 
