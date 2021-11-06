@@ -48,10 +48,13 @@ class Converter:
         #Calculate pixel after check state scale is 1 or 2 
         object_x = (x_int*self.__scale)+self.__top_left_point[0]
         object_y = (y_int*self.__scale)+self.__top_left_point[1]
-        return (int(object_x), int(object_y))
+        return (round(object_x), round(object_y))
 
     def get_selected_object_code(self):
         return self.__selected_object_code
+        
+    def get_scale(self):
+        return self.__scale
 
 class Calculator:
     #Calculate normal distribution of passenger

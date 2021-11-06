@@ -113,7 +113,7 @@ class Plane:
         origin = random.choice(airport_list)
         destination = random.choice(airport_list)
         # origin = airport_list[1]
-        # destination = airport_list[2]
+        # destination = airport_list[0]
         while(destination == origin):
             destination = random.choice(airport_list)
         degree_position = origin.get_degree_position()
@@ -129,6 +129,7 @@ class Plane:
         flight_code = "{}{}".format(airline_code,str(generate_num))
         # end generate Flight code
         plane_info = random.choice(plane_information)
+        # plane_info = plane_information[1]
         passenger = plane_info.get_max_seat()
         normal_passenger = Calculator.normal_distribution_seat(passenger=passenger)
         altitude = 0
@@ -232,13 +233,13 @@ class Plane:
                 self.__holding_point["outbound"]=(self.__holding_point["fix_end"][0]+y_leg_distance,
                                                             self.__holding_point["fix_end"][1]+x_leg_distance)
             if (self.__holding_point["outboundend"] == None):
-                radius = ((self.__speed/3600) / (math.pi/(180/ROT))) /111 # (degree position)
-                x_radius = 2*radius*math.cos(math.radians(self.__holding_fix_direction-270))
-                y_radius =2*radius*math.sin(math.radians(self.__holding_fix_direction-270))
+                leg_distance = self.__speed/(111*3600)*90 # (degree position)
+                x_leg_distance = leg_distance*math.cos(math.radians(self.__holding_fix_direction-180))
+                y_leg_distance =leg_distance*math.sin(math.radians(self.__holding_fix_direction-180))
                 # self.__holding_outbound_end_degree_position = (self.__holding_point["outbound"][0]+y_radius,
                 #                                             self.__holding_point["outbound"][1]+x_radius)
-                self.__holding_point["outboundend"]=(self.__holding_point["outbound"][0]+y_radius,
-                                                        self.__holding_point["outbound"][1]+x_radius)
+                self.__holding_point["outboundend"]=(self.__holding_point["fix"][0]+y_leg_distance,
+                                                            self.__holding_point["fix"][1]+x_leg_distance)
             self.__holding_phase = "fix end"
 
         if self.__holding_phase == "fix end":
