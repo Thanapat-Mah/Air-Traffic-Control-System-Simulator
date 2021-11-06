@@ -20,6 +20,7 @@ def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_m
 				run = False
 			else:
 				console.check_event(event)
+				help_box.check_event(event, is_open=console.get_is_help_open())
 				plane_manager.respond_command(console)
 				simulator.check_selection(event, plane_manager=plane_manager, airport_manager=airport_manager, sidebar=sidebar)
 				toolbar.check_event(event, simulator=simulator)

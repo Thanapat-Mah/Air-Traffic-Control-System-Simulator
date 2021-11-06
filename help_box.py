@@ -32,7 +32,15 @@ class HelpBox:
 
 	# check for page switching
 	def check_event(self, event, is_open=False):
-		pass
+		# can switch page only when it is opened
+		if is_open:
+			# check for change page
+			if self.__switch_page_button[0].click(event):
+				if self.__selected_page > 1:
+					self.__selected_page -= 1
+			elif self.__switch_page_button[1].click(event):
+				if self.__selected_page < self.__all_page_count:
+					self.__selected_page += 1
 
 	# draw help box
 	def draw_help_box(self, display, is_open=False):
@@ -45,7 +53,7 @@ class HelpBox:
 			topic_x = (self.__width - topic_surface.get_size()[0])/2
 			self.__background_surface.blit(topic_surface, (topic_x, 20))
 			# draw content
-			content_surface = self.__contents[self.__selected_page]
+			content_surface = self.__contents[self.__selected_page-1]
 			content_x = (self.__width - content_surface.get_size()[0])/2
 			content_y = 40 + topic_surface.get_size()[1]
 			self.__background_surface.blit(content_surface, (content_x, content_y))
