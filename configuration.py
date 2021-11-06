@@ -40,7 +40,13 @@ ICON_PATH = {
 	"help_active": "assets/icons/help_active.png",
 	"help_inactive": "assets/icons/help_inactive.png"
 }
-
+HELP_PATH = {
+	"command_generate": "assets/images/help/command_generate.png",
+	"command_takeoff": "assets/images/help/command_takeoff.png",
+	"command_hold": "assets/images/help/command_hold.png",
+	"command_continue": "assets/images/help/command_continue.png",
+	"command_altitude": "assets/images/help/command_altitude.png"
+}
 
 
 ### simulations data setting

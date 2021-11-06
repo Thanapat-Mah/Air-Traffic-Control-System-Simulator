@@ -9,8 +9,9 @@ from airport import AirportManager
 from plane_manager import PlaneManager
 from collision_detector import CollisionDetector
 from console import Console
+from help_box import HelpBox
 
-def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_manager, collision_detector, console):
+def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_manager, collision_detector, console, help_box):
 	run = True
 	while run:
 		# check for every event
@@ -28,7 +29,7 @@ def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_m
 		# update screen to next frame
 		simulator.update_simulator(airport_manager=airport_manager, plane_manager=plane_manager, sidebar=sidebar)
 		screen.update_screen(simulator=simulator, toolbar=toolbar, sidebar=sidebar, airport_manager=airport_manager,
-			map_=map_, plane_manager = plane_manager, collision_detector=collision_detector, console=console)
+			map_=map_, plane_manager = plane_manager, collision_detector=collision_detector, console=console, help_box=help_box)
 		pygame.display.update()
 
 	pygame.quit()
@@ -45,6 +46,7 @@ if __name__ == "__main__":
 	collision_detector = CollisionDetector()
 	console_width = 350
 	console = Console(10, screen.get_size()[1]-toolbar.get_height()-310, console_width, 300)
+	help_box = HelpBox(10, screen.get_size()[1]-toolbar.get_height()-320-console_width, console_width, console_width)
 	for i in range(3):
 		plane_manager.generate_new_plane(airport_manager=airport_manager)
-	simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_manager, collision_detector, console)
+	simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_manager, collision_detector, console, help_box)

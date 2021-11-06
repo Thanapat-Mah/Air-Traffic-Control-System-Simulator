@@ -129,6 +129,7 @@ class Console:
 
 	# draw console including command log, command input and help button
 	def draw_console(self, display):
+		# draw transparent background
 		pygame.draw.rect(self.__background_surface, self.__background_color, self.__background_surface.get_rect(), border_radius=self.__border_radius)
 
 		# draw command log
