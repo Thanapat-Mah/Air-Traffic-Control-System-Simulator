@@ -11,7 +11,7 @@ from plane import Plane
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 10
+    __LIMIT = 3
     def __init__(self, plane_size=30, image_path=PLANE_PATH, text_color=COLOR['white'], font=FONT['bebasneue_small'], route_color = COLOR['light_gray'], route_width = 2):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
@@ -57,7 +57,7 @@ class PlaneManager:
                 elif plane.get_phase() == PLNAE_PHASE['climbing']:
                     avrage_altitude = (sum(plane.get_plane_information().get_altitude())/2)
                     if (plane.get_altitude() == avrage_altitude):
-                        plane.set_phase(PLNAE_PHASE['holding']) ############
+                        plane.set_phase(PLNAE_PHASE['cruising']) ############
 
                 elif plane.get_phase() == PLNAE_PHASE['cruising']:
                     if (plane.get_remain_distance() <= plane.get_starting_descending_point()/1000):

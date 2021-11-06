@@ -84,7 +84,7 @@ class ListBox:
 		# draw status button
 		for status_button in self.__status_button_list:			
 			is_selected = (status_button.get_code() == simulator.get_selected_object_code())
-			is_collide = (status_button.get_code() in collision_detector.mock_get_collision_set())
+			is_collide = (status_button.get_code() in collision_detector.get_collision_set())
 			status_button.draw_button(display=display, is_selected=is_selected, is_collide=is_collide)
 		# draw page number
 		page_text_surface = self.__font.render(f"{self.__selected_page}/{self.__all_page_count}", True, self.__text_color)

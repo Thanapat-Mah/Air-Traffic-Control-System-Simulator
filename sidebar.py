@@ -81,7 +81,7 @@ class Sidebar:
 			self.__overall_list_box.draw_list_box(display=display, simulator=simulator, collision_detector=collision_detector)
 		# draw_notch
 		drawing_notch_color = self.__notch_color
-		if len(collision_detector.mock_get_collision_set()) > 0:
+		if len(collision_detector.get_collision_set()) > 0:
 			drawing_notch_color = self.__collision_notch_color
 		self.__notch_button.set_x(current_x - self.__notch_button.width)
 		self.__notch_button.set_background_color(drawing_notch_color)
