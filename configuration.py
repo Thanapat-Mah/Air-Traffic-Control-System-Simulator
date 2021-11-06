@@ -83,7 +83,7 @@ PLNAE_PHASE = {
 FAIL_RESPONSE = {
 	"invalid_command": "Invalid command, please try again",
 	"invalid_syntax": "Invalid syntax, please try again",
-	"Invalid_flight_code": "Invalid flight code, please try again",
+	"invalid_flight_code": "Invalid flight code, please try again",
 	"invalid_value": "Invalid value, please try again",
 	"can_not_command": "Can not command, please try again"
 }

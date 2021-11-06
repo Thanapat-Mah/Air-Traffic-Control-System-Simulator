@@ -21,22 +21,32 @@ class Console:
 			"fail_response": COLOR["pink"],
 			"warning": COLOR["pink"]
 		}
-		self.__user_text_prefix = user_text_prefix
 		self.__text_spacing = {
 			"user": 10,
 			"success_response": 0,
 			"fail_response": 0,
 			"warning": 10
 		}
-		self.__command_log = [{"success_response": "Type something in!"}]
+		self.__user_text_prefix = user_text_prefix
 		self.__syntax = SYNTAX
+		self.__command_log = [{"success_response": "Type something in!"}]
 		self.__command_input = CommandInput(x=25, y=self.__height-40, width=self.__width-40, height=30, font=self.__font)
 		self.__command_input_text = ""
+		self.__formatted_input = []
 		self.__help_button = None 		# MultiStateButton()
+		self.__is_help_open = False 	# open status of commnand help
 
-	# handle incoming command input
+	# pop out formatted input (return value and clear value)
+	def pop_formatted_input(self):
+		tmp = []
+		if len(self.__formatted_input) > 0:
+			tmp = self.__formatted_input.copy()
+			self.__formatted_input.clear()
+		return(tmp)
+
+	# handle incoming command input, check for command validity and save formatted command
 	def handle_input(self):
-		formatted_input = []
+		self.__formatted_input = []
 		if self.__command_input_text != "":
 			self.__command_log.append({"user": f"{self.__user_text_prefix} {self.__command_input_text}"})
 			# tokenize input
@@ -74,7 +84,7 @@ class Console:
 								# print("wrong order")
 							# else, collect keyword to formatted input
 							else:
-								formatted_input.insert(0, input_token)
+								self.__formatted_input.insert(0, input_token)
 						else:
 							# check if required parameter is missing
 							if command_token == REQUIRED:
@@ -83,19 +93,18 @@ class Console:
 									# print("required missing")
 							# check for optional parameter..., maybe no need to check
 							# collect parameter to formatted input
-							formatted_input.append(input_token)
+							self.__formatted_input.append(input_token)
 			# if something is invalid, clear formatted input and send fail response
 			if invalid_command:
-				formatted_input.clear()
+				self.__formatted_input.clear()
 				self.__command_log.append({"fail_response": FAIL_RESPONSE["invalid_command"]})
 			elif invalid_syntax:
-				formatted_input.clear()
+				self.__formatted_input.clear()
 				self.__command_log.append({"fail_response": FAIL_RESPONSE["invalid_syntax"]})
 			else:
 				self.__command_log.append({"success_response": "keyword and syntax is pass!"})
 			# clear input text after process
 			self.__command_input_text = ""
-		return(formatted_input)
 
 	# check for clicking on command input box or help button
 	def check_event(self, event):
