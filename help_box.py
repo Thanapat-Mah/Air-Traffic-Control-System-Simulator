@@ -13,7 +13,7 @@ class HelpBox:
 		self.__height = height
 		self.__border_radius = border_radius
 		self.__background_color = background_color
-		self.__background_surface = pygame.Surface((width, height), pygame.SRCALPHA)
+		self.__background_surface = pygame.Surface((self.__width, self.__height), pygame.SRCALPHA)
 		self.__topic = topic
 		self.__font = font
 		self.__text_color = text_color
@@ -55,7 +55,7 @@ class HelpBox:
 			# draw content
 			content_surface = self.__contents[self.__selected_page-1]
 			content_x = (self.__width - content_surface.get_size()[0])/2
-			content_y = 40 + topic_surface.get_size()[1]
+			content_y = 20 + topic_surface.get_size()[1]
 			self.__background_surface.blit(content_surface, (content_x, content_y))
 			# draw background surface
 			display.blit(self.__background_surface, (self.__x, self.__y))

@@ -74,7 +74,7 @@ PLANE_INFORMATIONS = (
 	("Airbus A320-200", 180, 863, (29000, 39000)),
 	("Boeing 787-9", 236, 903, (35000, 43000))
 )
-ZOOM_SCALE = 3	# map zoom scaling
+ZOOM_SCALE = 2.5	# map zoom scaling
 
 ROC = 3500/60 # rate of climbing 3500 ft/min
 ROT = 1 # rate of turn 3 degree / second

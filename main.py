@@ -45,9 +45,12 @@ if __name__ == "__main__":
 	airport_manager = AirportManager()
 	plane_manager = PlaneManager(image_path=PLANE_PATH)
 	collision_detector = CollisionDetector()
+	# adjust console and help box position
 	console_width = 350
-	console = Console(10, screen.get_size()[1]-toolbar.get_height()-310, console_width, 300)
-	help_box = HelpBox(10, screen.get_size()[1]-toolbar.get_height()-420-console_width, console_width, console_width+100)
+	console_height = 240
+	console_y = screen.get_size()[1] - toolbar.get_height() - console_height - 10
+	console = Console(10, console_y, console_width, console_height)
+	help_box = HelpBox(10, console_y-console_width-110, console_width, console_width+100)
 	for i in range(3):
 		plane_manager.generate_new_plane(airport_manager=airport_manager)
 	simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_manager, collision_detector, console, help_box)
