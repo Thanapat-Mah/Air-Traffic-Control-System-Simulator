@@ -50,4 +50,4 @@ class Screen:
 		sidebar.draw_sidebar(self.__display, simulator=simulator, collision_detector=collision_detector)
 		self.draw_name(name=simulator.get_name())
 		console.draw_console(self.__display)
-		help_box.draw_help_box(self.__display)
+		help_box.draw_help_box(self.__display, is_open=console.get_is_help_open())

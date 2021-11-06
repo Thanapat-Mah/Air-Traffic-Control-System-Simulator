@@ -40,6 +40,9 @@ class Console:
 			border_radius=15)
 		self.__is_help_open = False 	# open status of commnand help
 
+	def get_is_help_open(self):
+		return(self.__is_help_open)
+
 	# pop out formatted input (return value and clear value)
 	def pop_formatted_input(self):
 		tmp = []
@@ -125,7 +128,6 @@ class Console:
 		if self.__help_button.click(event):
 			self.__is_help_open = not self.__is_help_open
 			self.__help_button.switch_state()
-			self.__command_log.append({"warning": f"now help opening is {self.__is_help_open}"})
 
 	# draw console including command log, command input and help button
 	def draw_console(self, display):
