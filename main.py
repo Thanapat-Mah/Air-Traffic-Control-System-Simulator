@@ -43,6 +43,6 @@ if __name__ == "__main__":
 	plane_manager = PlaneManager(image_path=PLANE_PATH)
 	collision_detector = CollisionDetector()
 	console = Console(10, screen.get_size()[1]-toolbar.get_height()-310, 400, 300)
-	for i in range(3):
+	for i in range(1):
 		plane_manager.generate_new_plane(airport_manager=airport_manager)
 	simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_manager, collision_detector, console)
