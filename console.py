@@ -106,6 +106,11 @@ class Console:
 			# clear input text after process
 			self.__command_input_text = ""
 
+	# handle incoming response from PlaneManager
+	def handle_response(self, responses):
+		for response in responses:
+			self.__command_log.append(response)
+
 	# check for clicking on command input box or help button
 	def check_event(self, event):
 		self.__command_input.check_clicking(event, parent_surface_position=(self.__x, self.__y))
