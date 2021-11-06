@@ -6,7 +6,7 @@ from pygame import surface
 from configuration import PLANE_PATH
 from utilities import Converter, Loader
 from plane_airline_information import PlaneInformation,AirlineInformation
-from configuration import FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH, PLNAE_PHASE
+from configuration import FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH, PLNAE_PHASE, FAIL_RESPONSE
 from plane import Plane
 
 ### plane mamager that can update plane
@@ -198,21 +198,38 @@ class PlaneManager:
             gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specification_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter)
             self.__plane_list.append(gen_plane)
 
-    def respond_command(self, command): 
-        if command[0] == 'generate':
-            pass
-        elif command[1] == 'takeoff':
-            pass
-        elif command[1] == 'hold':
-            pass
-        elif command[1] == 'continue':
-            pass
-        elif command[1] == 'altitude':
-            pass
-        else:
-            pass
+    def respond_command(self, console):
+        formatted_input = console.pop_formatted_input()
+        if(len(formatted_input)) > 0:
+            response_message = []
 
-        return
+            # unpack keyword and parameters
+            keyword, *parameters = formatted_input
+            print("---------------------------------------------")
+            print(f"keyword    value: {keyword}") 
+            # parameters is a list
+            print(f"parameters type:  {type(parameters)}")
+            print(f"parameters value: {parameters}")
+
+            if keyword == 'generate':
+                pass
+            elif keyword == 'takeoff':
+                # set response like this
+                response_message.append({"fail_response": FAIL_RESPONSE["can_not_command"]})
+                response_message.append({"fail_response": "TG001 is now Cruising"})     # "TG001" and "Cruising" is variable
+                # or
+                # response_message.append({"success_response": "TG001 is taking off"})
+            elif keyword == 'hold':
+                pass
+            elif keyword == 'continue':
+                pass
+            elif keyword == 'altitude':
+                pass
+            else:
+                pass
+
+            # send response to console this way
+            console.handle_response(response_message)
     
     def command_generate(self, model, origin, destination):
         return

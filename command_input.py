@@ -4,7 +4,7 @@ from configuration import COLOR, FONT
 ### command input box for receive command text input from user
 class CommandInput:
 	def __init__(self, x, y, width, height, border_radius=5, border_size=2, background_color=COLOR["dark_gray"],
-		typing_background_color=COLOR["black"], font=FONT["consolas_normal"], text_color=COLOR["white"]):
+		typing_background_color=COLOR["black"], font=FONT["consolas_small"], text_color=COLOR["white"]):
 		self.__x = x
 		self.__y = y
 		self.__width = width

@@ -6,7 +6,7 @@ from numpy import std, mean, random
 class Loader:
 
     def load_image(image_path, size, scale = 1):
-        screen_size_scaled = (size[0]*scale, size[1]*scale)
+        screen_size_scaled = (int(size[0]*scale), int(size[1]*scale))
         image_loaded = pygame.image.load(image_path)
         return pygame.transform.scale(image_loaded, screen_size_scaled)
 
