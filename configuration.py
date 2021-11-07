@@ -117,3 +117,8 @@ SYNTAX = [
 	{KEYWORD: "altitude",
 	FORMAT: [REQUIRED, KEYWORD, REQUIRED]},
 ]
+
+MODEL_GENERATE = {
+	"A320":"Airbus A320-200",
+	"B787":"Boeing 787-9"
+}

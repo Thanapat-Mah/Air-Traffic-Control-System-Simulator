@@ -21,7 +21,7 @@ def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_m
 			else:
 				console.check_event(event)
 				help_box.check_event(event, is_open=console.get_is_help_open())
-				plane_manager.respond_command(console)
+				plane_manager.respond_command(console,airport_manager=airport_manager)
 				simulator.check_selection(event, plane_manager=plane_manager, airport_manager=airport_manager, sidebar=sidebar)
 				toolbar.check_event(event, simulator=simulator)
 				sidebar.check_event(event)
@@ -52,5 +52,5 @@ if __name__ == "__main__":
 	console = Console(10, console_y, console_width, console_height)
 	help_box = HelpBox(10, console_y-console_width-110, console_width, console_width+100)
 	for i in range(3):
-		plane_manager.generate_new_plane(airport_manager=airport_manager)
+		plane_manager.generate_new_plane(airport_manager=airport_manager, model="", origin_comm="", destination_comm="")
 	simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_manager, collision_detector, console, help_box)

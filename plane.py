@@ -105,14 +105,35 @@ class Plane:
         return(distance_different_origin_destination-distance_different_current_origin)
 
     # generate random all information plane
-    def generate_random_plane(plane_information, airline_information, airport_manager, flight_counter):
+    def generate_random_plane(plane_information, airline_information, airport_manager, flight_counter, model, origin_comm, destination_comm):
+        #generate origin and destination
         airport_list = airport_manager.get_airport_tuple()
-        origin = random.choice(airport_list)
-        destination = random.choice(airport_list)
-        # origin = airport_list[1]
-        # destination = airport_list[2]
-        while(destination == origin):
+        #check origin command is empty, can random
+        if origin_comm == '':
+            origin = random.choice(airport_list)
             destination = random.choice(airport_list)
+            while(destination == origin):
+                destination = random.choice(airport_list)
+        #check origin and destination command  isn't empty, can configure
+        else:
+            for airport in airport_list:
+                if origin_comm == airport.get_code():
+                    origin = airport
+            for airport in airport_list:
+                if destination_comm == airport.get_code():
+                    destination = airport
+
+        #generate model plane
+        #check model command is empty, can random
+        if model == '':
+            plane_info = random.choice(plane_information)
+        #check model command isn't empty, cam configure
+        else:
+            for plane_model in plane_information:
+                # print(plane_model.get_model())
+                if plane_model.get_model() == model:
+                    plane_info = plane_model
+
         degree_position = origin.get_degree_position()
         airline = random.choice(airline_information)
         airline_code = airline.get_code()
@@ -125,7 +146,7 @@ class Plane:
             generate_num = "{:03d}".format(flight_counter['TG'])
         flight_code = "{}{}".format(airline_code,str(generate_num))
         # end generate Flight code
-        plane_info = random.choice(plane_information)
+
         passenger = plane_info.get_max_seat()
         normal_passenger = Calculator.normal_distribution_seat(passenger=passenger)
         altitude = 0
