@@ -200,11 +200,23 @@ class PlaneManager:
             if keyword == 'generate':
                 pass
             elif keyword == 'takeoff':
-                # set response like this
-                response_message.append({"fail_response": FAIL_RESPONSE["can_not_command"]})
-                response_message.append({"fail_response": "TG001 is now Cruising"})     # "TG001" and "Cruising" is variable
-                # or
-                # response_message.append({"success_response": "TG001 is taking off"})
+                for plane in self.__plane_list:
+                    if plane.get_flight_code() == parameters[0]:
+                        if plane.get_status() == PLNAE_PHASE['waiting']:
+                            plane.set_status(PLNAE_PHASE['takingoff'])
+                            response_message.append({"success_response": "{} is {}".format(plane.get_flight_code(), plane.get_status())})
+                            has_flight = 1
+                            break
+                        else:
+                            response_message.append({"fail_response": FAIL_RESPONSE["can_not_command"]})
+                            response_message.append({"fail_response": "{} is now {}".format(plane.get_flight_code(), plane.get_status())})
+                            has_flight = 1
+                            break
+                    else :
+                            has_flight = 0   
+                if has_flight == 0: 
+                    response_message.append({"fail_response": FAIL_RESPONSE["invalid_flight_code"]})
+                        
             elif keyword == 'hold':
                 pass
             elif keyword == 'continue':
@@ -221,10 +233,7 @@ class PlaneManager:
         return
 
     def command_takeoff(self, flight_code):
-        for plane in self.__plane_list:
-            if plane.get_flight_code() == command[1]:
-                if plane.get_status() == PLNAE_PHASE['waiting']:
-                    pass
+        pass
 
     def command_hold(self, flight_code):
         return
