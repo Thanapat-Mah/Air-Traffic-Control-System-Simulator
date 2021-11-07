@@ -21,6 +21,7 @@ COLOR = {
 	"white": (255, 255, 255),
 	"pink": (255, 82, 96),
 	"red": (197, 0, 0),
+	"transparance_red": (197, 0, 0, int(255*0.5)),
 	"green": (63, 181, 61)
 }
 MAP_PATH = "assets/images/map_full_size.png"

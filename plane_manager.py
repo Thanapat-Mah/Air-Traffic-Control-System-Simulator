@@ -11,8 +11,10 @@ from plane import Plane
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 10
-    def __init__(self, plane_size=30, image_path=PLANE_PATH, text_color=COLOR['white'], font=FONT['bebasneue_small'], route_color = COLOR['light_gray'], route_width = 2):
+    __LIMIT = 100
+    def __init__(self, plane_size=30, image_path=PLANE_PATH, text_color=COLOR['white'], font=FONT['bebasneue_small'],
+        route_color = COLOR['light_gray'], route_width = 2, collision_circle_color=COLOR["transparance_red"],
+        collision_circle_radius=30, collision_circle_width=1):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
         self.__plane_specification_tuple = tuple([
@@ -31,8 +33,9 @@ class PlaneManager:
 
         self.__route_color = route_color
         self.__route_width = route_width
-        self.__collision_circle_color = None
-        self.__collision_circle_width = None
+        self.__collision_circle_color = collision_circle_color
+        self.__collision_circle_radius = collision_circle_radius
+        self.__collision_circle_width = collision_circle_width
 
     # get plane list that contain all plane object
     def get_plane_list(self):
@@ -110,12 +113,24 @@ class PlaneManager:
         return(True)
 
     #draw plane, route line and side plane detail
-    def draw_all_plane(self, display, converter):
+    def draw_all_plane(self, display, converter, collision_detector):
+        collision_set = collision_detector.get_collision_set()
         for plane in self.__plane_list:
             if(plane.get_direction() != None):
                 # set new hit box
                 position = plane.get_degree_position()
                 pixel = converter.degree_to_pixel(degree_postion=position)
+
+                # draw red circle when have future collision
+                if plane.get_flight_code() in collision_set:
+                    radius = self.__collision_circle_radius
+                    circle_surface = pygame.Surface((2*radius, 2*radius), pygame.SRCALPHA)
+                    # fill transparence circle
+                    pygame.draw.circle(circle_surface, self.__collision_circle_color, (radius, radius), radius)
+                    # draw solid border
+                    pygame.draw.circle(circle_surface, self.__collision_circle_color[:-1], (radius, radius), radius, width=self.__collision_circle_width)
+                    display.blit(circle_surface, (pixel[0]-radius, pixel[1]-radius))
+
                 # draw route line when is selected
                 airport_pixel = converter.degree_to_pixel(degree_postion=plane.get_destination().get_degree_position())
 

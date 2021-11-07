@@ -4,8 +4,11 @@ import copy
 class CollisionDetector:
 
     def __init__(self):
-        self.__separated_distance = {"horizontal": 9.26,
-                                        "vertical": 1000
+        # self.__separated_distance = {"horizontal": 9.26,
+        #                                 "vertical": 1000
+        #                             }
+        self.__separated_distance = {"horizontal": 100,
+                                        "vertical": 10000
                                     }
         self.__collision_set = set()
         self.__collision_couple_history_set = set()
