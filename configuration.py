@@ -77,7 +77,7 @@ PLANE_INFORMATIONS = (
 ZOOM_SCALE = 2.5	# map zoom scaling
 
 ROC = 3500/60 # rate of climbing 3500 ft/min
-ROT = 1 # rate of turn 3 degree / second
+ROT = 3 # rate of turn 3 degree / second
 ACCELERATE = 6 #accelerate when taking off and landing (m/s^2)
 PLNAE_PHASE = {
 	"waiting":"Waiting",

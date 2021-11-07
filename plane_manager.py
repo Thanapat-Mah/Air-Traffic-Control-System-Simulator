@@ -2,7 +2,7 @@ import pygame
 import copy
 import math
 from numpy import arctan, frompyfunc
-from pygame import surface
+from pygame import Rect, surface
 from configuration import PLANE_PATH
 from utilities import Converter, Loader
 from plane_airline_information import PlaneInformation,AirlineInformation
@@ -11,7 +11,7 @@ from plane import Plane
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 3
+    __LIMIT = 1
     def __init__(self, plane_size=30, image_path=PLANE_PATH, text_color=COLOR['white'], font=FONT['bebasneue_small'], route_color = COLOR['light_gray'], route_width = 2):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
@@ -57,7 +57,7 @@ class PlaneManager:
                 elif plane.get_phase() == PLNAE_PHASE['climbing']:
                     avrage_altitude = (sum(plane.get_plane_information().get_altitude())/2)
                     if (plane.get_altitude() == avrage_altitude):
-                        plane.set_phase(PLNAE_PHASE['cruising']) ############
+                        plane.set_phase(PLNAE_PHASE['holding']) ############
 
                 elif plane.get_phase() == PLNAE_PHASE['cruising']:
                     if (plane.get_remain_distance() <= plane.get_starting_descending_point()/1000):
@@ -127,30 +127,42 @@ class PlaneManager:
                         if (holding_point["outboundend"] != None):
                             for point in holding_point:
                                 holding_point[point] = converter.degree_to_pixel(degree_postion=holding_point[point])
-                            degree = plane.get_holding_fix_direction()
+                                if holding_point[point][0]%2 != 0:
+                                    holding_point[point] = ((holding_point[point][0]-1),(holding_point[point][1]))
+                                if holding_point[point][1]%2 != 0:
+                                    holding_point[point] = ((holding_point[point][0]),(holding_point[point][1]-1))
+                            degree = plane.get_holding_fix_direction()+90
                             #find mid point
-                            mid_fix_fixend = ((holding_point["fix"][0]+holding_point["fix_end"][0])/2,(holding_point["fix"][1]+holding_point["fix_end"][1])/2)
-                            mid_outbound_outboundend = ((holding_point["outboundend"][0]+holding_point["outbound"][0])/2,(holding_point["outboundend"][1]+holding_point["outbound"][1])/2)
+                            mid_fix_fixend = (round((holding_point["fix"][0]+holding_point["fix_end"][0])/2),round((holding_point["fix"][1]+holding_point["fix_end"][1])/2))
+                            mid_outbound_outboundend = (round((holding_point["outboundend"][0]+holding_point["outbound"][0])/2),round((holding_point["outboundend"][1]+holding_point["outbound"][1])/2))
                             #find radius
-                            radius_fix_fixend = round(math.dist(mid_fix_fixend,holding_point["fix_end"]))
-                            radius_outbound_outboundend = round(math.dist(mid_outbound_outboundend, holding_point["outboundend"]))
-                            #draw holding route
-                            pygame.draw.arc(display, self.__route_color, 
-                                            (mid_fix_fixend[0]-radius_fix_fixend, mid_fix_fixend[1]-radius_fix_fixend, 2*radius_fix_fixend, 2*radius_fix_fixend), 
-                                            math.radians(degree+90)+math.pi, math.radians(degree+90),self.__route_width)
-                            pygame.draw.arc(display,  self.__route_color, 
-                                            (mid_outbound_outboundend[0]-radius_outbound_outboundend, mid_outbound_outboundend[1]-radius_outbound_outboundend, 2*radius_outbound_outboundend, 2*radius_outbound_outboundend), 
-                                            math.radians(degree+90), math.radians(degree+90)+math.pi,self.__route_width)
+                            radius_fix_fixend = round(math.dist(holding_point["fix"],holding_point["fix_end"])/2)
+                            #find new points for drawing
+                            holding_point["fix_end"] = (round(2*(mid_fix_fixend[0])-(holding_point["fix"][0])),
+                                                            round(2*(mid_fix_fixend[1])-(holding_point["fix"][1])))
+                            distance_mid_x = (mid_fix_fixend[0])-(mid_outbound_outboundend[0])
+                            distance_mid_y = (mid_fix_fixend[1])-(mid_outbound_outboundend[1])
+                            holding_point["outboundend"] = (holding_point["fix"][0]-distance_mid_x,holding_point["fix"][1]-distance_mid_y)
+                            holding_point["outbound"] = (holding_point["fix_end"][0]-distance_mid_x,holding_point["fix_end"][1]-distance_mid_y)
+                            #rectangle for drawing arc
+                            rect_fix_fixend = (mid_fix_fixend[0]-radius_fix_fixend, mid_fix_fixend[1]-radius_fix_fixend, 2*radius_fix_fixend+1, 2*radius_fix_fixend+1)
+                            rect_outbound_outboundend = (mid_outbound_outboundend[0]-radius_fix_fixend, mid_outbound_outboundend[1]-radius_fix_fixend+1, 2*radius_fix_fixend, 2*radius_fix_fixend+1)
+                            #drawing holding route
+                            pygame.draw.arc(display, self.__route_color, rect_fix_fixend, 
+                                            math.radians(degree+180), math.radians(degree),self.__route_width)
+                            pygame.draw.arc(display, self.__route_color, rect_outbound_outboundend, 
+                                            math.radians(degree), math.radians(degree+180),self.__route_width)
                             pygame.draw.line(display,  self.__route_color, holding_point["fix_end"], holding_point["outbound"], width = self.__route_width)
                             pygame.draw.line(display,  self.__route_color, holding_point["outboundend"], holding_point["fix"], width = self.__route_width)
-                            
                             #for testing
-                            #pygame.draw.rect(display, (255,0,0), (mid_fix_fixend[0]-radius_fix_fixend, mid_fix_fixend[1]-radius_fix_fixend, 2*radius_fix_fixend+1, 2*radius_fix_fixend+1),1)
-                            #pygame.draw.rect(display, (255,0,0), (mid_outbound_outboundend[0]-radius_outbound_outboundend, mid_outbound_outboundend[1]-radius_outbound_outboundend, 2*radius_outbound_outboundend, 2*radius_outbound_outboundend),1)
-                            # pygame.draw.circle(display, self.__route_color, (holding_point["fix"][0], holding_point["fix"][1]),2)
-                            # pygame.draw.circle(display, self.__route_color, (holding_point["fix_end"][0], holding_point["fix_end"][1]),2)
-                            # pygame.draw.circle(display, self.__route_color, (holding_point["outbound"][0], holding_point["outbound"][1]),2)
-                            # pygame.draw.circle(display, self.__route_color, (holding_point["outboundend"][0], holding_point["outboundend"][1]),2)
+                            # pygame.draw.line(display,  self.__route_color, holding_point["fix_end"], holding_point["fix"], width = self.__route_width)
+                            # pygame.draw.line(display,  self.__route_color, holding_point["outbound"], holding_point["outboundend"], width = self.__route_width)
+                            # pygame.draw.rect(display, (0,0,255),(mid_outbound_outboundend[0]-radius_fix_fixend, mid_outbound_outboundend[1]-radius_fix_fixend, 2*radius_fix_fixend+1, 2*radius_fix_fixend+1),1)
+                            # pygame.draw.circle(display, (255,0,0), (mid_fix_fixend[0], mid_fix_fixend[1]),1)
+                            # pygame.draw.circle(display, (0,0,255), (holding_point["fix"][0], holding_point["fix"][1]),1)
+                            # pygame.draw.circle(display, (0,0,255), (holding_point["fix_end"][0], holding_point["fix_end"][1]),1)
+                            # pygame.draw.circle(display, (0,255,0), (holding_point["outbound"][0], holding_point["outbound"][1]),1)
+                            # pygame.draw.circle(display, (0,255,0), (holding_point["outboundend"][0], holding_point["outboundend"][1]),1)
  
                 direction = plane.get_direction()
                 # rotate the plane in the direction of the destination.
@@ -160,7 +172,7 @@ class PlaneManager:
                 new_hit_box = image.get_rect(center = pixel_position)
                 plane.set_hit_box(new_hit_box)
                 # draw plane according to current position.
-                display.blit(image, new_hit_box)
+                #display.blit(image, new_hit_box)
                 # draw text right side of plane
                 flight_code_surface = self.__font.render(plane.get_flight_code(), True, self.__text_color)
                 route_surface = self.__font.render(f'{plane.get_origin().get_code()} - {plane.get_destination().get_code()}', True, self.__text_color)
