@@ -22,7 +22,7 @@ def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_m
 				console.check_event(event)
 				help_box.check_event(event, is_open=console.get_is_help_open())
 				plane_manager.respond_command(console)
-				collision_detector.check_collision(plane_list=plane_manager.get_plane_list())
+				collision_detector.check_collision(plane_list=plane_manager.get_plane_list(), console=console)
 				simulator.check_selection(event, plane_manager=plane_manager, airport_manager=airport_manager, sidebar=sidebar)
 				toolbar.check_event(event, simulator=simulator)
 				sidebar.check_event(event)

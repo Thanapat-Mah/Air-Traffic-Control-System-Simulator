@@ -11,7 +11,7 @@ from plane import Plane
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 3
+    __LIMIT = 10
     def __init__(self, plane_size=30, image_path=PLANE_PATH, text_color=COLOR['white'], font=FONT['bebasneue_small'], route_color = COLOR['light_gray'], route_width = 2):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)

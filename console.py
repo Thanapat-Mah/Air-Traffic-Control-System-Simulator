@@ -20,13 +20,15 @@ class Console:
 			"user": COLOR["white"],
 			"success_response": COLOR["green"],
 			"fail_response": COLOR["pink"],
-			"warning": COLOR["pink"]
+			"warning": COLOR["pink"],
+			"warning_sequence": COLOR["pink"]
 		}
 		self.__text_spacing = {
 			"user": 10,
 			"success_response": 0,
 			"fail_response": 0,
-			"warning": 10
+			"warning": 10,
+			"warning_sequence": 0
 		}
 		self.__user_text_prefix = user_text_prefix
 		self.__syntax = SYNTAX

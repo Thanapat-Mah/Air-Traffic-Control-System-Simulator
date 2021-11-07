@@ -14,7 +14,7 @@ class CollisionDetector:
     def get_collision_set(self):
         return (self.__collision_set)
 
-    def check_collision(self,plane_list):
+    def check_collision(self, plane_list, console):
         self.__collision_set = set()
         self.__collision_notify_set = set()
         for i in range(len(plane_list)):
@@ -35,6 +35,13 @@ class CollisionDetector:
                 else:
                     if collision_couple in self.__collision_couple_history_set:
                         self.__collision_couple_history_set.remove(collision_couple)
+        # send warning for collision to console
+        response_message = []
+        if len(self.__collision_notify_set) > 0:
+            for collision_couple in self.__collision_notify_set:
+                response_message.append({"warning": "Potential future collisions detected"})
+                response_message.append({"warning_sequence": " - {} and {}".format(collision_couple[0], collision_couple[1])})
+        console.handle_response(response_message)
 
     def pop_notify_list(self):
         tmp_list = self.__collision_notify_set
