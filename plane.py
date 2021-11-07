@@ -112,8 +112,8 @@ class Plane:
         airport_list = airport_manager.get_airport_tuple()
         origin = random.choice(airport_list)
         destination = random.choice(airport_list)
-        origin = airport_list[3]
-        destination = airport_list[4]
+        #origin = airport_list[3]
+        #destination = airport_list[4]
         while(destination == origin):
             destination = random.choice(airport_list)
         degree_position = origin.get_degree_position()

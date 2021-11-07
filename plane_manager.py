@@ -11,7 +11,7 @@ from plane import Plane
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 1
+    __LIMIT = 10
     def __init__(self, plane_size=30, image_path=PLANE_PATH, text_color=COLOR['white'], font=FONT['bebasneue_small'], route_color = COLOR['light_gray'], route_width = 2):
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
@@ -127,6 +127,7 @@ class PlaneManager:
                         if (holding_point["outboundend"] != None):
                             for point in holding_point:
                                 holding_point[point] = converter.degree_to_pixel(degree_postion=holding_point[point])
+                                #check for make sure mid point is integer
                                 if holding_point[point][0]%2 != 0:
                                     holding_point[point] = ((holding_point[point][0]-1),(holding_point[point][1]))
                                 if holding_point[point][1]%2 != 0:
@@ -163,7 +164,7 @@ class PlaneManager:
                             # pygame.draw.circle(display, (0,0,255), (holding_point["fix_end"][0], holding_point["fix_end"][1]),1)
                             # pygame.draw.circle(display, (0,255,0), (holding_point["outbound"][0], holding_point["outbound"][1]),1)
                             # pygame.draw.circle(display, (0,255,0), (holding_point["outboundend"][0], holding_point["outboundend"][1]),1)
- 
+
                 direction = plane.get_direction()
                 # rotate the plane in the direction of the destination.
                 image = pygame.transform.rotate(self.__plane_icon, direction)
@@ -172,7 +173,7 @@ class PlaneManager:
                 new_hit_box = image.get_rect(center = pixel_position)
                 plane.set_hit_box(new_hit_box)
                 # draw plane according to current position.
-                #display.blit(image, new_hit_box)
+                display.blit(image, new_hit_box)
                 # draw text right side of plane
                 flight_code_surface = self.__font.render(plane.get_flight_code(), True, self.__text_color)
                 route_surface = self.__font.render(f'{plane.get_origin().get_code()} - {plane.get_destination().get_code()}', True, self.__text_color)
