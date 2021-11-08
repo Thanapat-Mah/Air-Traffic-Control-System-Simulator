@@ -11,7 +11,7 @@ from plane import Plane
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 100
+    __LIMIT = 10
     def __init__(self, plane_size=30, image_path=PLANE_PATH, text_color=COLOR['white'], font=FONT['bebasneue_small'],
         route_color = COLOR['light_gray'], route_width = 2, collision_circle_color=COLOR["transparance_red"],
         collision_circle_radius=30, collision_circle_width=1):
@@ -116,7 +116,7 @@ class PlaneManager:
     def draw_all_plane(self, display, converter, collision_detector):
         collision_set = collision_detector.get_collision_set()
         for plane in self.__plane_list:
-            if(plane.get_direction() != None):
+            if(plane.get_direction() != None and plane.get_phase() != PLNAE_PHASE['waiting']):
                 # set new hit box
                 position = plane.get_degree_position()
                 pixel = converter.degree_to_pixel(degree_position=position)
@@ -170,16 +170,6 @@ class PlaneManager:
                             pygame.draw.arc(display, self.__route_color, rect_outbound_outboundend, math.radians(degree+180), math.radians(degree),self.__route_width)
                             pygame.draw.line(display,  self.__route_color, holding_point["fix_end"], holding_point["outbound"], width = self.__route_width)
                             pygame.draw.line(display,  self.__route_color, holding_point["outboundend"], holding_point["fix"], width = self.__route_width)
-                            # for testing
-                            # pygame.draw.line(display,  self.__route_color, holding_point["fix_end"], holding_point["fix"], width = self.__route_width)
-                            # pygame.draw.line(display,  self.__route_color, holding_point["outbound"], holding_point["outboundend"], width = self.__route_width)
-                            # pygame.draw.rect(display, (0,0,255),(mid_outbound_outboundend[0]-radius_fix_fixend, mid_outbound_outboundend[1]-radius_fix_fixend, 2*radius_fix_fixend+1, 2*radius_fix_fixend+1),1)
-                            # pygame.draw.circle(display, (255,0,0), (mid_fix_fixend[0], mid_fix_fixend[1]),1)
-                            # pygame.draw.circle(display, (0,0,255), (holding_point["fix"][0], holding_point["fix"][1]),1)
-                            # pygame.draw.circle(display, (0,0,255), (holding_point["fix_end"][0], holding_point["fix_end"][1]),1)
-                            # pygame.draw.circle(display, (0,255,0), (holding_point["outbound"][0], holding_point["outbound"][1]),1)
-                            # pygame.draw.circle(display, (0,255,0), (holding_point["outboundend"][0], holding_point["outboundend"][1]),1)
-
                 direction = plane.get_direction()
                 # rotate the plane in the direction of the destination.
                 image = pygame.transform.rotate(self.__plane_icon, direction)
@@ -219,7 +209,7 @@ class PlaneManager:
                 'Altitude: '+"{:.2f}".format(plane.get_altitude())+' ft',
                 # 'Altitude: '+str(round(plane.get_altitude(),2))+' ft',
                 'Speed: '+"{:.2f}".format(plane.get_speed())+' km/h',
-                'phase: '+str(plane.get_phase())
+                'Phase: '+str(plane.get_phase())
             ])
         return([''])
 
@@ -236,15 +226,16 @@ class PlaneManager:
 
             # unpack keyword and parameters
             keyword, *parameters = formatted_input
-            print("---------------------------------------------")
-            print(f"keyword    value: {keyword}")
+            # print("---------------------------------------------")
+            # print(f"keyword    value: {keyword}")
             # parameters is a list
-            print(f"parameters type:  {type(parameters)}")
-            print(f"parameters value: {parameters}")
+            # print(f"parameters type:  {type(parameters)}")
+            # print(f"parameters value: {parameters}")
 
             if keyword == 'generate':
-                has_airport = 0
-                has_model = 0
+                has_airport = False
+                has_model = False
+                has_flight = False
                 #for loop model plane
                 for model in MODEL_GENERATE:
                     #check model plane if is equal
@@ -257,7 +248,7 @@ class PlaneManager:
                             break
                         #check origin and destination if either origin or destination is empty
                         elif parameters[1] == '' or parameters[2] == '':
-                            has_model = 0
+                            has_model = False
                         #check origin and destination if origin and destination isn't empty
                         else:
                             airport_list = airport_manager.get_airport_tuple()
@@ -267,7 +258,7 @@ class PlaneManager:
                                 if airport.get_code() == parameters[1] and airport.get_code() == parameters[2]:
                                     response_message.append({"fail_response": "Fail para 1 = para 2"})
                                     response_message.append({"fail_response": FAIL_RESPONSE["invalid_value"]})
-                                    has_airport = 1
+                                    has_airport = True
                                     break
                                 #check airport code is equal to origin
                                 elif airport.get_code() == parameters[1]:
@@ -277,14 +268,14 @@ class PlaneManager:
                                         if airport_one.get_code() == parameters[2]:
                                             self.generate_new_plane(airport_manager=airport_manager ,model=MODEL_GENERATE[model], origin_comm=parameters[1], destination_comm=parameters[2])
                                             response_message.append({"success_response": "Generate new flight success."})
-                                            has_airport = 1
+                                            has_airport = True
                                             break
                                         else:
-                                            has_airport = 0
+                                            has_airport = False
                     # else:
-                    #     has_model = 0
+                    #     has_model = False
                 #check invalid generate command
-                if has_model == 0 and has_airport == 0:
+                if not has_model and not has_airport:
                     response_message.append({"fail_response": FAIL_RESPONSE["invalid_value"]})
 
             elif keyword == 'takeoff':
@@ -293,22 +284,42 @@ class PlaneManager:
                         if plane.get_phase() == PLNAE_PHASE['waiting']:
                             plane.set_phase(PLNAE_PHASE['takingoff'])
                             response_message.append({"success_response": "{} is {}".format(plane.get_flight_code(), plane.get_phase())})
-                            has_flight = 1
+                            has_flight = True
                             break
                         else:
                             response_message.append({"fail_response": FAIL_RESPONSE["can_not_command"]})
                             response_message.append({"fail_response": "{} is now {}".format(plane.get_flight_code(), plane.get_phase())})
-                            has_flight = 1
+                            has_flight = True
                             break
                     else :
-                            has_flight = 0
-                if has_flight == 0:
+                            has_flight = False
+                if not has_flight:
                     response_message.append({"fail_response": FAIL_RESPONSE["invalid_flight_code"]})
 
             elif keyword == 'hold':
                 pass
+                # for plane in self.__plane_list:
+                #     if plane.get_flight_code() == parameters[0]:
+                #         if plane.get_phase() == PLNAE_PHASE['cruising']:
+                #             plane.set_phase(PLNAE_PHASE['holding'])
+                #             response_message.append({"success_response": "{} is {}".format(plane.get_flight_code(), plane.get_phase())})
+                #         else:
+                #             response_message.append({"fail_response": FAIL_RESPONSE["can_not_command"]})
+                #             response_message.append({"fail_response": "{} is now {}".format(plane.get_flight_code(), plane.get_phase())})
+                # else:
+                #     response_message.append({"fail_response": FAIL_RESPONSE["invalid_flight_code"]})
+
             elif keyword == 'continue':
                 pass
+                # for plane in  self.__plane_list:
+                #     if plane.get_flight_code() == parameters[0]:
+                #         if plane.get_phase() == PLNAE_PHASE['holding']:
+                #             plane.set_phase(PLNAE_PHASE['continue'])
+                #         else:
+                #             response_message.append({"fail_response": FAIL_RESPONSE["can_not_command"]})
+                #             response_message.append({"fail_response": "{} is now {}".format(plane.get_flight_code(), plane.get_phase())})
+                # else:
+                #     response_message.append({"fail_response": FAIL_RESPONSE["invalid_flight_code"]})
             elif keyword == 'altitude':
                 pass
             else:

@@ -257,15 +257,11 @@ class Plane:
             else :
                 self.__holding_phase = "outbound"
 
-
-
-
         if self.__holding_phase == "outbound":
             self.__holding_point["fix_end"]
             leg_distance = self.__speed/(111*3600)*90
             if (leg_distance - math.dist(self.__degree_position,  self.__holding_point["fix_end"]))*111 <= 1:
                 self.__holding_phase = "outbound end"
-
 
         if self.__holding_phase == "outbound end":
             if abs(self.__direction - self.__holding_fix_direction) < 360:
