@@ -18,21 +18,21 @@ class Map:
     def get_top_left_point(self):
         return self.__top_left_point
 
-    #zoom map in
+    # zoom map in
     def zoom_in(self):
         if self.__zoom_state != "zoom_in":
             self.__zoom_state = "zoom_in"
             self.__top_left_point = ((int(-self.__width*(ZOOM_SCALE-1)/2), 0))
             self.__image = pygame.transform.scale(self.__source_image, ((int(self.__width*ZOOM_SCALE), int(self.__height*ZOOM_SCALE))))
 
-    #zoom map out
+    # zoom map out
     def zoom_out(self):
         if self.__zoom_state != "zoom_out":
             self.__zoom_state = "zoom_out"
             self.__top_left_point = ((0, 0))
             self.__image = pygame.transform.scale( self.__source_image, (self.__width, self.__height))
 
-    #move map by holding the mouse
+    # move map by holding the mouse
     def move(self):
         if self.__first_click_position is None:
             self.__first_click_position = pygame.mouse.get_pos()
@@ -55,7 +55,7 @@ class Map:
         display.blit(self.__image, self.__top_left_point)
 
 
-    #check event
+    # check event
     def check_event(self, event, simulator):
         zoom_status = simulator.get_state(state = "is_zoom", current=True)
         if zoom_status:

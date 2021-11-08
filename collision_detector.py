@@ -1,6 +1,7 @@
 import math
 import copy
 
+### plane collision detector
 class CollisionDetector:
 
     def __init__(self):
@@ -17,16 +18,18 @@ class CollisionDetector:
     def get_collision_set(self):
         return (self.__collision_set)
 
+    # check all plane collision
     def check_collision(self, plane_list, console):
         self.__collision_set = set()
         self.__collision_notify_set = set()
         for i in range(len(plane_list)):
             for j in range(i+1,len(plane_list)):
                 collision_couple = (plane_list[i].get_flight_code(), plane_list[j].get_flight_code())
+                #check collision condition
                 if ((math.dist(plane_list[i].get_degree_position(), plane_list[j].get_degree_position())*111 <= self.__separated_distance["horizontal"]) 
                     and (abs(plane_list[i].get_altitude()-plane_list[j].get_altitude()) <= self.__separated_distance["vertical"])):
-                    self.__collision_set.add(plane_list[i].get_flight_code())
-                    self.__collision_set.add(plane_list[j].get_flight_code())
+                    self.__collision_set.add(collision_couple[0])
+                    self.__collision_set.add(collision_couple[1])
                     if len(self.__collision_couple_history_set) == 0:
                         self.__collision_notify_set.add(collision_couple)
                         self.__collision_couple_history_set.add(collision_couple)
@@ -36,6 +39,7 @@ class CollisionDetector:
                             self.__collision_notify_set.add(collision_couple)
                             self.__collision_couple_history_set.add(collision_couple)
                 else:
+                    # if planes're in collison set ,remove it
                     if collision_couple in self.__collision_couple_history_set:
                         self.__collision_couple_history_set.remove(collision_couple)
         # send warning for collision to console
@@ -46,7 +50,8 @@ class CollisionDetector:
                 response_message.append({"warning_sequence": " - {} and {}".format(collision_couple[0], collision_couple[1])})
         console.handle_response(response_message)
 
-    def pop_notify_list(self):
+    # clear notify set
+    def pop_notify_set(self):
         tmp_list = self.__collision_notify_set
         self.__collision_notify_set = set()
         return tmp_list

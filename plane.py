@@ -29,10 +29,6 @@ class Plane:
         self.__starting_descending_point = v_plane * t_descending + ((v_plane*t_landing)+0.5*(-6)*((t_landing)**2))
         self.__holding_phase = ""
         self.__holding_fix_direction = None 
-        #self.__holding_fix_degree_position = None # fix point
-        #self.__holding_fix_end_degree_position = None # end of fix end line
-        #self.__holding_outbound_degree_position = None # end of outbound line
-        #self.__holding_outbound_end_degree_position = None # end of outbound end line
         self.__holding_point = {"fix": None,
                         "fix_end":None,
                         "outbound": None,
@@ -112,8 +108,8 @@ class Plane:
         airport_list = airport_manager.get_airport_tuple()
         origin = random.choice(airport_list)
         destination = random.choice(airport_list)
-        #origin = airport_list[3]
-        #destination = airport_list[4]
+        #origin = airport_list[2]
+        #destination = airport_list[1]
         while(destination == origin):
             destination = random.choice(airport_list)
         degree_position = origin.get_degree_position()
@@ -139,11 +135,11 @@ class Plane:
 
     # update plane position
     def update_position(self):
-        #update position for Landing plane
+        # update position for Landing plane
         if (self.__phase != PLNAE_PHASE["landing"] and self.__phase != PLNAE_PHASE["holding"]):
             self.find_direction()
 
-        #update position for Taking off plane
+        # update position for Taking off plane
         if (self.__phase == PLNAE_PHASE["takingoff"]):
             self.taking_off()
 
@@ -153,7 +149,7 @@ class Plane:
         elif (self.__phase == PLNAE_PHASE["descending"]):
             self.descending()
 
-        #update position for landing plane
+        # update position for landing plane
         elif (self.__phase == PLNAE_PHASE["landing"]):
             self.landing()
 
@@ -183,14 +179,14 @@ class Plane:
     def waiting(self):
         pass
 
-    #movment for taking off plane
+    # movment for taking off plane
     def taking_off(self):
         average_speed = self.__plane_information.get_speed()
         self.__speed += ACCELERATE*3600/1000 
         if self.__speed > 0.8*average_speed:
             self.__speed  = 0.8*average_speed
 
-    #movment for climing plane
+    # movment for climing plane
     def climbing(self):
         avrage_altitude = self.__plane_information.get_altitude()
         avrage_altitude = (sum(avrage_altitude)/2)
@@ -198,13 +194,13 @@ class Plane:
         if self.__altitude > avrage_altitude:
             self.__altitude = avrage_altitude
 
-    #movment for descending plane
+    # movment for descending plane
     def descending(self):
         self.__altitude -= ROC
         if self.__altitude < 0:
             self.__altitude = 0
 
-    #movment for landing plane
+    # movment for landing plane
     def landing(self):
         self.__speed -= ACCELERATE*3600/1000
         if self.__speed < 0: 
@@ -231,8 +227,6 @@ class Plane:
                 leg_distance = self.__speed/(111*3600)*90 # (degree position)
                 x_leg_distance = leg_distance*math.cos(math.radians(self.__holding_fix_direction-180))
                 y_leg_distance =leg_distance*math.sin(math.radians(self.__holding_fix_direction-180))
-                # self.__holding_outbound_end_degree_position = (self.__holding_point["outbound"][0]+y_radius,
-                #                                             self.__holding_point["outbound"][1]+x_radius)
                 self.__holding_point["outboundend"]=(self.__holding_point["fix"][0]+y_leg_distance,
                                                             self.__holding_point["fix"][1]+x_leg_distance)
             self.__holding_phase = "fix end"
