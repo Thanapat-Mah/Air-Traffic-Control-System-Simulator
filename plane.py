@@ -28,7 +28,7 @@ class Plane:
         t_landing = v_plane/6
         self.__starting_descending_point = v_plane * t_descending + ((v_plane*t_landing)+0.5*(-6)*((t_landing)**2))
         self.__holding_phase = ""
-        self.__holding_fix_direction = None 
+        self.__holding_fix_direction = None
         self.__holding_point = {"fix": None,
                         "fix_end":None,
                         "outbound": None,
@@ -72,7 +72,7 @@ class Plane:
 
     def get_holding_fix_direction(self):
         return self.__holding_fix_direction
-    
+
     def get_holding_point(self):
         return(self.__holding_point)
 
@@ -104,14 +104,35 @@ class Plane:
         return(distance_different_origin_destination-distance_different_current_origin)
 
     # generate random all information plane
-    def generate_random_plane(plane_information, airline_information, airport_manager, flight_counter):
+    def generate_random_plane(plane_information, airline_information, airport_manager, flight_counter, model, origin_comm, destination_comm):
+        #generate origin and destination
         airport_list = airport_manager.get_airport_tuple()
-        origin = random.choice(airport_list)
-        destination = random.choice(airport_list)
-        #origin = airport_list[2]
-        #destination = airport_list[1]
-        while(destination == origin):
+        #check origin command is empty, can random
+        if origin_comm == '':
+            origin = random.choice(airport_list)
             destination = random.choice(airport_list)
+            while(destination == origin):
+                destination = random.choice(airport_list)
+        #check origin and destination command  isn't empty, can configure
+        else:
+            for airport in airport_list:
+                if origin_comm == airport.get_code():
+                    origin = airport
+            for airport in airport_list:
+                if destination_comm == airport.get_code():
+                    destination = airport
+
+        #generate model plane
+        #check model command is empty, can random
+        if model == '':
+            plane_info = random.choice(plane_information)
+        #check model command isn't empty, cam configure
+        else:
+            for plane_model in plane_information:
+                # print(plane_model.get_model())
+                if plane_model.get_model() == model:
+                    plane_info = plane_model
+
         degree_position = origin.get_degree_position()
         airline = random.choice(airline_information)
         airline_code = airline.get_code()
@@ -124,13 +145,12 @@ class Plane:
             generate_num = "{:03d}".format(flight_counter['TG'])
         flight_code = "{}{}".format(airline_code,str(generate_num))
         # end generate Flight code
-        plane_info = random.choice(plane_information)
-        # plane_info = plane_information[1]
+
         passenger = plane_info.get_max_seat()
         normal_passenger = Calculator.normal_distribution_seat(passenger=passenger)
         altitude = 0
         speed = 0
-        phase = 'Taking-off'
+        phase = 'Waiting'
         return (Plane(airline_information=airline, plane_information=plane_info, passenger=normal_passenger, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, phase=phase))
 
     # update plane position
@@ -145,7 +165,7 @@ class Plane:
 
         elif (self.__phase == PLNAE_PHASE["climbing"]):
             self.climbing()
-        
+
         elif (self.__phase == PLNAE_PHASE["descending"]):
             self.descending()
 
@@ -155,7 +175,7 @@ class Plane:
 
         elif (self.__phase == PLNAE_PHASE["holding"]):
             self.holding()
-    
+
         speed = self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
         x_speed = speed*math.cos(math.radians(self.__direction))
         y_speed =speed*math.sin(math.radians(self.__direction))
@@ -182,7 +202,7 @@ class Plane:
     # movment for taking off plane
     def taking_off(self):
         average_speed = self.__plane_information.get_speed()
-        self.__speed += ACCELERATE*3600/1000 
+        self.__speed += ACCELERATE*3600/1000
         if self.__speed > 0.8*average_speed:
             self.__speed  = 0.8*average_speed
 
@@ -203,7 +223,7 @@ class Plane:
     # movment for landing plane
     def landing(self):
         self.__speed -= ACCELERATE*3600/1000
-        if self.__speed < 0: 
+        if self.__speed < 0:
             self.__speed  = 0
 
     def holding(self):
@@ -232,7 +252,7 @@ class Plane:
             self.__holding_phase = "fix end"
 
         if self.__holding_phase == "fix end":
-            if abs(self.__direction - self.__holding_fix_direction) < 180:       
+            if abs(self.__direction - self.__holding_fix_direction) < 180:
                 self.__direction -= ROT
             else :
                 self.__holding_phase = "outbound"
@@ -248,14 +268,13 @@ class Plane:
 
 
         if self.__holding_phase == "outbound end":
-            if abs(self.__direction - self.__holding_fix_direction) < 360:              
+            if abs(self.__direction - self.__holding_fix_direction) < 360:
                     self.__direction -= ROT
-            else: 
+            else:
                 self.__holding_phase = "inbound"
-        
+
         if self.__holding_phase == "inbound":
             if math.dist( self.__holding_point["fix"], self.__degree_position)*111 <= 1:
                 self.__holding_phase = ""
                 self.__direction = self.__holding_fix_direction
                 self.__degree_position =  self.__holding_point["fix"]
-            
