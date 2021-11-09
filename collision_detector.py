@@ -29,7 +29,7 @@ class CollisionDetector:
         for i in range(len(plane_list)):
                 for j in range(i+1,len(plane_list)):
                     collision_couple = (plane_list[i].get_flight_code(), plane_list[j].get_flight_code())
-                    if ((math.dist(plane_list[i].get_degree_position(), plane_list[j].get_degree_position())*111 <= self.__separated_distance["horizontal"]) 
+                    if ((math.dist(plane_list[i].get_degree_position(), plane_list[j].get_degree_position())*111 <= self.__separated_distance["horizontal"])
                         and (abs(plane_list[i].get_altitude()-plane_list[j].get_altitude()) <= self.__separated_distance["vertical"])):
                         self.__collision_set.add(collision_couple[0])
                         self.__collision_set.add(collision_couple[1])
