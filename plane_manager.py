@@ -11,7 +11,7 @@ from plane import Plane
 
 ### plane mamager that can update plane
 class PlaneManager:
-    __LIMIT = 10
+    __LIMIT = 100
     def __init__(self, plane_size=30, image_path=PLANE_PATH, text_color=COLOR['white'], font=FONT['bebasneue_small'],
         route_color = COLOR['light_gray'], route_width = 2, collision_circle_color=COLOR["transparance_red"],
         collision_circle_radius=30, collision_circle_width=1):
@@ -54,6 +54,7 @@ class PlaneManager:
             for plane in self.__plane_list:
                 if plane.get_phase() == PLNAE_PHASE['takingoff']:
                         if (plane.get_speed() == 0.8*plane.get_plane_information().get_speed()):
+                            plane.set_current_command("")
                             airport_manager.count_plane(plane.get_origin().get_code(), 'departed')
                             plane.set_phase(PLNAE_PHASE['climbing'])
 
@@ -75,6 +76,23 @@ class PlaneManager:
                         airport_manager.count_plane(plane.get_destination().get_code(), "arrived")
                         plane.set_altitude(0)
                         self.__plane_list.remove(plane)
+
+                elif plane.get_phase() == PLNAE_PHASE['holding']:
+                    if(plane.get_current_command() == 'continue' and 
+                    (plane.get_holding_phase() == "inbound" or plane.get_degree_position() == plane.get_holding_point()["fix"])):
+                        plane.set_current_command("")
+                        plane.clear_holding()
+                        plane.set_phase(PLNAE_PHASE['cruising'])
+        # change hold to continue when pause
+        if (simulated_delta_count.seconds == 0):
+            for plane in self.__plane_list: 
+                if plane.get_phase() == PLNAE_PHASE['holding']:
+                    if(plane.get_current_command() == 'continue' and 
+                    (plane.get_holding_phase() == "inbound" or plane.get_degree_position() == plane.get_holding_point()["fix"])):
+                        plane.set_current_command("")
+                        plane.clear_holding()
+                        plane.set_phase(PLNAE_PHASE['cruising'])
+        
         # dict for return
         phase_dict ={
             PLNAE_PHASE['holding']: [],
@@ -191,9 +209,9 @@ class PlaneManager:
 
     # return selected plane' airline code
     def check_selection (self, event):
-        selected_plane = ''
+        selected_plane = ""
         for plane in self.__plane_list:
-            if selected_plane == '':
+            if selected_plane == "":
                 selected_plane = plane.click(event)
         return(selected_plane)
 
@@ -211,7 +229,7 @@ class PlaneManager:
                 'Speed: '+"{:.2f}".format(plane.get_speed())+' km/h',
                 'Phase: '+str(plane.get_phase())
             ])
-        return([''])
+        return([""])
 
     # generate new plane
     def generate_new_plane(self, airport_manager, model, origin_comm, destination_comm):
@@ -223,7 +241,9 @@ class PlaneManager:
         formatted_input = console.pop_formatted_input()
         if(len(formatted_input)) > 0:
             response_message = []
-
+            has_airport = False
+            has_model = False
+            has_flight = False
             # unpack keyword and parameters
             keyword, *parameters = formatted_input
             # print("---------------------------------------------")
@@ -233,21 +253,18 @@ class PlaneManager:
             # print(f"parameters value: {parameters}")
 
             if keyword == 'generate':
-                has_airport = False
-                has_model = False
-                has_flight = False
                 #for loop model plane
                 for model in MODEL_GENERATE:
                     #check model plane if is equal
                     if model == parameters[0]:
                         #check origin and destination if origin and destination is empty
-                        if parameters[1] == '' and parameters[2] == '':
+                        if parameters[1] == "" and parameters[2] == "":
                             self.generate_new_plane(airport_manager=airport_manager ,model=MODEL_GENERATE[model], origin_comm="", destination_comm="")
                             response_message.append({"success_response": "Generate new flight success."})
                             has_model = 1
                             break
                         #check origin and destination if either origin or destination is empty
-                        elif parameters[1] == '' or parameters[2] == '':
+                        elif parameters[1] == "" or parameters[2] == "":
                             has_model = False
                         #check origin and destination if origin and destination isn't empty
                         else:
@@ -281,45 +298,46 @@ class PlaneManager:
             elif keyword == 'takeoff':
                 for plane in self.__plane_list:
                     if plane.get_flight_code() == parameters[0]:
+                        has_flight = True
                         if plane.get_phase() == PLNAE_PHASE['waiting']:
+                            plane.set_current_command('takingoff')
                             plane.set_phase(PLNAE_PHASE['takingoff'])
                             response_message.append({"success_response": "{} is {}".format(plane.get_flight_code(), plane.get_phase())})
-                            has_flight = True
-                            break
                         else:
                             response_message.append({"fail_response": FAIL_RESPONSE["can_not_command"]})
                             response_message.append({"fail_response": "{} is now {}".format(plane.get_flight_code(), plane.get_phase())})
-                            has_flight = True
-                            break
-                    else :
-                            has_flight = False
+
                 if not has_flight:
                     response_message.append({"fail_response": FAIL_RESPONSE["invalid_flight_code"]})
 
             elif keyword == 'hold':
-                pass
-                # for plane in self.__plane_list:
-                #     if plane.get_flight_code() == parameters[0]:
-                #         if plane.get_phase() == PLNAE_PHASE['cruising']:
-                #             plane.set_phase(PLNAE_PHASE['holding'])
-                #             response_message.append({"success_response": "{} is {}".format(plane.get_flight_code(), plane.get_phase())})
-                #         else:
-                #             response_message.append({"fail_response": FAIL_RESPONSE["can_not_command"]})
-                #             response_message.append({"fail_response": "{} is now {}".format(plane.get_flight_code(), plane.get_phase())})
-                # else:
-                #     response_message.append({"fail_response": FAIL_RESPONSE["invalid_flight_code"]})
+                for plane in self.__plane_list:
+                    if plane.get_flight_code() == parameters[0]:
+                        has_flight = True
+                        if plane.get_phase() == PLNAE_PHASE['cruising']:
+                            plane.set_current_command('holding')
+                            plane.set_phase(PLNAE_PHASE['holding'])
+                            plane.initial_holding()
+                            response_message.append({"success_response": "{} is {}".format(plane.get_flight_code(), plane.get_phase())})
+                        else:
+                            response_message.append({"fail_response": FAIL_RESPONSE["can_not_command"]})
+                            response_message.append({"fail_response": "{} is now {}".format(plane.get_flight_code(), plane.get_phase())})
+                if not has_flight:
+                    response_message.append({"fail_response": FAIL_RESPONSE["invalid_flight_code"]}) 
 
             elif keyword == 'continue':
-                pass
-                # for plane in  self.__plane_list:
-                #     if plane.get_flight_code() == parameters[0]:
-                #         if plane.get_phase() == PLNAE_PHASE['holding']:
-                #             plane.set_phase(PLNAE_PHASE['continue'])
-                #         else:
-                #             response_message.append({"fail_response": FAIL_RESPONSE["can_not_command"]})
-                #             response_message.append({"fail_response": "{} is now {}".format(plane.get_flight_code(), plane.get_phase())})
-                # else:
-                #     response_message.append({"fail_response": FAIL_RESPONSE["invalid_flight_code"]})
+                for plane in self.__plane_list:
+                    if plane.get_flight_code() == parameters[0]:
+                        has_flight = True
+                        if plane.get_phase() == PLNAE_PHASE['holding']:
+                            plane.set_current_command('continue')
+                            response_message.append({"success_response": "{} will continue".format(plane.get_flight_code())})
+                        else:
+                            response_message.append({"fail_response": FAIL_RESPONSE["can_not_command"]})
+                            response_message.append({"fail_response": "{} is now {}".format(plane.get_flight_code(), plane.get_phase())})
+                if not has_flight:
+                    response_message.append({"fail_response": FAIL_RESPONSE["invalid_flight_code"]}) 
+
             elif keyword == 'altitude':
                 pass
             else:

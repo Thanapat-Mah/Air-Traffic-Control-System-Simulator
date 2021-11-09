@@ -33,6 +33,7 @@ class Plane:
                         "fix_end":None,
                         "outbound": None,
                         "outboundend": None}
+        self._current_command = None
 
     def get_flight_code(self):
         return(self.__flight_code)
@@ -70,11 +71,17 @@ class Plane:
     def get_starting_descending_point(self):
         return(self.__starting_descending_point)
 
+    def get_holding_phase(self):
+        return(self.__holding_phase)
+
     def get_holding_fix_direction(self):
         return self.__holding_fix_direction
 
     def get_holding_point(self):
         return(self.__holding_point)
+
+    def get_current_command(self):
+        return(self._current_command)
 
     def set_degree_position(self, degree_position):
         self.__degree_position = degree_position
@@ -93,6 +100,20 @@ class Plane:
 
     def set_hit_box(self, new_hit_box):
         self.__hit_box = new_hit_box
+    
+    def set_holding_phase(self, pahse):
+        self.set_holding_phase = pahse
+
+    def set_current_command(self, command):
+        self._current_command = command
+
+    def clear_holding(self):
+        self.__holding_phase = ""
+        self.__holding_fix_direction = None
+        self.__holding_point = {"fix": None,
+                        "fix_end":None,
+                        "outbound": None,
+                        "outboundend": None}
 
     # get remain distance between plane position and destination position
     def get_remain_distance(self):
@@ -108,7 +129,7 @@ class Plane:
         #generate origin and destination
         airport_list = airport_manager.get_airport_tuple()
         #check origin command is empty, can random
-        if origin_comm == '':
+        if origin_comm == "":
             origin = random.choice(airport_list)
             destination = random.choice(airport_list)
             while(destination == origin):
@@ -124,7 +145,7 @@ class Plane:
 
         #generate model plane
         #check model command is empty, can random
-        if model == '':
+        if model == "":
             plane_info = random.choice(plane_information)
         #check model command isn't empty, cam configure
         else:
@@ -225,8 +246,8 @@ class Plane:
         self.__speed -= ACCELERATE*3600/1000
         if self.__speed < 0:
             self.__speed  = 0
-
-    def holding(self):
+    
+    def initial_holding(self):
         if self.__holding_phase == "":
             if  self.__holding_fix_direction == None and  self.__holding_point["fix"] == None:
                 self.__holding_fix_direction = self.__direction
@@ -251,6 +272,8 @@ class Plane:
                                                             self.__holding_point["fix"][1]+x_leg_distance)
             self.__holding_phase = "fix end"
 
+
+    def holding(self):
         if self.__holding_phase == "fix end":
             if abs(self.__direction - self.__holding_fix_direction) < 180:
                 self.__direction -= ROT
@@ -271,6 +294,6 @@ class Plane:
 
         if self.__holding_phase == "inbound":
             if math.dist( self.__holding_point["fix"], self.__degree_position)*111 <= 1:
-                self.__holding_phase = ""
+                self.__holding_phase = "fix end"
                 self.__direction = self.__holding_fix_direction
                 self.__degree_position =  self.__holding_point["fix"]

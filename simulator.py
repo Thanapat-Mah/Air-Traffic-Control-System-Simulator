@@ -84,7 +84,7 @@ class Simulator:
 				self.__selected_object_detail = detail
 		# spawn plane when reach time period
 		if self.__spawn_delta_count == self.__spawn_period:
-			plane_manager.generate_new_plane(airport_manager=airport_manager, model='', origin_comm='', destination_comm='')
+			plane_manager.generate_new_plane(airport_manager=airport_manager, model="", origin_comm="", destination_comm="")
 			self.__spawn_delta_count = datetime.timedelta(seconds = 0)
 		# update plane and get plane information
 		self.__plane_information = plane_manager.update_plane(simulated_delta_count=self.__simulated_delta_count, airport_manager=airport_manager)		
