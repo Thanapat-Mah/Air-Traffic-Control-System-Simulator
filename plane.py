@@ -33,6 +33,7 @@ class Plane:
                         "fix_end":None,
                         "outbound": None,
                         "outboundend": None}
+        self.__target_altitude = -1
 
     def get_flight_code(self):
         return(self.__flight_code)
@@ -94,6 +95,9 @@ class Plane:
     def set_hit_box(self, new_hit_box):
         self.__hit_box = new_hit_box
 
+    def set_target_altitude(self,target_altitude):
+        self.__target_altitude = target_altitude
+
     # get remain distance between plane position and destination position
     def get_remain_distance(self):
         origin_position = self.get_origin().get_degree_position()
@@ -150,7 +154,7 @@ class Plane:
         normal_passenger = Calculator.normal_distribution_seat(passenger=passenger)
         altitude = 0
         speed = 0
-        phase = 'Waiting'
+        phase = 'Taking-off'
         return (Plane(airline_information=airline, plane_information=plane_info, passenger=normal_passenger, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, phase=phase))
 
     # update plane position
@@ -175,6 +179,13 @@ class Plane:
 
         elif (self.__phase == PLNAE_PHASE["holding"]):
             self.holding()
+
+        elif (self.__phase == PLNAE_PHASE['cruising']):
+                if self.__target_altitude > self.__altitude:
+                    self.increase_altitude()
+                elif self.__target_altitude < self.__altitude:
+                    self.decrease_altitude()
+
 
         speed = self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
         x_speed = speed*math.cos(math.radians(self.__direction))
@@ -278,3 +289,17 @@ class Plane:
                 self.__holding_phase = ""
                 self.__direction = self.__holding_fix_direction
                 self.__degree_position =  self.__holding_point["fix"]
+
+    def increase_altitude(self):
+        increase_altitude = self.__target_altitude
+        if increase_altitude != -1:
+            self.__altitude += ROC
+            if self.__altitude > increase_altitude:
+                self.__altitude = increase_altitude
+
+    def decrease_altitude(self):
+        decrease_altitude = self.__target_altitude
+        if decrease_altitude != -1:
+            self.__altitude -= ROC
+            if self.__altitude < decrease_altitude:
+                self.__altitude = decrease_altitude

@@ -71,13 +71,11 @@ class Console:
 			# if there is no keyword (command) in input, respond with invalid command
 			if not input_syntax:
 				invalid_command = True
-				# print("no command(keyword)")
 			# else, check for syntax
 			else:
 				# check if input exceed the number of token in correct syntax format
 				if len(input_tokens) > len(input_syntax[FORMAT]):
 					invalid_syntax = True
-					# print("exceed")
 				# else, process command input token by token
 				else:
 					for i in range(len(input_syntax[FORMAT])):
@@ -90,7 +88,6 @@ class Console:
 							# check if keyword is in wrong order
 							if input_token != input_syntax["keyword"]:
 								invalid_syntax = True
-								# print("wrong order")
 							# else, collect keyword to formatted input
 							else:
 								self.__formatted_input.insert(0, input_token)
@@ -99,8 +96,6 @@ class Console:
 							if command_token == REQUIRED:
 								if input_token == "":
 									invalid_syntax = True
-									# print("required missing")
-							# check for optional parameter..., maybe no need to check
 							# collect parameter to formatted input
 							self.__formatted_input.append(input_token)
 			# if something is invalid, clear formatted input and send fail response
@@ -110,8 +105,6 @@ class Console:
 			elif invalid_syntax:
 				self.__formatted_input.clear()
 				self.__command_log.append({"fail_response": FAIL_RESPONSE["invalid_syntax"]})
-			else:
-				self.__command_log.append({"success_response": "keyword and syntax is pass!"})
 			# clear input text after process
 			self.__command_input_text = ""
 

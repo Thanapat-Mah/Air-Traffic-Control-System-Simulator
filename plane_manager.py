@@ -228,6 +228,9 @@ class PlaneManager:
         if (len(self.__plane_list) != self.__LIMIT):
             gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specification_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter, model = model, origin_comm=origin_comm, destination_comm=destination_comm)
             self.__plane_list.append(gen_plane)
+            # gen_plane.get_code()
+        
+        # return flight code
 
     def respond_command(self, console, airport_manager):
         formatted_input = console.pop_formatted_input()
@@ -252,7 +255,7 @@ class PlaneManager:
                         #check origin and destination if origin and destination is empty
                         if parameters[1] == '' and parameters[2] == '':
                             self.generate_new_plane(airport_manager=airport_manager ,model=MODEL_GENERATE[model], origin_comm="", destination_comm="")
-                            response_message.append({"success_response": "Generate new flight success."})
+                            response_message.append({"success_response": "Generate new flight success."}) #gen new plane flight code
                             has_model = 1
                             break
                         #check origin and destination if either origin or destination is empty
@@ -265,8 +268,8 @@ class PlaneManager:
                             for airport in airport_list:
                                 #check airport code is equal to origin and destination
                                 if airport.get_code() == parameters[1] and airport.get_code() == parameters[2]:
-                                    response_message.append({"fail_response": "Fail para 1 = para 2"})
                                     response_message.append({"fail_response": FAIL_RESPONSE["invalid_value"]})
+                                    response_message.append({"fail_response": "Origin and destination can't be the same."})
                                     has_airport = 1
                                     break
                                 #check airport code is equal to origin
@@ -310,7 +313,22 @@ class PlaneManager:
             elif keyword == 'continue':
                 pass
             elif keyword == 'altitude':
-                pass
+                for plane in self.__plane_list:
+                    if plane.get_flight_code() == parameters[0]:
+                        if plane.get_phase() == PLNAE_PHASE['cruising']:
+                            for plane_model in self.__plane_specification_tuple:
+                                if plane.get_plane_information() == plane_model:
+                                    altitude = plane_model.get_altitude()
+                                    if int(parameters[1]) >= altitude[0] and int(parameters[1]) <= altitude[1]:
+                                        plane.set_altitude(int(parameters[1]))
+                                        response_message.append({"success_response": "{} is at an altitude of {} ft.".format(plane.get_flight_code(), parameters[1])})
+                                    else:
+                                        response_message.append({"fail_response": FAIL_RESPONSE["invalid_value"]})
+                                        response_message.append({"fail_response": "The value must be between {} and {}".format(altitude[0], altitude[1])})
+                        else:
+                            response_message.append({"fail_response": FAIL_RESPONSE["can_not_command"]})
+                            response_message.append({"fail_response": "{} is now {}".format(plane.get_flight_code(), plane.get_phase())})
+                            
             else:
                 pass
 
