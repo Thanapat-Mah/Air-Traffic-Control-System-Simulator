@@ -236,9 +236,9 @@ class PlaneManager:
         if (len(self.__plane_list) != self.__LIMIT):
             gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specification_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter, model = model, origin_comm=origin_comm, destination_comm=destination_comm)
             self.__plane_list.append(gen_plane)
-            # gen_plane.get_code()
+            flight_code = gen_plane.get_flight_code()
 
-        # return flight code
+        return flight_code
 
     def respond_command(self, console, airport_manager):
         formatted_input = console.pop_formatted_input()
@@ -256,47 +256,49 @@ class PlaneManager:
             # print(f"parameters value: {parameters}")
 
             if keyword == 'generate':
-                #for loop model plane
-                for model in MODEL_GENERATE:
-                    #check model plane if is equal
-                    if model == parameters[0]:
-                        #check origin and destination if origin and destination is empty
-                        if parameters[1] == "" and parameters[2] == "":
-                            self.generate_new_plane(airport_manager=airport_manager ,model=MODEL_GENERATE[model], origin_comm="", destination_comm="")
-                            response_message.append({"success_response": "Generate new flight success."}) #gen new plane flight code
-                            has_model = 1
-                            break
-                        #check origin and destination if either origin or destination is empty
-                        elif parameters[1] == "" or parameters[2] == "":
-                            has_model = False
-                        #check origin and destination if origin and destination isn't empty
-                        else:
-                            airport_list = airport_manager.get_airport_tuple()
-                            #for loop airport in airport list
-                            for airport in airport_list:
-                                #check airport code is equal to origin and destination
-                                if airport.get_code() == parameters[1] and airport.get_code() == parameters[2]:
-                                    response_message.append({"fail_response": FAIL_RESPONSE["invalid_value"]})
-                                    response_message.append({"fail_response": "Origin and destination can't be the same."})
-                                    has_airport = True
-                                    break
-                                #check airport code is equal to origin
-                                elif airport.get_code() == parameters[1]:
-                                    #for loop airport in airport list again to check destination
-                                    for airport_one in airport_list:
-                                        #check airport code is equal destination
-                                        if airport_one.get_code() == parameters[2]:
-                                            self.generate_new_plane(airport_manager=airport_manager ,model=MODEL_GENERATE[model], origin_comm=parameters[1], destination_comm=parameters[2])
-                                            response_message.append({"success_response": "Generate new flight success."})
-                                            has_airport = True
-                                            break
-                                        else:
-                                            has_airport = False
-                    # else:
-                    #     has_model = False
-                #check invalid generate command
-                if not has_model and not has_airport:
-                    response_message.append({"fail_response": FAIL_RESPONSE["invalid_value"]})
+                if parameters[0] == "":
+                    flight_code = self.generate_new_plane(airport_manager=airport_manager ,model="", origin_comm="", destination_comm="")
+                    response_message.append({"success_response": "Generate {} success.".format(flight_code)})
+                else:
+                    #for loop model plane
+                    for model in MODEL_GENERATE:
+                        #check model plane if is equal
+                        if model == parameters[0]:
+                            #check origin and destination if origin and destination is empty
+                            if parameters[1] == "" and parameters[2] == "":
+                                flight_code = self.generate_new_plane(airport_manager=airport_manager ,model=MODEL_GENERATE[model], origin_comm="", destination_comm="")
+                                response_message.append({"success_response": "Generate {} success.".format(flight_code)})
+                                has_model = 1
+                                break
+                            #check origin and destination if either origin or destination is empty
+                            elif parameters[1] == "" or parameters[2] == "":
+                                has_model = False
+                            #check origin and destination if origin and destination isn't empty
+                            else:
+                                airport_list = airport_manager.get_airport_tuple()
+                                #for loop airport in airport list
+                                for airport in airport_list:
+                                    #check airport code is equal to origin and destination
+                                    if airport.get_code() == parameters[1] and airport.get_code() == parameters[2]:
+                                        response_message.append({"fail_response": FAIL_RESPONSE["invalid_value"]})
+                                        response_message.append({"fail_response": "Origin and destination can't be the same."})
+                                        has_airport = True
+                                        break
+                                    #check airport code is equal to origin
+                                    elif airport.get_code() == parameters[1]:
+                                        #for loop airport in airport list again to check destination
+                                        for airport_one in airport_list:
+                                            #check airport code is equal destination
+                                            if airport_one.get_code() == parameters[2]:
+                                                flight_code = self.generate_new_plane(airport_manager=airport_manager ,model=MODEL_GENERATE[model], origin_comm=parameters[1], destination_comm=parameters[2])
+                                                response_message.append({"success_response": "Generate {} success.".format(flight_code)})
+                                                has_airport = True
+                                                break
+                                            else:
+                                                has_airport = False
+                    #check invalid generate command
+                    if not has_model and not has_airport:
+                        response_message.append({"fail_response": FAIL_RESPONSE["invalid_value"]})
 
             elif keyword == 'takeoff':
                 for plane in self.__plane_list:
@@ -349,7 +351,7 @@ class PlaneManager:
                                 if plane.get_plane_information() == plane_model:
                                     altitude = plane_model.get_altitude()
                                     if int(parameters[1]) >= altitude[0] and int(parameters[1]) <= altitude[1]:
-                                        plane.set_altitude(int(parameters[1]))
+                                        plane.set_target_altitude(int(parameters[1]))
                                         response_message.append({"success_response": "{} is at an altitude of {} ft.".format(plane.get_flight_code(), parameters[1])})
                                     else:
                                         response_message.append({"fail_response": FAIL_RESPONSE["invalid_value"]})
@@ -363,18 +365,3 @@ class PlaneManager:
 
             # send response to console this way
             console.handle_response(response_message)
-
-    def command_generate(self, model, origin, destination):
-        return
-
-    def command_takeoff(self, flight_code):
-        pass
-
-    def command_hold(self, flight_code):
-        pass
-
-    def command_continue(self, flight_code):
-        return
-
-    def command_altitude(self, flight_code, altitude):
-        return

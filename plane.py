@@ -175,7 +175,7 @@ class Plane:
         normal_passenger = Calculator.normal_distribution_seat(passenger=passenger)
         altitude = 0
         speed = 0
-        phase = 'Waiting'
+        phase = 'Taking-off'
         return (Plane(airline_information=airline, plane_information=plane_info, passenger=normal_passenger, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, phase=phase))
 
     # update plane position
