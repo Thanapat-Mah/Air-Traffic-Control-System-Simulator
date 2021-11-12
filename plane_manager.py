@@ -351,7 +351,7 @@ class PlaneManager:
                                 if plane.get_plane_information() == plane_model:
                                     altitude = plane_model.get_altitude()
                                     if int(parameters[1]) >= altitude[0] and int(parameters[1]) <= altitude[1]:
-                                        plane.set_target_altitude(int(parameters[1]))
+                                        plane.set_target_altitude(float(parameters[1]))
                                         response_message.append({"success_response": "{} is at an altitude of {} ft.".format(plane.get_flight_code(), parameters[1])})
                                     else:
                                         response_message.append({"fail_response": FAIL_RESPONSE["invalid_value"]})
