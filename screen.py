@@ -4,7 +4,8 @@ from utilities import Converter, Converter
 
 ### screen of program, adjust and display components.
 class Screen:
-	def __init__(self, fullscreen=False, width=1366, height=768, background_color=COLOR["dark_gray"], text_background_color=COLOR["black"], text_color=COLOR["white"], font=FONT["roboto_normal"]):
+	def __init__(self, fullscreen=False, width=1366, height=768, background_color=COLOR["dark_gray"],
+		text_background_color=COLOR["black"], text_color=COLOR["white"], font=FONT["roboto_normal"]):
 		self.__fullscreen = fullscreen
 		# if fullsreen, adjust width and height to fit user's display size
 		if fullscreen:
@@ -24,11 +25,6 @@ class Screen:
 	def get_size(self):
 		return((self.__width, self.__height))
 
-	# refresh plain color background
-	def refresh_background(self):
-		#self.__display.fill(self.__background_color)
-		pass
-
 	# draw name of simulation
 	def draw_name(self, name):
 		padding = 10
@@ -42,7 +38,6 @@ class Screen:
 	# update screen by re-draw every components
 	def update_screen(self, simulator, map_, airport_manager, sidebar, toolbar, plane_manager, collision_detector, console, help_box):
 		# draw background map, plane and airport
-		self.refresh_background()
 		converter = Converter(screen_size=(self.__width, self.__height), map_=map_, simulator=simulator)
 		map_.draw_map(self.__display)
 		airport_manager.draw_all_airport(self.__display, converter=converter)
