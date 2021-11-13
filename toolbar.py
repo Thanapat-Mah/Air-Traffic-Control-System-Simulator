@@ -59,7 +59,7 @@ class Toolbar:
 			simulator.update_state("is_play")
 		elif self.__speed_button.click(event):
 			self.__speed_button.switch_state()
-			simulator.update_state("speed")
+			simulator.update_state("time_period")
 		elif self.__zoom_button.click(event):
 			self.__zoom_button.switch_state()
 			simulator.update_state("is_zoom")

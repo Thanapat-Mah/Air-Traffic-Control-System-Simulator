@@ -8,7 +8,7 @@ class Simulator:
 	def __init__(self, name, name_background_color=COLOR["dark_gray"], time_step=1, spawn_period=260):
 		self.__name = name
 		self.__is_play = True
-		self.__speed = [25, 5, 1]				# time period, less value more speed, first value is current
+		self.__time_period = [50, 10, 1]		# time period, less value more speed, first value is current
 		self.__is_zoom = False		
 		self.__running_time_count = 0
 		self.__simulated_datetime = datetime.datetime(2022, 1, 1, 0, 0, 0)	# simulated datetime
@@ -39,8 +39,8 @@ class Simulator:
 		# calculate all possible state
 		if state == "is_play":
 			state_list = [self.__is_play, not self.__is_play]
-		elif state == "speed":
-			state_list = self.__speed
+		elif state == "time_period":
+			state_list = self.__time_period
 		elif state == "is_zoom":
 			state_list = [self.__is_zoom, not self.__is_zoom]
 		# return only current value
@@ -54,9 +54,9 @@ class Simulator:
 	def update_state(self, state):
 		if state == "is_play":
 			self.__is_play = not self.__is_play
-		elif state == "speed":
-			self.__speed.append(self.__speed[0])
-			self.__speed = self.__speed[1:]
+		elif state == "time_period":
+			self.__time_period.append(self.__time_period[0])
+			self.__time_period = self.__time_period[1:]
 			self.__running_time_count = 0
 		elif state == "is_zoom":
 			self.__is_zoom = not self.__is_zoom
@@ -65,8 +65,8 @@ class Simulator:
 	def tick_time(self):
 		if self.__is_play:
 			self.__running_time_count += 1
-			# increase simulated datetime by 1 minutes when reach the time period in speed
-			if self.__running_time_count%self.get_state("speed", current = True) == 0:
+			# increase simulated datetime by 1 minutes when reach the time period in time_period
+			if self.__running_time_count%self.get_state("time_period", current = True) == 0:
 				self.__simulated_datetime += self.__simulated_time_step
 				self.__spawn_delta_count += self.__simulated_time_step
 				self.__simulated_delta_count += self.__simulated_time_step
@@ -91,12 +91,12 @@ class Simulator:
 		self.__simulated_delta_count = datetime.timedelta(seconds = 0)
 		# update airport and get airport information
 		self.__airport_information = airport_manager.update_airport(plane_manager=plane_manager)
+		# check for future potentail collision between each plane
+		collision_detector.check_collision(plane_list_init=plane_manager.get_plane_list(), console=console)
 		# update all information on sidebar
 		sidebar.update_information(plane_information=self.__plane_information,
 			airport_information=self.__airport_information,
 			selected_object_detail=self.__selected_object_detail)
-
-		collision_detector.check_collision(plane_list_init=plane_manager.get_plane_list(), console=console)
 
 	# check for clicking event in simulation, including click on plane, airport or status button on sidebar
 	def check_selection(self, event, airport_manager, plane_manager, sidebar):
