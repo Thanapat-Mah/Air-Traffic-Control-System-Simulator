@@ -1,7 +1,6 @@
 import pygame
-from configuration import FONT, COLOR, AIRPORTS, AIRPORT_PATH, ZOOM_SCALE
-from simulator import Simulator
-from utilities import Loader, Converter
+from configuration import FONT, COLOR, AIRPORTS, AIRPORT_PATH
+from utilities import Loader
 
 ### airport, store information and mark airport' position on map
 class Airport:
@@ -115,7 +114,6 @@ class AirportManager:
 
     # return selected airports detail
     def get_detail(self, code):
-        airport_detail_dict = {}
         for airport in self.__airport_tuple:
             if code == airport.get_code():
                 return(airport.get_detail())
