@@ -142,6 +142,7 @@ class PlaneManager:
                 self.draw_plane(display=display ,plane=plane, pixel_position=pixel_position)        # draw plane
                 self.draw_text(display=display, plane=plane, pixel_position=pixel_position)         # draw text right side of plane
     
+    #draw collision circle
     def draw_collision_circle(self,display,pixel_position):
         radius = self.__collision_circle_radius
         circle_surface = pygame.Surface((2*radius, 2*radius), pygame.SRCALPHA)
