@@ -10,14 +10,14 @@ class Loader:
         image_loaded = pygame.image.load(image_path)
         return pygame.transform.scale(image_loaded, screen_size_scaled)
 
-    def adjust_size(self, icon, height_limit):
+    def adjust_size(icon, height_limit):
         width, height = icon.get_size()
         scale = height_limit/height
         return(pygame.transform.scale(icon, (int(width*scale), int(height*scale))))
 
     # load icons used in button
-    def load_icons(self, height_limit, *name):
-        icons_tuple = tuple(self.adjust_size(pygame.image.load(n), height_limit) for n in name)
+    def load_icons(height_limit, *name):
+        icons_tuple = tuple(Loader.adjust_size(pygame.image.load(n), height_limit) for n in name)
         return(icons_tuple)
 
 ### convert degree postion to pixel position

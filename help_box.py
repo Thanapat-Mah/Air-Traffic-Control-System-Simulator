@@ -17,8 +17,7 @@ class HelpBox:
 		self.__topic = topic
 		self.__font = font
 		self.__text_color = text_color
-		loader = Loader()
-		self.__contents = loader.load_icons(self.__width, *(HELP_PATH[key] for key in HELP_PATH))
+		self.__contents = Loader.load_icons(self.__width, *(HELP_PATH[key] for key in HELP_PATH))
 		self.__selected_page = 1
 		self.__all_page_count = len(self.__contents)
 		page_number_width = self.__font.render("1/2", True, self.__text_color).get_size()[0]*2

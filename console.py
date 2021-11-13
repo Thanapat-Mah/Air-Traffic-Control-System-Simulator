@@ -36,9 +36,8 @@ class Console:
 		self.__command_input = CommandInput(x=25, y=self.__height-40, width=self.__width-80, height=30, font=self.__font)
 		self.__command_input_text = ""
 		self.__formatted_input = []
-		loader = Loader()
 		self.__help_button = MultiStateButton(x=self.__width-40, y=self.__y+self.__height-40, width=30, height=30,
-			label_tuple=("", ""), icon_tuple=loader.load_icons(30, ICON_PATH["help_inactive"], ICON_PATH["help_active"]),
+			label_tuple=("", ""), icon_tuple=Loader.load_icons(30, ICON_PATH["help_inactive"], ICON_PATH["help_active"]),
 			border_radius=15)
 		self.__is_help_open = False 	# open status of commnand help
 
