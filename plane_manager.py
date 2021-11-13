@@ -1,7 +1,5 @@
 import pygame
 import math
-from numpy import arctan, frompyfunc, mod
-from pygame import Rect, surface
 from configuration import PLANE_PATH, MODEL_GENERATE
 from utilities import Loader, Calculator
 from plane_airline_information import PlaneInformation,AirlineInformation
@@ -29,7 +27,6 @@ class PlaneManager:
         }
         self.__text_color = text_color
         self.__font = font
-
         self.__route_color = route_color
         self.__route_width = route_width
         self.__collision_circle_color = collision_circle_color
@@ -56,26 +53,21 @@ class PlaneManager:
                             plane.set_current_command("")
                             airport_manager.count_plane(plane.get_origin().get_code(), 'departed')
                             plane.set_phase(PLNAE_PHASE['climbing'])
-
                 elif plane.get_phase() == PLNAE_PHASE['climbing']:
                     avrage_altitude = (sum(plane.get_plane_information().get_altitude())/2)
                     if (plane.get_altitude() == avrage_altitude):
                         plane.set_phase(PLNAE_PHASE['cruising'])
-
                 elif plane.get_phase() == PLNAE_PHASE['cruising']:
                     if (plane.get_remain_distance() <= plane.get_starting_descending_point()/1000):
                         plane.set_phase(PLNAE_PHASE['descending'])
-
                 elif plane.get_phase() == PLNAE_PHASE['descending']:
                     if (plane.get_altitude() <= 0):
                         plane.set_phase(PLNAE_PHASE['landing'])
-
                 elif plane.get_phase() == PLNAE_PHASE['landing']:
                     if(plane.get_speed() <= 0):
                         airport_manager.count_plane(plane.get_destination().get_code(), "arrived")
                         plane.set_altitude(0)
                         self.__plane_list.remove(plane)
-
                 elif plane.get_phase() == PLNAE_PHASE['holding']:
                     if(plane.get_current_command() == 'continue' and
                     (plane.get_holding_phase() == "inbound" or plane.get_degree_position() == plane.get_holding_point()["fix"])):
@@ -91,7 +83,6 @@ class PlaneManager:
                         plane.set_current_command("")
                         plane.clear_holding()
                         plane.set_phase(PLNAE_PHASE['cruising'])
-
         # dict for return
         phase_dict ={
             PLNAE_PHASE['holding']: [],
@@ -134,38 +125,35 @@ class PlaneManager:
         collision_set = collision_detector.get_collision_set()
         for plane in self.__plane_list:
             if(plane.get_direction() != None and plane.get_phase() != PLNAE_PHASE['waiting']):
-                # set new hit box
                 position = plane.get_degree_position()
                 pixel_position = converter.degree_to_pixel(degree_position=position)
                 airport_pixel = converter.degree_to_pixel(degree_position=plane.get_destination().get_degree_position())
                 # draw red circle when have future collision
                 if plane.get_flight_code() in collision_set:
-                    self.draw_collision_detector(display, pixel_position)
+                    self.draw_collision_detector(display=display, pixel_position=pixel_position)
                 # draw if plane object is selected
                 if converter.get_selected_object_code() == plane.get_flight_code():
                     if plane.get_phase() != PLNAE_PHASE['holding']:
-                        # draw route line when is selected
-                        pygame.draw.line(display, self.__route_color, pixel_position, airport_pixel, width = self.__route_width)
+                        # draw route line
+                        pygame.draw.line(display, self.__route_color, pixel_position, 
+                            airport_pixel, width = self.__route_width)  
                     else:
-                        # draw if plane is flying in holding pattern
-                        self.draw_holding_route(plane=plane ,converter=converter, display=display)
-                # draw plane
-                self.draw_plane(plane=plane, display=display, pixel_position=pixel_position)
-                # draw text right side of plane
-                self.draw_text(plane=plane, pixel_position=pixel_position, display=display)
+                        self.draw_holding_route(display=display, plane=plane ,converter=converter)  # draw if plane is flying in holding pattern               
+                self.draw_plane(display=display ,plane=plane, pixel_position=pixel_position)        # draw plane
+                self.draw_text(display=display, plane=plane, pixel_position=pixel_position)         # draw text right side of plane
     
-
-    def draw_collision_detector(self,display,pixel):
+    def draw_collision_detector(self,display,pixel_position):
         radius = self.__collision_circle_radius
         circle_surface = pygame.Surface((2*radius, 2*radius), pygame.SRCALPHA)
         # fill transparence circle
         pygame.draw.circle(circle_surface, self.__collision_circle_color, (radius, radius), radius)
         # draw solid border
-        pygame.draw.circle(circle_surface, self.__collision_circle_color[:-1], (radius, radius), radius, width=self.__collision_circle_width)
-        display.blit(circle_surface, (pixel[0]-radius, pixel[1]-radius))
+        pygame.draw.circle(circle_surface, self.__collision_circle_color[:-1], 
+            (radius, radius), radius, width=self.__collision_circle_width)
+        display.blit(circle_surface, (pixel_position[0]-radius, pixel_position[1]-radius))
 
     # draw_holding_route
-    def draw_holding_route(self, plane, converter, display):
+    def draw_holding_route(self, display ,plane, converter):
         holding_point = plane.get_holding_point().copy()
         if (holding_point["outboundend"] != None):
             for point in holding_point:
@@ -181,15 +169,17 @@ class PlaneManager:
             holding_point = Calculator.find_holding_point(holding_point=holding_point, mid_fix_fixend=mid_fix_fixend,mid_outbound_outboundend=mid_outbound_outboundend)
             degree = 180-math.degrees(math.atan2(mid_fix_fixend[1]-holding_point["fix_end"][1],mid_fix_fixend[0]-holding_point["fix_end"][0]))
             # drawing holding route
-            rect_fix_fixend = (mid_fix_fixend[0]-radius_fix_fixend, mid_fix_fixend[1]-radius_fix_fixend, 2*radius_fix_fixend+1, 2*radius_fix_fixend+1)
-            rect_outbound_outboundend = (mid_outbound_outboundend[0]-radius_fix_fixend, mid_outbound_outboundend[1]-radius_fix_fixend+1, 2*radius_fix_fixend, 2*radius_fix_fixend+1)
+            rect_fix_fixend = (mid_fix_fixend[0]-radius_fix_fixend, mid_fix_fixend[1]-radius_fix_fixend, 
+                2*radius_fix_fixend+1, 2*radius_fix_fixend+1)
+            rect_outbound_outboundend = (mid_outbound_outboundend[0]-radius_fix_fixend, mid_outbound_outboundend[1]-radius_fix_fixend+1, 
+                2*radius_fix_fixend, 2*radius_fix_fixend+1)
             pygame.draw.arc(display, self.__route_color, rect_fix_fixend, math.radians(degree), math.radians(degree+180),self.__route_width)
             pygame.draw.arc(display, self.__route_color, rect_outbound_outboundend, math.radians(degree+180), math.radians(degree),self.__route_width)
             pygame.draw.line(display,  self.__route_color, holding_point["fix_end"], holding_point["outbound"], width = self.__route_width)
             pygame.draw.line(display,  self.__route_color, holding_point["outboundend"], holding_point["fix"], width = self.__route_width)
 
     # draw plane
-    def draw_plane(self, plane, display, pixel_position):
+    def draw_plane(self, display, plane, pixel_position):
         direction = plane.get_direction()
         # rotate the plane in the direction of the destination.
         image = pygame.transform.rotate(self.__plane_icon, direction)
@@ -199,13 +189,12 @@ class PlaneManager:
         display.blit(image, new_hit_box)
 
     # draw text right side of plane
-    def draw_text(self, plane, pixel_position, display):
+    def draw_text(self, display, plane, pixel_position):
         flight_code_surface = self.__font.render(plane.get_flight_code(), True, self.__text_color)
         route_surface = self.__font.render(f'{plane.get_origin().get_code()} - {plane.get_destination().get_code()}', True, self.__text_color)
         text_x = pixel_position[0] + self.__plane_size/2
         display.blit(flight_code_surface, (text_x, pixel_position[1]-flight_code_surface.get_size()[1]/2-5))
         display.blit(route_surface, (text_x, pixel_position[1]))
-
 
     # return selected plane' airline code
     def check_selection (self, event):
@@ -219,14 +208,15 @@ class PlaneManager:
     def get_detail(self, code=None):
         for plane in self.__plane_list:
             if plane.get_flight_code() == code:
-                return(['Flight Code: '+plane.get_flight_code(),
+                return([
+                'Flight Code: '+plane.get_flight_code(),
                 'Airline: '+plane.get_airline_information().get_name(),
                 'From: '+plane.get_origin().get_code()+' To: '+plane.get_destination().get_code(),
                 'Passenger: '+str(plane.get_passenger()),
                 'Altitude: '+"{:.2f}".format(plane.get_altitude())+' ft',
                 'Speed: '+"{:.2f}".format(plane.get_speed())+' km/h',
                 'Phase: '+str(plane.get_phase())
-            ])
+                ])
         return([""])
 
     # generate new plane
@@ -235,8 +225,7 @@ class PlaneManager:
             gen_plane = Plane.generate_random_plane(plane_information=self.__plane_specification_tuple, airline_information=self.__airline_tuple, airport_manager = airport_manager, flight_counter = self.__flight_counter, model = model, origin_comm=origin_comm, destination_comm=destination_comm)
             self.__plane_list.append(gen_plane)
             flight_code = gen_plane.get_flight_code()
-
-        return flight_code
+        return(flight_code)
 
     def respond_command(self, console, airport_manager):
         formatted_input = console.pop_formatted_input()

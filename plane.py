@@ -1,4 +1,3 @@
-from numpy.lib.function_base import select
 import pygame
 import random
 import math
@@ -8,7 +7,6 @@ from configuration import ROC, PLNAE_PHASE, ACCELERATE, ROT
 
 ### flight, store information, generate random plane, mark plane position on map
 class Plane:
-
     def __init__(self, flight_code, phase, airline_information, plane_information, passenger, origin, destination, altitude, speed, degree_position):
         self.__flight_code = flight_code
         self.__airline_information = airline_information
@@ -29,10 +27,12 @@ class Plane:
         self.__starting_descending_point = v_plane * t_descending + ((v_plane*t_landing)+0.5*(-6)*((t_landing)**2))
         self.__holding_phase = ""
         self.__holding_fix_direction = None
-        self.__holding_point = {"fix": None,
-                        "fix_end":None,
-                        "outbound": None,
-                        "outboundend": None}
+        self.__holding_point = {
+            "fix": None,
+            "fix_end":None,
+            "outbound": None,
+            "outboundend": None
+        }
         self._current_command = None
         self.__target_altitude = -1
 
@@ -76,7 +76,7 @@ class Plane:
         return(self.__holding_phase)
 
     def get_holding_fix_direction(self):
-        return self.__holding_fix_direction
+        return(self.__holding_fix_direction)
 
     def get_holding_point(self):
         return(self.__holding_point)
@@ -108,6 +108,9 @@ class Plane:
     def set_current_command(self, command):
         self._current_command = command
 
+    def set_target_altitude(self,target_altitude):
+        self.__target_altitude = target_altitude
+
     def clear_holding(self):
         self.__holding_phase = ""
         self.__holding_fix_direction = None
@@ -116,14 +119,11 @@ class Plane:
                         "outbound": None,
                         "outboundend": None}
 
-    def set_target_altitude(self,target_altitude):
-        self.__target_altitude = target_altitude
-
     # get remain distance between plane position and destination position
     def get_remain_distance(self):
         origin_position = self.get_origin().get_degree_position()
         destination_position = self.get_destination().get_degree_position()
-        current_postion = self.get_degree_position() #current position of plane
+        current_postion = self.get_degree_position() # current position of plane
         distance_different_current_origin = math.dist(origin_position,current_postion)*111
         distance_different_origin_destination = math.dist(origin_position,destination_position)*111
         return(distance_different_origin_destination-distance_different_current_origin)
@@ -154,7 +154,6 @@ class Plane:
         # check model command isn't empty, cam configure
         else:
             for plane_model in plane_information:
-                # print(plane_model.get_model())
                 if plane_model.get_model() == model:
                     plane_info = plane_model
 
@@ -169,45 +168,35 @@ class Plane:
             flight_counter.update({'TG': flight_counter['TG'] + 1})
             generate_num = "{:03d}".format(flight_counter['TG'])
         flight_code = "{}{}".format(airline_code,str(generate_num))
-        # end generate Flight code
-
         passenger = plane_info.get_max_seat()
         normal_passenger = Calculator.normal_distribution_seat(passenger=passenger)
         altitude = 0
         speed = 0
         phase = PLNAE_PHASE["waiting"]
-        return (Plane(airline_information=airline, plane_information=plane_info, passenger=normal_passenger, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, phase=phase))
+        return(Plane(airline_information=airline, plane_information=plane_info, passenger=normal_passenger, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, phase=phase))
 
     # update plane position
     def update_position(self):
         # update position for Landing plane
         if (self.__phase != PLNAE_PHASE["landing"] and self.__phase != PLNAE_PHASE["holding"]):
             self.find_direction()
-
         # update position for Taking off plane
         if (self.__phase == PLNAE_PHASE["takingoff"]):
             self.taking_off()
-
         elif (self.__phase == PLNAE_PHASE["climbing"]):
             self.climbing()
-
         elif (self.__phase == PLNAE_PHASE["descending"]):
             self.descending()
-
         # update position for landing plane
         elif (self.__phase == PLNAE_PHASE["landing"]):
             self.landing()
-
         elif (self.__phase == PLNAE_PHASE["holding"]):
             self.holding()
-
         elif (self.__phase == PLNAE_PHASE['cruising']):
                 if self.__target_altitude > self.__altitude:
                     self.increase_altitude()
                 elif self.__target_altitude < self.__altitude:
                     self.decrease_altitude()
-
-
         speed = self.__speed/(111*3600)   # unit = degree/second ,111km = 1 degree
         x_speed = speed*math.cos(math.radians(self.__direction))
         y_speed =speed*math.sin(math.radians(self.__direction))
@@ -223,13 +212,11 @@ class Plane:
                         return(self.__flight_code)
         return("")
 
+    # find direction between plane and destination
     def find_direction(self):
         destination_position = self.__destination.get_degree_position()
         self.__direction = math.degrees(math.atan2(destination_position[0] - self.__degree_position[0],
         destination_position[1] - self.__degree_position[1])) # arctan(y/x)
-
-    def waiting(self):
-        pass
 
     # movment for taking off plane
     def taking_off(self):
@@ -291,19 +278,16 @@ class Plane:
                 self.__direction -= ROT
             else :
                 self.__holding_phase = "outbound"
-
         if self.__holding_phase == "outbound":
             self.__holding_point["fix_end"]
             leg_distance = self.__speed/(111*3600)*90
             if (leg_distance - math.dist(self.__degree_position,  self.__holding_point["fix_end"]))*111 <= 1:
                 self.__holding_phase = "outbound end"
-
         if self.__holding_phase == "outbound end":
             if abs(self.__direction - self.__holding_fix_direction) < 360:
                     self.__direction -= ROT
             else:
                 self.__holding_phase = "inbound"
-
         if self.__holding_phase == "inbound":
             if math.dist( self.__holding_point["fix"], self.__degree_position)*111 <= 1:
                 self.__holding_phase = "fix end"
