@@ -19,15 +19,14 @@ class InformationBox:
 		self.__background_color = background_color
 
 	# return four corner point position
-	def get_corner_point(self, index=None):
+	def get_corner_point(self, index=0):
 		corner_point = (
 			(self.__x, self.__y),								# top left
 			(self.__x+self.__width, self.__y),					# top right
 			(self.__x, self.__y+self.__height),					# bottom left
 			(self.__x+self.__width, self.__y+self.__height)		# bottom right
 			)
-		if index != None:
-			corner_point = corner_point[index]
+		corner_point = corner_point[index]
 		return(corner_point)
 
 	# set content in box
