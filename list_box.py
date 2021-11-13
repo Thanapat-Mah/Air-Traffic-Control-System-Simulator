@@ -91,7 +91,7 @@ class ListBox:
 		left_switch_button = self.__switch_page_button[0]
 		display.blit(page_text_surface,
 			(self.__x+(self.__width-page_text_surface.get_size()[0])/2,
-			left_switch_button.y+(left_switch_button.height-page_text_surface.get_size()[1])/2))
+			left_switch_button.get_y()+(left_switch_button.get_height()-page_text_surface.get_size()[1])/2))
 		# draw switch page button		
 		for button in self.__switch_page_button:
 			button.draw_button(display=display)

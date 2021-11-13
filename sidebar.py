@@ -83,7 +83,7 @@ class Sidebar:
 		drawing_notch_color = self.__notch_color
 		if len(collision_detector.get_collision_set()) > 0:
 			drawing_notch_color = self.__collision_notch_color
-		self.__notch_button.set_x(current_x - self.__notch_button.width)
+		self.__notch_button.set_x(current_x - self.__notch_button.get_width())
 		self.__notch_button.set_background_color(drawing_notch_color)
 		self.__notch_button.draw_button(display=display)
 		pygame.draw.rect(display, drawing_notch_color, (current_x - self.__notch_width, self.__y, self.__notch_width, self.__height))
