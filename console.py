@@ -1,5 +1,5 @@
 import pygame
-from configuration import COLOR, FONT, ICON_PATH, KEYWORD, FORMAT, OPTIONAL, REQUIRED, SYNTAX, FAIL_RESPONSE
+from configuration import COLOR, FONT, ICON_PATH, KEYWORD, FORMAT, REQUIRED, SYNTAX, FAIL_RESPONSE
 from utilities import Loader
 from button import MultiStateButton
 from command_input import CommandInput
@@ -16,6 +16,7 @@ class Console:
 		self.__background_color = background_color
 		self.__background_surface = pygame.Surface((width, height), pygame.SRCALPHA)
 		self.__font = font
+		# text color and spacing for different text type
 		self.__text_color = {
 			"user": COLOR["white"],
 			"success_response": COLOR["green"],
@@ -57,8 +58,7 @@ class Console:
 		self.__formatted_input = []
 		if self.__command_input_text != "":
 			self.__command_log.append({"user": f"{self.__user_text_prefix} {self.__command_input_text}"})
-			# tokenize input
-			input_tokens = self.__command_input_text.split()
+			input_tokens = self.__command_input_text.split()	# tokenize input
 			input_syntax = False
 			invalid_command = False
 			invalid_syntax = False
@@ -75,7 +75,6 @@ class Console:
 				# check if input exceed the number of token in correct syntax format
 				if len(input_tokens) > len(input_syntax[FORMAT]):
 					invalid_syntax = True
-				# else, process command input token by token
 				else:
 					for i in range(len(input_syntax[FORMAT])):
 						# extract token from input and correct syntax
@@ -87,7 +86,6 @@ class Console:
 							# check if keyword is in wrong order
 							if input_token != input_syntax["keyword"]:
 								invalid_syntax = True
-							# else, collect keyword to formatted input
 							else:
 								self.__formatted_input.insert(0, input_token)
 						else:
@@ -95,7 +93,6 @@ class Console:
 							if command_token == REQUIRED:
 								if input_token == "":
 									invalid_syntax = True
-							# collect parameter to formatted input
 							self.__formatted_input.append(input_token)
 			# if something is invalid, clear formatted input and send fail response
 			if invalid_command:
@@ -104,8 +101,7 @@ class Console:
 			elif invalid_syntax:
 				self.__formatted_input.clear()
 				self.__command_log.append({"fail_response": FAIL_RESPONSE["invalid_syntax"]})
-			# clear input text after process
-			self.__command_input_text = ""
+			self.__command_input_text = "" 		# clear input text after process
 
 	# handle incoming response from PlaneManager
 	def handle_response(self, responses):
@@ -127,7 +123,6 @@ class Console:
 	def draw_console(self, display):
 		# draw transparent background
 		pygame.draw.rect(self.__background_surface, self.__background_color, self.__background_surface.get_rect(), border_radius=self.__border_radius)
-
 		# draw command log
 		text_y = 10
 		for log in self.__command_log:
@@ -135,21 +130,16 @@ class Console:
 				# render log text
 				text = log[key]
 				text_surface = self.__font.render(text, True, self.__text_color[key])
-				# spacing this line text
-				text_y += self.__text_spacing[key]
+				text_y += self.__text_spacing[key]			# spacing this line text
 				# if text is exceed the area of console, remove oldest current log
 				if text_y > (self.__height-40-text_surface.get_size()[1]):
 					self.__command_log = self.__command_log[1:]
 				else:
-					# draw text on surface
-					self.__background_surface.blit(text_surface, (10, text_y))
-				# spacing next line text
-				text_y += text_surface.get_size()[1]
+					self.__background_surface.blit(text_surface, (10, text_y))	# draw text on surface
+				text_y += text_surface.get_size()[1] 							# spacing next line text
 		# draw command input box
 		prefix_surface = self.__font.render(self.__user_text_prefix, True, self.__text_color["user"])
 		self.__background_surface.blit(prefix_surface, (10, self.__height-35))
-		self.__command_input.draw_command_input(display=self.__background_surface)		
-		# draw console surface
-		display.blit(self.__background_surface, (self.__x, self.__y))
-		# draw help button
-		self.__help_button.draw_button(display)
+		self.__command_input.draw_command_input(display=self.__background_surface)
+		display.blit(self.__background_surface, (self.__x, self.__y))	# draw console surface
+		self.__help_button.draw_button(display)							# draw help button
