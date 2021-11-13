@@ -203,9 +203,9 @@ class Plane:
 
         elif (self.__phase == PLNAE_PHASE['cruising']):
                 if self.__target_altitude > self.__altitude:
-                    self.increase_altitude()
+                    self.climbing()
                 elif self.__target_altitude < self.__altitude:
-                    self.decrease_altitude()
+                    self.descending()
 
 
         speed = self.__speed/(111*3600)   #unit = degree/second ,111km = 1 degree
@@ -240,17 +240,29 @@ class Plane:
 
     # movment for climing plane
     def climbing(self):
-        avrage_altitude = self.__plane_information.get_altitude()
-        avrage_altitude = (sum(avrage_altitude)/2)
-        self.__altitude += ROC
-        if self.__altitude > avrage_altitude:
-            self.__altitude = avrage_altitude
+        if self.__target_altitude != -1:
+            self.__altitude += ROC
+            if self.__altitude > self.__target_altitude:
+                self.__altitude = self.__target_altitude
+                self.__target_altitude = -1
+        elif self.__phase == PLNAE_PHASE["climbing"]:
+            avrage_altitude = self.__plane_information.get_altitude()
+            avrage_altitude = (sum(avrage_altitude)/2)
+            self.__altitude += ROC
+            if self.__altitude > avrage_altitude:
+                self.__altitude = avrage_altitude
 
     # movment for descending plane
     def descending(self):
-        self.__altitude -= ROC
-        if self.__altitude < 0:
-            self.__altitude = 0
+        if self.__target_altitude != -1:
+            self.__altitude -= ROC
+            if self.__altitude < self.__target_altitude:
+                self.__altitude = self.__target_altitude
+                self.__target_altitude = -1
+        elif self.__phase == PLNAE_PHASE["descending"]:
+            self.__altitude -= ROC
+            if self.__altitude < 0:
+                self.__altitude = 0
 
     # movment for landing plane
     def landing(self):
@@ -308,17 +320,3 @@ class Plane:
                 self.__holding_phase = "fix end"
                 self.__direction = self.__holding_fix_direction
                 self.__degree_position =  self.__holding_point["fix"]
-
-    def increase_altitude(self):
-        increase_altitude = self.__target_altitude
-        if increase_altitude != -1:
-            self.__altitude += ROC
-            if self.__altitude > increase_altitude:
-                self.__altitude = increase_altitude
-
-    def decrease_altitude(self):
-        decrease_altitude = self.__target_altitude
-        if decrease_altitude != -1:
-            self.__altitude -= ROC
-            if self.__altitude < decrease_altitude:
-                self.__altitude = decrease_altitude
