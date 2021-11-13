@@ -22,14 +22,15 @@ def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_m
 				console.check_event(event)
 				help_box.check_event(event, is_open=console.get_is_help_open())
 				plane_manager.respond_command(console,airport_manager=airport_manager)
-				collision_detector.check_collision(plane_list_init=plane_manager.get_plane_list(), console=console)
+				# collision_detector.check_collision(plane_list_init=plane_manager.get_plane_list(), console=console)
 				simulator.check_selection(event, plane_manager=plane_manager, airport_manager=airport_manager, sidebar=sidebar)
 				toolbar.check_event(event, simulator=simulator)
 				sidebar.check_event(event)
 				map_.check_event(event, simulator=simulator)
 
 		# update screen to next frame
-		simulator.update_simulator(airport_manager=airport_manager, plane_manager=plane_manager, sidebar=sidebar)
+		simulator.update_simulator(airport_manager=airport_manager, plane_manager=plane_manager, sidebar=sidebar,
+			collision_detector=collision_detector, console=console)
 		screen.update_screen(simulator=simulator, toolbar=toolbar, sidebar=sidebar, airport_manager=airport_manager,
 			map_=map_, plane_manager = plane_manager, collision_detector=collision_detector, console=console, help_box=help_box)
 		pygame.display.update()

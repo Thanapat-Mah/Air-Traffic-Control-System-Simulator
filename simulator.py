@@ -72,7 +72,7 @@ class Simulator:
 				self.__simulated_delta_count += self.__simulated_time_step
 
 	# update plane and airport to next time step, also update information shown on sidebar
-	def update_simulator(self, airport_manager, plane_manager, sidebar):
+	def update_simulator(self, airport_manager, plane_manager, sidebar, collision_detector, console):
 		# tick time
 		self.tick_time()
 		# get selected object detail
@@ -95,6 +95,8 @@ class Simulator:
 		sidebar.update_information(plane_information=self.__plane_information,
 			airport_information=self.__airport_information,
 			selected_object_detail=self.__selected_object_detail)
+
+		collision_detector.check_collision(plane_list_init=plane_manager.get_plane_list(), console=console)
 
 	# check for clicking event in simulation, including click on plane, airport or status button on sidebar
 	def check_selection(self, event, airport_manager, plane_manager, sidebar):
