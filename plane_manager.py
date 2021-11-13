@@ -130,7 +130,7 @@ class PlaneManager:
                 airport_pixel = converter.degree_to_pixel(degree_position=plane.get_destination().get_degree_position())
                 # draw red circle when have future collision
                 if plane.get_flight_code() in collision_set:
-                    self.draw_collision_detector(display=display, pixel_position=pixel_position)
+                    self.draw_collision_circle(display=display, pixel_position=pixel_position)
                 # draw if plane object is selected
                 if converter.get_selected_object_code() == plane.get_flight_code():
                     if plane.get_phase() != PLNAE_PHASE['holding']:
@@ -141,8 +141,9 @@ class PlaneManager:
                         self.draw_holding_route(display=display, plane=plane ,converter=converter)  # draw if plane is flying in holding pattern
                 self.draw_plane(display=display ,plane=plane, pixel_position=pixel_position)        # draw plane
                 self.draw_text(display=display, plane=plane, pixel_position=pixel_position)         # draw text right side of plane
-
-    def draw_collision_detector(self,display,pixel_position):
+    
+    #draw collision circle
+    def draw_collision_circle(self,display,pixel_position):
         radius = self.__collision_circle_radius
         circle_surface = pygame.Surface((2*radius, 2*radius), pygame.SRCALPHA)
         # fill transparence circle
