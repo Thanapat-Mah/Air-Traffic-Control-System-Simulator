@@ -70,3 +70,14 @@ class Calculator:
         while(normal_passenger < 0):
             normal_passenger = int(random.normal(mean_seat, std_seat, 1))
         return normal_passenger
+
+    def find_mid_point(point1,point2):
+        return (round((point1[0]+point2[0])/2),round((point1[1]+point2[1])/2))
+
+    def find_holding_point(holding_point, mid_fix_fixend,mid_outbound_outboundend):
+        holding_point["fix_end"] = (round(2*(mid_fix_fixend[0])-(holding_point["fix"][0])),round(2*(mid_fix_fixend[1])-(holding_point["fix"][1])))
+        distance_mid_x = (mid_fix_fixend[0])-(mid_outbound_outboundend[0])
+        distance_mid_y = (mid_fix_fixend[1])-(mid_outbound_outboundend[1])
+        holding_point["outboundend"] = (holding_point["fix"][0]-distance_mid_x,holding_point["fix"][1]-distance_mid_y)
+        holding_point["outbound"] = (holding_point["fix_end"][0]-distance_mid_x,holding_point["fix_end"][1]-distance_mid_y)
+        return holding_point

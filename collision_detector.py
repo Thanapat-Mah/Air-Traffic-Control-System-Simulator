@@ -1,5 +1,4 @@
 import math
-import copy
 
 from numpy import PINF
 from configuration import PLNAE_PHASE
@@ -37,7 +36,7 @@ class CollisionDetector:
                             self.__collision_notify_set.add(collision_couple)
                             self.__collision_couple_history_set.add(collision_couple)
                         else :
-                            collision_couple_history_list_tmp = copy.deepcopy(self.__collision_couple_history_set)
+                            collision_couple_history_list_tmp = self.__collision_couple_history_set.copy()
                             if collision_couple not in collision_couple_history_list_tmp :
                                 self.__collision_notify_set.add(collision_couple)
                                 self.__collision_couple_history_set.add(collision_couple)
