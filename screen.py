@@ -41,7 +41,7 @@ class Screen:
 		converter = Converter(screen_size=(self.__width, self.__height), map_=map_, simulator=simulator)
 		map_.draw_map(self.__display)
 		airport_manager.draw_all_airport(self.__display, converter=converter)
-		plane_manager.draw_all_plane(self.__display, converter=converter, collision_detector=collision_detector)
+		plane_manager.draw(self.__display, converter=converter, collision_detector=collision_detector)
 		# draw user interface
 		toolbar.draw_toolbar(self.__display, simulated_datetime=simulator.get_simulated_datetime())
 		sidebar.draw_sidebar(self.__display, simulator=simulator, collision_detector=collision_detector)

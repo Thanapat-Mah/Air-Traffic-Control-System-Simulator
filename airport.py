@@ -72,7 +72,7 @@ class AirportManager:
         self.__font = font
 
     def get_airport_tuple(self):
-        return self.__airport_tuple
+        return(self.__airport_tuple)
 
     # update status of airport and return all aiport in each status
     def update_airport(self, plane_manager):
