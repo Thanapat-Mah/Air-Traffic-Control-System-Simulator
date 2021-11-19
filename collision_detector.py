@@ -16,9 +16,12 @@ class CollisionDetector:
         return(self.__collision_set)
 
     # check all plane collision
-    def check_collision(self, plane_list_init, console):
+    def check_collision(self, plane_manager, console):
+        plane_list_init = plane_manager.get_plane_list()
         self.__collision_set = set()
         self.__collision_notify_set = set()
+        plane_collided = set()
+        response_message = []
         plane_list = plane_list_init.copy()
         # remove wating plane
         plane_list = [plane for plane in plane_list if plane.get_phase() != PLNAE_PHASE['waiting']]
@@ -43,14 +46,17 @@ class CollisionDetector:
                         self.__collision_couple_history_set.remove(collision_couple)
                 # remove plane collision remove
                 if ((math.dist(plane_list[i].get_degree_position(), plane_list[j].get_degree_position())*111 <= 1)
-                    and (abs(plane_list[i].get_altitude()-plane_list[j].get_altitude()) == 60)):
-                    plane_list_init.remove(plane_list[i])
-                    plane_list_init.remove(plane_list[j])
+                    and (abs(plane_list[i].get_altitude()-plane_list[j].get_altitude()) <= 60)):
+                    plane_collided.add(collision_couple)
 
         # send warning for collision to console
-        response_message = []
         if len(self.__collision_notify_set) > 0:
             for collision_couple in self.__collision_notify_set:
                 response_message.append({"warning": "Potential future collisions detected"})
                 response_message.append({"warning_sequence": " - {} and {}".format(collision_couple[0], collision_couple[1])})
+        if len(plane_collided) > 0:    
+            for collision_couple in plane_collided:
+                response_message.append({"warning": "{} and {} were collided".format(collision_couple[0], collision_couple[1])})
+                plane_manager.remove_plane(collision_couple[0])
+                plane_manager.remove_plane(collision_couple[1])
         console.handle_response(response_message)

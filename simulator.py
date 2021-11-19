@@ -1,4 +1,3 @@
-from configuration import COLOR
 import datetime
 
 ### simulator data and state, keep track of state and time
@@ -90,7 +89,7 @@ class Simulator:
 		# update airport and get airport information
 		self.__airport_information = airport_manager.update_airport(plane_manager=plane_manager)
 		# check for future potentail collision between each plane
-		collision_detector.check_collision(plane_list_init=plane_manager.get_plane_list(), console=console)
+		collision_detector.check_collision(plane_manager=plane_manager, console=console)
 		# update all information on sidebar
 		sidebar.update_information(plane_information=self.__plane_information,
 			airport_information=self.__airport_information,

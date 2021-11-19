@@ -294,7 +294,7 @@ class PlaneManager:
                                     altitude = plane_model.get_altitude()
                                     if int(parameters[1]) >= altitude[0] and int(parameters[1]) <= altitude[1]:
                                         plane.set_target_altitude(float(parameters[1]))
-                                        response_message.append({"success_response": "{} is at an altitude of {} ft.".format(plane.get_flight_code(), parameters[1])})
+                                        response_message.append({"success_response": "{} will change at an altitude of {} ft.".format(plane.get_flight_code(), parameters[1])})
                                     else:
                                         response_message.append({"fail_response": FAIL_RESPONSE["invalid_value"]})
                                         response_message.append({"fail_response": "The value must be between {} and {}".format(altitude[0], altitude[1])})
@@ -337,3 +337,9 @@ class PlaneManager:
                                     has_airport = False
         if not has_model and not has_airport:
             response_message.append({"fail_response": FAIL_RESPONSE["invalid_value"]})
+
+    # remove the specific flight
+    def remove_plane(self, flight_code):
+        for plane in self.__plane_list:
+            if plane.get_flight_code() == flight_code:
+                self.__plane_list.remove(plane)
