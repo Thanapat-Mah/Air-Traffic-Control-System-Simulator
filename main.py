@@ -33,12 +33,11 @@ def simulate(screen, toolbar, sidebar, airport_manager, map_, simulator, plane_m
 		screen.update_screen(simulator=simulator, toolbar=toolbar, sidebar=sidebar, airport_manager=airport_manager,
 			map_=map_, plane_manager = plane_manager, collision_detector=collision_detector, console=console, help_box=help_box)
 		pygame.display.update()
-
 	pygame.quit()
 
 if __name__ == "__main__":
 	pygame.init()
-	screen = Screen(fullscreen=False)
+	screen = Screen(fullscreen=True)
 	simulator = Simulator(name="Air Traffic Control System Simulator")
 	toolbar = Toolbar(screen_size=screen.get_size(), simulator=simulator)
 	sidebar = Sidebar(screen_size=screen.get_size(), toolbar_height=toolbar.get_height())

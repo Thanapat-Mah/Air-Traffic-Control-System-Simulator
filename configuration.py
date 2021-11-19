@@ -10,8 +10,6 @@ FONT = {
 	"bebasneue_small": pygame.font.Font('assets/fonts/BebasNeue-Regular.ttf', 16),
 	"consolas_small": pygame.font.Font('assets/fonts/CONSOLA.TTF', 14)
 }
-# roboto_normal = pygame.font.Font('assets/fonts/Roboto-Regular.ttf', 24)
-# bebasneue_normal = pygame.font.Font('assets/fonts/BebasNeue-Regular.ttf', 22)
 # RGB code for every color used in program
 COLOR = {
 	"black": (28, 28, 28),
@@ -53,13 +51,6 @@ HELP_PATH = {
 ### simulations data setting
 # airport name, IATA code and location
 AIRPORTS = (
-	# ("Chiang Mai International Airport", "CNX", 800, 200),
-	# ("Suvarnabhumi Airport", "BKK", 905, 488),
-	# ("Khon Kaen Airport", "KKC", 1020, 320),
-	# ("Phuket International Airport", "HKT", 770, 800),
-	# ("Hat Yai International Airport", "HDY", 890, 890)
-	# ("Bara Airport", "BAR", 13, 90),
-	# ("MAJU Airport", "MAJ", 12, 110),
 	("Chiang Mai International Airport", "CNX", 18.767750, 98.964000),
     ("Suvarnabhumi Airport", "BKK", 13.690000, 100.750111),
     ("Khon Kaen Airport", "KKC", 16.465417, 102.787361),
@@ -75,11 +66,11 @@ PLANE_INFORMATIONS = (
 	("Airbus A320-200", 180, 863, (29000, 39000)),
 	("Boeing 787-9", 236, 903, (35000, 43000))
 )
-ZOOM_SCALE = 2.5	# map zoom scaling
+ZOOM_SCALE = 2.5 # map zoom scaling
 
-ROC = 3500/60 # rate of climbing 3500 ft/min
-ROT = 3 # rate of turn 3 degree / second
-ACCELERATE = 6 #accelerate when taking off and landing (m/s^2)
+ROC = 3500/60 	 # rate of climbing 3500 ft/min
+ROT = 3 		 # rate of turn 3 degree / second
+ACCELERATE = 6 	 #accelerate when taking off and landing (m/s^2)
 PLNAE_PHASE = {
 	"waiting":"Waiting",
 	"takingoff":"Taking-off",

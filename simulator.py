@@ -1,11 +1,9 @@
-import pygame
 from configuration import COLOR
-from utilities import Converter
 import datetime
 
 ### simulator data and state, keep track of state and time
 class Simulator:
-	def __init__(self, name, name_background_color=COLOR["dark_gray"], time_step=1, spawn_period=260):
+	def __init__(self, name, time_step=1, spawn_period=260):
 		self.__name = name
 		self.__is_play = True
 		self.__time_period = [50, 10, 1]		# time period, less value more speed, first value is current

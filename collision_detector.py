@@ -1,5 +1,6 @@
 import math
 from configuration import PLNAE_PHASE
+
 ### plane collision detector
 class CollisionDetector:
     def __init__(self):
@@ -40,6 +41,12 @@ class CollisionDetector:
                 else:
                     if collision_couple in self.__collision_couple_history_set:
                         self.__collision_couple_history_set.remove(collision_couple)
+                # remove plane collision remove
+                if ((math.dist(plane_list[i].get_degree_position(), plane_list[j].get_degree_position())*111 <= 1)
+                    and (abs(plane_list[i].get_altitude()-plane_list[j].get_altitude()) == 60)):
+                    plane_list_init.remove(plane_list[i])
+                    plane_list_init.remove(plane_list[j])
+
         # send warning for collision to console
         response_message = []
         if len(self.__collision_notify_set) > 0:
