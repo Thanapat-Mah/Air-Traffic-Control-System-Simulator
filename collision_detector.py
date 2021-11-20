@@ -45,7 +45,7 @@ class CollisionDetector:
                     if collision_couple in self.__collision_couple_history_set:
                         self.__collision_couple_history_set.remove(collision_couple)
                 # remove plane collision remove
-                if ((math.dist(plane_list[i].get_degree_position(), plane_list[j].get_degree_position())*111 <= 1)
+                if ((math.dist(plane_list[i].get_degree_position(), plane_list[j].get_degree_position())*111 <= 0.25)
                     and (abs(plane_list[i].get_altitude()-plane_list[j].get_altitude()) <= 60)):
                     plane_collided.add(collision_couple)
 
