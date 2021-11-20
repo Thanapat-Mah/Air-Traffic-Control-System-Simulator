@@ -59,6 +59,7 @@ class PlaneManager:
                         plane.set_phase(PLNAE_PHASE['cruising'])
                 elif plane.get_phase() == PLNAE_PHASE['cruising']:
                     if (plane.get_remain_distance() <= plane.get_starting_descending_point()/1000):
+                        plane.set_target_altitude(-1)
                         plane.set_phase(PLNAE_PHASE['descending'])
                 elif plane.get_phase() == PLNAE_PHASE['descending']:
                     if (plane.get_altitude() <= 0):
@@ -227,7 +228,7 @@ class PlaneManager:
                 airport_manager = airport_manager, flight_counter = self.__flight_counter, model = model, origin_comm=origin_comm, destination_comm=destination_comm)
             self.__plane_list.append(gen_plane)
             flight_code = gen_plane.get_flight_code()
-        return(flight_code)
+            return(flight_code)
 
     # take commands from the console and follow them
     def respond_command(self, console, airport_manager):
@@ -294,7 +295,7 @@ class PlaneManager:
                                     altitude = plane_model.get_altitude()
                                     if int(parameters[1]) >= altitude[0] and int(parameters[1]) <= altitude[1]:
                                         plane.set_target_altitude(float(parameters[1]))
-                                        response_message.append({"success_response": "{} will change at an altitude of {} ft.".format(plane.get_flight_code(), parameters[1])})
+                                        response_message.append({"success_response": "{} will change altitude to {} ft.".format(plane.get_flight_code(), parameters[1])})
                                     else:
                                         response_message.append({"fail_response": FAIL_RESPONSE["invalid_value"]})
                                         response_message.append({"fail_response": "The value must be between {} and {}".format(altitude[0], altitude[1])})

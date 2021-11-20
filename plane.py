@@ -20,11 +20,8 @@ class Plane:
         self.__destination = destination
         self.__phase = phase
         self.__hit_box = None
-        v_plane = 0.8*self.__plane_information.get_speed() * 1000/3600 # unit: m/s
         avrage_altitude = (sum(self.__plane_information.get_altitude())/2)
-        t_descending = avrage_altitude/ROC
-        t_landing = v_plane/6
-        self.__starting_descending_point = v_plane * t_descending + ((v_plane*t_landing)+0.5*(-6)*((t_landing)**2))
+        self.__starting_descending_point = 99
         self.__holding_phase = ""
         self.__holding_fix_direction = None
         self.__holding_point = {
@@ -126,7 +123,7 @@ class Plane:
         current_postion = self.get_degree_position() # current position of plane
         distance_different_current_origin = math.dist(origin_position,current_postion)*111
         distance_different_origin_destination = math.dist(origin_position,destination_position)*111
-        return(distance_different_origin_destination-distance_different_current_origin)
+        return(distance_different_origin_destination-distance_different_current_origin) #km
 
     # generate random all information plane
     def generate_random_plane(plane_information, airline_information, airport_manager, flight_counter, model, origin_comm, destination_comm):
@@ -188,6 +185,7 @@ class Plane:
             self.climbing()
         elif (self.__phase == PLNAE_PHASE["descending"]):
             self.descending()
+
         # update position for landing plane
         elif (self.__phase == PLNAE_PHASE["landing"]):
             self.landing()
@@ -204,6 +202,10 @@ class Plane:
         y_speed =speed*math.sin(math.radians(self.__direction))
         self.__degree_position = (self.__degree_position[0]+y_speed,self.__degree_position[1]+x_speed)
 
+        self.find_starting_descending_point()
+
+
+
     # check if this plane is clicked, return empty string or plane' airline code
     def click(self, event):
         if self.__hit_box:     # if this plane have hit_box (is drawed at least one time)
@@ -219,6 +221,12 @@ class Plane:
         destination_position = self.__destination.get_degree_position()
         self.__direction = math.degrees(math.atan2(destination_position[0] - self.__degree_position[0],
         destination_position[1] - self.__degree_position[1])) # arctan(y/x)
+
+    def find_starting_descending_point(self):
+        v_plane = 0.8*self.__plane_information.get_speed() * 1000/3600 # unit: m/s
+        t_descending = self.__altitude/ROC
+        t_landing = v_plane/6
+        self.__starting_descending_point = v_plane * t_descending + ((v_plane*t_landing)+0.5*(-6)*((t_landing)**2))
 
     # movment for taking off plane
     def taking_off(self):
