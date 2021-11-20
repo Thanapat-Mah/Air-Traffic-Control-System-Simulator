@@ -156,7 +156,7 @@ class Plane:
 
         degree_position = origin.get_degree_position()
         airline = random.choice(airline_information)
-        airline_code = airline.get_code()
+        airline_code = airline.get_co
         # start generate Flight code
         if (airline_code == 'FD'):
             flight_counter.update({'FD': flight_counter['FD'] + 1})
@@ -169,8 +169,7 @@ class Plane:
         normal_passenger = Calculator.normal_distribution_seat(passenger=passenger)
         altitude = 0
         speed = 0
-        phase = PLNAE_PHASE["takingoff"]
-        #phase = PLNAE_PHASE["waiting"]
+        phase = PLNAE_PHASE["waiting"]
         return(Plane(airline_information=airline, plane_information=plane_info, passenger=normal_passenger, flight_code=flight_code, origin=origin, destination=destination, altitude=altitude, degree_position=degree_position, speed=speed, phase=phase))
 
     # update plane position

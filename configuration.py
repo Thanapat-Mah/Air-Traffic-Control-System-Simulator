@@ -60,11 +60,12 @@ AIRPORTS = (
 # airline IATA code and full name
 AIRLINES = (
 	("FD", "Thai AirAsia"),
-	("TG", "Thai Airways International")
+	("TG", "Thai Airways Insternational")
 )
+# plane model information model code, model, max seat, average speed, altitude range
 PLANE_INFORMATIONS = (
-	("Airbus A320-200", 180, 863, (29000, 39000)),
-	("Boeing 787-9", 236, 903, (35000, 43000))
+	("A320", "Airbus A320-200", 180, 863, (29000, 39000)),
+	("B787", "Boeing 787-9", 236, 903, (35000, 43000))
 )
 ZOOM_SCALE = 2.5 # map zoom scaling
 
@@ -109,8 +110,3 @@ SYNTAX = [
 	{KEYWORD: "altitude",
 	FORMAT: [REQUIRED, KEYWORD, REQUIRED]},
 ]
-
-MODEL_GENERATE = {
-	"A320":"Airbus A320-200",
-	"B787":"Boeing 787-9"
-}

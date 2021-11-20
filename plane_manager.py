@@ -1,6 +1,6 @@
 import pygame
 import math
-from configuration import PLANE_PATH, MODEL_GENERATE
+from configuration import PLANE_PATH
 from utilities import Loader, Calculator
 from plane_airline_information import PlaneInformation,AirlineInformation
 from configuration import FONT, COLOR, PLANE_INFORMATIONS, AIRLINES, PLANE_PATH, PLNAE_PHASE, FAIL_RESPONSE
@@ -15,7 +15,7 @@ class PlaneManager:
         self.__plane_size = plane_size
         self.__plane_icon = Loader.load_image(image_path = image_path, size=(plane_size, plane_size), scale = 1)
         self.__plane_specification_tuple = tuple([
-            PlaneInformation(model= info[0], max_seat=info[1], speed=info[2], altitude=info[3]) for info in PLANE_INFORMATIONS
+            PlaneInformation(model= info[1], max_seat=info[2], speed=info[3], altitude=info[4]) for info in PLANE_INFORMATIONS
         ])
         self.__plane_list = []
         self.__airline_tuple = tuple([
@@ -309,10 +309,10 @@ class PlaneManager:
     def generate_command(self, parameters, response_message, airport_manager):
         has_airport = False
         has_model = False
-        for model in MODEL_GENERATE:
-            if model == parameters[0]:
+        for model in PLANE_INFORMATIONS:
+            if model[0] == parameters[0]:
                 if parameters[1] == "" and parameters[2] == "":
-                    flight_code = self.generate_new_plane(airport_manager=airport_manager ,model=MODEL_GENERATE[model], origin_comm="", destination_comm="")
+                    flight_code = self.generate_new_plane(airport_manager=airport_manager ,model=model[1], origin_comm="", destination_comm="")
                     response_message.append({"success_response": "Generate {} success.".format(flight_code)})
                     has_model = 1
                     break
@@ -329,7 +329,7 @@ class PlaneManager:
                         elif airport.get_code() == parameters[1]:
                             for airport_one in airport_list:
                                 if airport_one.get_code() == parameters[2]:
-                                    flight_code = self.generate_new_plane(airport_manager=airport_manager ,model=MODEL_GENERATE[model],
+                                    flight_code = self.generate_new_plane(airport_manager=airport_manager ,model=model[0],
                                         origin_comm=parameters[1], destination_comm=parameters[2])
                                     response_message.append({"success_response": "Generate {} success.".format(flight_code)})
                                     has_airport = True
