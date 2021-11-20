@@ -156,7 +156,7 @@ class Plane:
 
         degree_position = origin.get_degree_position()
         airline = random.choice(airline_information)
-        airline_code = airline.get_co
+        airline_code = airline.get_code()
         # start generate Flight code
         if (airline_code == 'FD'):
             flight_counter.update({'FD': flight_counter['FD'] + 1})
