@@ -221,6 +221,7 @@ class Plane:
         self.__direction = math.degrees(math.atan2(destination_position[0] - self.__degree_position[0],
         destination_position[1] - self.__degree_position[1])) # arctan(y/x)
 
+    # find starting point from distination airport to descending  
     def find_starting_descending_point(self):
         v_plane = 0.8*self.__plane_information.get_speed() * 1000/3600 # unit: m/s
         t_descending = self.__altitude/ROC

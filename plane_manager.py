@@ -329,7 +329,7 @@ class PlaneManager:
                         elif airport.get_code() == parameters[1]:
                             for airport_one in airport_list:
                                 if airport_one.get_code() == parameters[2]:
-                                    flight_code = self.generate_new_plane(airport_manager=airport_manager ,model=model[0],
+                                    flight_code = self.generate_new_plane(airport_manager=airport_manager ,model=model[1],
                                         origin_comm=parameters[1], destination_comm=parameters[2])
                                     response_message.append({"success_response": "Generate {} success.".format(flight_code)})
                                     has_airport = True

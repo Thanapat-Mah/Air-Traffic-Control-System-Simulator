@@ -4,18 +4,17 @@ from utilities import Converter, Converter
 
 ### screen of program, adjust and display components.
 class Screen:
-	def __init__(self, fullscreen=False, width=1366, height=768, background_color=COLOR["dark_gray"],
-		text_background_color=COLOR["black"], text_color=COLOR["white"], font=FONT["roboto_normal"]):
+	def __init__(self, fullscreen=False, width=1366, height=768, text_background_color=COLOR["black"],
+	text_color=COLOR["white"], font=FONT["roboto_normal"]):
 		self.__fullscreen = fullscreen
 		# if fullsreen, adjust width and height to fit user's display size
-		if fullscreen:
+		if self.__fullscreen:
 			info_object = pygame.display.Info()
 			self.__width = info_object.current_w
 			self.__height = info_object.current_h
 		else:
 			self.__width = width
 			self.__height = height
-		self.__background_color = background_color
 		self.__display = pygame.display.set_mode((self.__width, self.__height))
 		self.__text_background_color = text_background_color
 		self.__text_color = text_color
