@@ -5,7 +5,7 @@ from utilities import Loader
 
 ### toolbar at bottom side of screen, provide tool for modify simulation behavior
 class Toolbar:
-	def __init__(self, screen_size, simulator, height=50, background_color=COLOR["black"], font=FONT["roboto_normal"], datetime_color=COLOR["white"]):
+	def __init__(self, screen_size, height=50, background_color=COLOR["black"], font=FONT["roboto_normal"], datetime_color=COLOR["white"]):
 		self.__x = 0
 		self.__y = screen_size[1] - height	# adjust position to buttom of screen
 		self.__width = screen_size[0]

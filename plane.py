@@ -20,8 +20,7 @@ class Plane:
         self.__destination = destination
         self.__phase = phase
         self.__hit_box = None
-        avrage_altitude = (sum(self.__plane_information.get_altitude())/2)
-        self.__starting_descending_point = 99
+        self.__starting_descending_point = -1
         self.__holding_phase = ""
         self.__holding_fix_direction = None
         self.__holding_point = {
