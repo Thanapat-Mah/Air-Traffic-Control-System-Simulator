@@ -1,2 +1,0 @@
-to do
-add switch_state() in Airport
